@@ -1,2 +1,0 @@
-/home/george/Desktop/Technion/234218-data-structures/build/CMakeFiles/rebuild_cache.dir
-/home/george/Desktop/Technion/234218-data-structures/build/CMakeFiles/edit_cache.dir
