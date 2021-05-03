@@ -7,7 +7,7 @@ set(CMAKE_C_FLAGS ${FLAGS_DEBUG})
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 11)
 
-set(ASSIGNMENT_1 "Assignments/hw1")
+set(WET_1 "Assignments/hw2")
 
 # add_executable(hw0-part1 Assignments/hw0/part1.c)
 link_directories(.)
