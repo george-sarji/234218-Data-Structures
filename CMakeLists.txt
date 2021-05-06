@@ -8,6 +8,9 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 11)
 
 set(WET_1 "Assignments/hw2")
+set (TYPES "Data types/")
+set (LINKED_LIST ${TYPES}/LinkedList)
 
+add_executable(linkedlist ${LINKED_LIST}/LinkedList.cpp)
 # add_executable(hw0-part1 Assignments/hw0/part1.c)
 link_directories(.)
