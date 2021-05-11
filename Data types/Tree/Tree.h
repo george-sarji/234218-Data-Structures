@@ -18,16 +18,21 @@ namespace structures
 
         // Operator overloads
         T& operator*();
-        Tree* operator=(Tree* tree);
+        Tree& operator=(const Tree& tree);
+        bool operator>(const Tree& tree) const;
+        bool operator>=(const Tree& tree) const;
+        bool operator<(const Tree& tree) const;
+        bool operator<=(const Tree& tree) const;
+        bool operator==(const Tree& tree) const;
 
         // Utility methods
-        Tree* Left();
-        Tree* Right();
+        Tree* Left() const;
+        Tree* Right() const;
         int& Height();
-        void LeftLeft();
-        void LeftRight();
-        void RightLeft();
-        void RightRight();
+        Tree* LeftLeft(Tree* father);
+        Tree* LeftRight(Tree* father);
+        Tree* RightLeft(Tree* father);
+        Tree* RightRight(Tree* father);
 
         // ! Required functions
         // Left, Right, Height, operator* overload, LeftLeft, LeftRight, RightLeft, RightRight, assignment operator overload
