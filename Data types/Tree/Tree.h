@@ -10,32 +10,33 @@ namespace structures
         T data;
         Tree *left;
         Tree *right;
-        int& height;
+        int &height;
 
     public:
-        Tree(T& data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right) {}
-        ~Tree() = default;
+        Tree(T &data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right) {}
+        Tree(const Tree &tree);
+        ~Tree();
 
         // Operator overloads
-        T& operator*();
-        Tree& operator=(const Tree& tree);
-        bool operator>(const Tree& tree) const;
-        bool operator>=(const Tree& tree) const;
-        bool operator<(const Tree& tree) const;
-        bool operator<=(const Tree& tree) const;
-        bool operator==(const Tree& tree) const;
+        T &operator*();
+        Tree &operator=(const Tree &tree);
+        bool operator>(const Tree &tree) const;
+        bool operator>=(const Tree &tree) const;
+        bool operator<(const Tree &tree) const;
+        bool operator<=(const Tree &tree) const;
+        bool operator==(const Tree &tree) const;
 
         // Utility methods
-        Tree* Left() const;
-        Tree* Right() const;
-        int& Height();
-        Tree* LeftLeft(Tree* father);
-        Tree* LeftRight(Tree* father);
-        Tree* RightLeft(Tree* father);
-        Tree* RightRight(Tree* father);
+        Tree *Left() const;
+        Tree *Right() const;
+        int &Height();
+        Tree *LeftLeft(Tree *root);
+        Tree *LeftRight(Tree *root);
+        Tree *RightLeft(Tree *root);
+        Tree *RightRight(Tree *root);
 
         // ! Required functions
-        // Left, Right, Height, operator* overload, LeftLeft, LeftRight, RightLeft, RightRight, assignment operator overload
+        // LeftRight, RightLeft
     };
 }
 

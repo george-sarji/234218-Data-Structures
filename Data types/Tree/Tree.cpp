@@ -1,7 +1,23 @@
 #include "Tree.h"
+#define MAX(left, right) (left > right ? left : right)
 
 namespace structures
 {
+    template <class T>
+    structures::Tree<T>::Tree(const Tree &tree)
+    {
+        data = tree->data;
+        left = tree->left;
+        right = tree->right;
+    }
+
+    template <class T>
+    structures::Tree<T>::~Tree()
+    {
+        delete left;
+        delete right;
+        delete data;
+    }
 
     template <class T>
     Tree<T> *structures::Tree<T>::Left() const
@@ -68,20 +84,57 @@ namespace structures
     }
 
     template <class T>
-    Tree<T> *structures::Tree<T>::LeftLeft(Tree *father)
+    Tree<T> *structures::Tree<T>::LeftLeft(Tree *root)
     {
-        Tree *new_father = father->Left();
-        father->left = new_father->Right();
-        new_father->right = father;
-        return new_father;
+        Tree *new_root = root->Left();
+        root->left = new_root->Right();
+        new_root->right = root;
+
+        root->Height() = MAX((root->Right())->Height(), (root->Left())->Height()) + 1;
+        (new_root->left)->Height() = (new_root->Left())->Height() + 1;
+        new_root->Height() = MAX((new_root->left)->Height(), (new_root->Right())->Height()) + 1;
+
+        return new_root;
     }
 
     template <class T>
-    Tree<T> *structures::Tree<T>::RightRight(Tree *father)
+    Tree<T> *structures::Tree<T>::RightRight(Tree *root)
     {
-        Tree *new_father = father->Right();
-        father->right = new_father->Left();
-        new_father->left = father;
-        return new_father;
+        Tree *new_root = root->Right();
+        root->right = new_root->Left();
+        new_root->left = root;
+        return new_root;
+    }
+
+    template <class T>
+    Tree<T> *structures::Tree<T>::LeftRight(Tree *root)
+    {
+        Tree *new_root = root->left->Right();
+        Tree *tmp_left = new_root->Left();
+        Tree *tmp_right = new_root->Right();
+
+        new_root->left = root->Left();
+        new_root->right = root;
+        (new_root->Left())->right = tmp_left;
+        (new_root->Right())->left = tmp_right;
+
+        return new_root;
+    }
+
+    template <class T>
+    Tree<T> *structures::Tree<T>::RightLeft(Tree *root)
+    {
+        Tree *new_root = root->right->Left();
+        Tree *tmp_left = new_root->Left();
+        Tree *tmp_right = new_root->Right();
+
+        new_root->left = root;
+        new_root->right = root->Right();
+        (new_root->Left())->right = tmp_left;
+        (new_root->Right())->left = tmp_right;
+
+        return new_root;
     }
 }
+
+int main() { return 0; }
