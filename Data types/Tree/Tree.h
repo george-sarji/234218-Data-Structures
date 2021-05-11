@@ -7,13 +7,13 @@ namespace structures
     class Tree
     {
     private:
-        T *data;
+        T data;
         Tree *left;
         Tree *right;
         int& height;
 
     public:
-        Tree(T *data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right) {}
+        Tree(T& data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right) {}
         ~Tree() = default;
 
         // Operator overloads

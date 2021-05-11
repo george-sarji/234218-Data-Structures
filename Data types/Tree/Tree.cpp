@@ -17,4 +17,9 @@ namespace structures
     int& structures::Tree<T>::Height() {
         return this->height;
     }
+
+    template<class T>
+    T& structures::Tree<T>::operator*() {
+        return this->data;
+    }
 }
