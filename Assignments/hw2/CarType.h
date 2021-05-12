@@ -1,3 +1,6 @@
+#ifndef CARTYPE_H_
+#define CARTYPE_H_
+
 #include "CarModel.h"
 
 namespace structures
@@ -25,3 +28,5 @@ namespace structures
         void InitiateModels(const int num);
     };
 }
+
+#endif

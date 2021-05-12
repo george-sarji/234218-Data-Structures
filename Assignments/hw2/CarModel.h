@@ -1,4 +1,5 @@
-
+#ifndef CARMODEL_H_
+#define CARMODEL_H_
 namespace structures
 {
     class CarModel
@@ -25,3 +26,5 @@ namespace structures
         bool operator==(const CarModel& model) const;
     };
 }
+
+#endif;
