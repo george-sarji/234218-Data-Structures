@@ -1,5 +1,5 @@
+#include "CarModel.h"
 #include "CarType.h"
-
 namespace structures
 {
     structures::CarType::~CarType()

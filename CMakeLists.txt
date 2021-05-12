@@ -14,5 +14,7 @@ set(TREE ${TYPES}/Tree)
 
 add_executable(linkedlist ${LINKED_LIST}/LinkedList.cpp)
 add_executable(tree ${TREE}/Tree.cpp)
+add_executable(model ${WET_1}/CarModel.cpp)
+add_executable(type ${WET_1}/CarType.cpp ${WET_1}/CarModel.cpp)
 # add_executable(hw0-part1 Assignments/hw0/part1.c)
 link_directories(.)
