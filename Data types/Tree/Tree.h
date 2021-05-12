@@ -13,9 +13,9 @@ namespace structures
         int &height;
 
     public:
-        Tree(T &data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right) {}
+        Tree(T &data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), height(1) {}
         Tree(const Tree &tree);
-        ~Tree();
+        ~Tree() = default;
 
         // Operator overloads
         T &operator*();
@@ -34,6 +34,11 @@ namespace structures
         Tree *LeftRight(Tree *root);
         Tree *RightLeft(Tree *root);
         Tree *RightRight(Tree *root);
+
+        // Addition/removal functions
+        Tree& addIntersection(T& data);
+        Tree& removeIntersection(T& data);
+        Tree& inorderSuccessor();
 
         // ! Required functions
         // LeftRight, RightLeft
