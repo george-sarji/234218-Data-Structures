@@ -4,11 +4,9 @@
 namespace structures
 {
     template <class T>
-    structures::Tree<T>::Tree(const Tree &tree)
+    structures::Tree<T>::Tree(const Tree &tree) : data(tree->data), left(tree->left), right(tree->right)
     {
-        data = tree->data;
-        left = tree->left;
-        right = tree->right;
+
     }
 
     template <class T>
@@ -26,7 +24,40 @@ namespace structures
     template <class T>
     int &structures::Tree<T>::Height()
     {
+        if (this->left && this->right)
+        {
+            return MAX(this->left->height, this->right->height) + 1;
+        }
+        else if (this->left)
+        {
+            return this->left->height + 1;
+        }
+        else if (this->right)
+        {
+            return this->right->height + 1;
+        }
         return this->height;
+    }
+
+    template <class T>
+    int structures::Tree<T>::getBalanceFactor() const
+    {
+        if (this->left && this->right)
+        {
+            return this->left->height - this->right->height;
+        }
+        else if (!this->left && !this->right)
+        {
+            return 0;
+        }
+        else if (this->left && !this->right)
+        {
+            return this->left->height;
+        }
+        else
+        {
+            return this->right->height
+        }
     }
 
     template <class T>
@@ -82,8 +113,8 @@ namespace structures
         root->left = new_root->right;
         new_root->right = root;
 
-        root->height = MAX((root->right)->height, (root->left)->height) + 1;
-        new_root->height = MAX((new_root->left)->height, (new_root->right)->height) + 1;
+        root->height = root->Height();
+        new_root->height = new_root->Height();
 
         return new_root;
     }
@@ -95,8 +126,8 @@ namespace structures
         root->right = new_root->left;
         new_root->left = root;
 
-        root->height = MAX((root->left)->height, (root->right)->height) + 1;
-        new_root->height = MAX((new_root->left)->height, (new_root->right)->height) + 1;
+        root->height = root->Height();
+        new_root->height = new_root->Height();
 
         return new_root;
     }
@@ -113,9 +144,9 @@ namespace structures
         (new_root->left)->right = tmp_left;
         (new_root->right)->left = tmp_right;
 
-        (new_root->left)->height = MAX(((new_root->left)->left)->height, ((new_root->left)->right)->height) + 1;
-        (new_root->right)->height = MAX(((new_root->right)->left)->height, ((new_root->right)->right)->height) + 1;
-        new_root->height = MAX((new_root->left)->height, (new_root->right)->height) + 1;
+        (new_root->left)->height = new_root->left->Height();
+        (new_root->right)->height = new_root->right->Height();
+        new_root->height = new_root->Height();
 
         return new_root;
     }
@@ -132,9 +163,9 @@ namespace structures
         (new_root->left)->right = tmp_left;
         (new_root->right)->left = tmp_right;
 
-        (new_root->left)->height = MAX(((new_root->left)->left)->height, ((new_root->left)->right)->height) + 1;
-        (new_root->right)->height = MAX(((new_root->right)->left)->height, ((new_root->right)->right)->height) + 1;
-        new_root->height = MAX((new_root->left)->height, (new_root->right)->height) + 1;
+        (new_root->left)->height = new_root->left->Height();
+        (new_root->right)->height = new_root->right->Height();
+        new_root->height = new_root->Height();
 
         return new_root;
     }
@@ -143,19 +174,33 @@ namespace structures
     Tree<T> &structures::Tree<T>::addIntersection(T &new_data)
     {
         // Reached end of recursion, create new leaf.
-        if (this == NULL)
+        if (this == nullptr)
         {
             return new Tree(new_data);
         }
         // Check if the data goes to the right subtree
         if (new_data > this->data)
         {
-            this->right = this->right->addIntersection(new_data);
+            if (this->right)
+            {
+                this->right = this->right->addIntersection(new_data);
+            }
+            else
+            {
+                this->right = new Tree(new_data);
+            }
         }
         // Check if the data goes to the left subtree
         else if (new_data < this->data)
         {
-            this->left = this->left->addIntersection(new_data);
+            if (this->left)
+            {
+                this->left = this->left->addIntersection(new_data);
+            }
+            else
+            {
+                this->left = new Tree(new_data);
+            }
         }
         // AVL does not allow equal keys
         else
@@ -163,25 +208,27 @@ namespace structures
             return this;
         }
 
-        this->height = MAX(this->left->height, this->right->height) + 1;
+        this->height = this->Height();
+        int balance_factor = this->getBalanceFactor();
 
-        int balance_factor = this->left->height - this->right->height;
-
-        // Check the balance for each specific rotation
-        if (balance_factor > 1 && new_data < this->left->data)
-        {
-            // Left Left.
-            return this->RightRight(this);
-        }
-        else if (balance_factor < -1 && new_data > this->right->data)
+        // Check the balance factors for the proper rotations
+        // Left-Left rotation:
+        if (balance_factor > 1 && this->left && this->left->getBalanceFactor() > -1)
         {
             return this->LeftLeft(this);
         }
-        else if (balance_factor > 1 && new_data > this->left->data)
+        // Left-Right rotation:
+        if (balance_factor > 1 && this->left && this->left->getBalanceFactor() < 0)
         {
             return this->LeftRight(this);
         }
-        else if (balance < -1 && new_data < this->right->data)
+        // Right-Right rotation:
+        if (balance_factor < -1 && this->right && this->right->getBalanceFactor() < 1)
+        {
+            return this->RightRight(this);
+        }
+        // Right-Left rotation:
+        if (balance_factor < -1 && this->right && this->right->getBalanceFactor() > 0)
         {
             return this->RightLeft(this);
         }
@@ -190,46 +237,97 @@ namespace structures
     }
 
     template <class T>
-    Tree<T>& structures::Tree<T>::removeIntersection(T& data)
+    Tree<T> &structures::Tree<T>::removeIntersection(T &data)
     {
-        if(!this)
+        if (!this)
         {
             return this;
         }
 
-        if(data < this->data)
+        if (data < this->data)
         {
-            this->left = this->left->removeIntersection(data);
+            if(this->left)
+            {
+                this->left = this->left->removeIntersection(data);
+            }
+            else
+            {
+                return this;
+            }
         }
-        else if(data < this->data)
+        else if (data > this->data)
         {
-            this->right = this->right->removeIntersection(data);
+            if(this->right)
+            {
+                this->right = this->right->removeIntersection(data);
+            }
+            else
+            {
+                return this;
+            }
         }
+        //intersection to delete
         else
         {
             //intersection is a leaf
-            if(this->left == NULL && this->right == NULL)
+            if (this->left == nullptr && this->right == nullptr)
             {
                 delete this;
-                return NULL;
+                return nullptr;
             }
             //intersection has two children
-            else if(this->left != NULL && this->right != NULL)
+            else if (this->left != nullptr && this->right != nullptr)
             {
-                Tree<T>* next = this->inorderSuccessor();
+                Tree<T> *next = this->inorderSuccessor();
                 this->data = next->data;
                 this->right = this->right->removeIntersection(next->data);
             }
+            //intersection has only one child
+            else
+            {
+                Tree<T> *son = this->left ? this->left : this->right;
+                delete this;
+                return son;
+            }
         }
-        
+
+        if (this == nullptr)
+        {
+            return this;
+        }
+
+        this->height = this->Height();
+
+        int balance_factor = this->getBalanceFactor();
+
+        // Check the balance for each specific rotation
+        if (balance_factor > 1 && this->left->getBalanceFactor() >= 0)
+        {
+            // Left Left.
+            return this->LeftLeft(this);
+        }
+        else if (balance_factor < -1 && this->right->getBalanceFactor() <= 0)
+        {
+            return this->RightRight(this);
+        }
+        else if (balance_factor > 1 && this->left->getBalanceFactor() = -1)
+        {
+            return this->LeftRight(this);
+        }
+        else if (balance_factor < -1 && this->right->getBalanceFactor() = 1)
+        {
+            return this->RightLeft(this);
+        }
+
+        return this;
     }
 
     template <class T>
-    Tree<T>& structures::Tree<T>::inorderSuccessor()
-    {   
+    Tree<T> &structures::Tree<T>::inorderSuccessor()
+    {
         Tree<T> current = this->right;
 
-        while(current->left != NULL)
+        while (current->left != nullptr)
         {
             current = current->left;
         }

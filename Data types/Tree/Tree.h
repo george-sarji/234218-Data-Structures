@@ -30,6 +30,7 @@ namespace structures
         Tree *Left() const;
         Tree *Right() const;
         int &Height();
+        int getBalanceFactor() const;
         Tree *LeftLeft(Tree *root);
         Tree *LeftRight(Tree *root);
         Tree *RightLeft(Tree *root);
