@@ -26,8 +26,10 @@ namespace structures
         bool operator<(const Tree &tree) const;
         bool operator<=(const Tree &tree) const;
         bool operator==(const Tree &tree) const;
+        Tree* findData(T data) const;
 
         // Utility methods
+        T* Data() const;
         Tree *Left() const;
         Tree *Right() const;
         int Height();
