@@ -17,6 +17,7 @@ namespace structures
         Tree(T data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), height(1) {}
         Tree(const Tree &tree);
         ~Tree() = default;
+        void clearTree();
 
         // Operator overloads
         T &operator*();
