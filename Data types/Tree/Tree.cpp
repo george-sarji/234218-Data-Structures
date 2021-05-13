@@ -10,6 +10,16 @@ namespace structures
     {
     }
 
+    template<class T>
+    void structures::Tree<T>::clearTree() {
+        if(!this) return;
+        if(this->left)
+            this->left->clearTree();
+        if(this->right)
+            this->right->clearTree();
+        delete this;
+    }
+
     template <class T>
     Tree<T> *structures::Tree<T>::Left() const
     {
@@ -392,5 +402,6 @@ int main()
     root = root->addIntersection(5);
     root = root->removeIntersection(12);
     root->printInOrder();
+    root->clearTree();
     return 0;
 }
