@@ -15,6 +15,8 @@ namespace structures
     public:
         CarType(int id): id(id), max_sales(0), models(nullptr), best_seller(nullptr), num_of_models(0) {}
         ~CarType();
+        CarType(const CarType& car_type) = default;
+        CarType& operator=(const CarType& car_type) = default;
 
         // Parameter functions
         int& Id();

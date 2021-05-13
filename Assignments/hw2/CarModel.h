@@ -11,6 +11,7 @@ namespace structures
         CarModel() = default;
         CarModel(int id): id(id), complaints(0), grade(0), sales(0) {}
         ~CarModel() = default;
+        CarModel(const CarModel& model) = default;
 
         // Parameter functions
         int& Sales();
@@ -19,6 +20,7 @@ namespace structures
         int& Id();
 
         // Operator overload
+        CarModel& operator=(const CarModel& model) = default;
         bool operator>(const CarModel& model) const;
         bool operator>=(const CarModel& model) const;
         bool operator<(const CarModel& model) const;
