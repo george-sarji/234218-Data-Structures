@@ -179,6 +179,10 @@ namespace structures
         {
             return new Tree(new_data);
         }
+        else if(this->data == T()) {
+            this->data = new_data;
+            return this;
+        }
         // Check if the data goes to the right subtree
         if (new_data > this->data)
         {
@@ -361,7 +365,7 @@ namespace structures
 
 int main()
 {
-    structures::Tree<int> *root = new structures::Tree<int>(20);
+    structures::Tree<int> *root = new structures::Tree<int>();
     /*correct output for the four next cases
 	1 BF: 0 Height: 0
 	2 BF: 0 Height: 1
@@ -370,7 +374,7 @@ int main()
     //basic LL root change
     // root = root->addIntersection(3);
     // root = root->addIntersection(2);
-    // root = root->addIntersection(1);
+    root = root->addIntersection(20);
     root = root->addIntersection(5);
     root = root->addIntersection(4);
     root = root->addIntersection(9);

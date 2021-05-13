@@ -13,6 +13,7 @@ namespace structures
         int height;
 
     public:
+        Tree() = default;
         Tree(T data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), height(1) {}
         Tree(const Tree &tree);
         ~Tree() = default;
@@ -39,9 +40,9 @@ namespace structures
         void printPreOrder() const;
 
         // Addition/removal functions
-        Tree* addIntersection(T data);
-        Tree* removeIntersection(T data);
-        Tree* inorderSuccessor();
+        Tree *addIntersection(T data);
+        Tree *removeIntersection(T data);
+        Tree *inorderSuccessor();
 
         // ! Required functions
         // LeftRight, RightLeft
