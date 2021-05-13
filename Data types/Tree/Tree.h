@@ -10,10 +10,10 @@ namespace structures
         T data;
         Tree *left;
         Tree *right;
-        int &height;
+        int height;
 
     public:
-        Tree(T &data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), height(1) {}
+        Tree(T data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), height(1) {}
         Tree(const Tree &tree);
         ~Tree() = default;
 
@@ -29,17 +29,19 @@ namespace structures
         // Utility methods
         Tree *Left() const;
         Tree *Right() const;
-        int &Height();
+        int Height();
         int getBalanceFactor() const;
         Tree *LeftLeft(Tree *root);
         Tree *LeftRight(Tree *root);
         Tree *RightLeft(Tree *root);
         Tree *RightRight(Tree *root);
+        void printInOrder() const;
+        void printPreOrder() const;
 
         // Addition/removal functions
-        Tree& addIntersection(T& data);
-        Tree& removeIntersection(T& data);
-        Tree& inorderSuccessor();
+        Tree* addIntersection(T data);
+        Tree* removeIntersection(T data);
+        Tree* inorderSuccessor();
 
         // ! Required functions
         // LeftRight, RightLeft
