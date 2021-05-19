@@ -11,12 +11,6 @@ namespace structures
     }
 
     template <class T>
-    structures::Tree<T>::~Tree()
-    {
-        this->clearTree();
-    }
-
-    template <class T>
     void structures::Tree<T>::clearTree()
     {
         if (!this)
@@ -41,7 +35,7 @@ namespace structures
     }
 
     template <class T>
-    T *structures::Tree<T>::Data() const
+    T *structures::Tree<T>::Data() 
     {
         return &this->data;
     }
@@ -140,9 +134,16 @@ namespace structures
         new_root->right = root;
 
         new_root->parent = root->parent;
-        root->parent = new_root;
-        (root->left)->parent = root;
-        (root->right)->parent = root;
+        (new_root->left)->parent = new_root;
+        (new_root->right)->parent = new_root;
+        if((new_root->left)->left)
+        {
+            ((new_root->left)->left)->parent = new_root->left;
+        }
+        if((new_root->left)->right)
+        {
+            ((new_root->left)->right)->parent = new_root->left;
+        }
 
         root->height = root->Height();
         new_root->height = new_root->Height();
@@ -158,9 +159,16 @@ namespace structures
         new_root->left = root;
 
         new_root->parent = root->parent;
-        root->parent = new_root;
-        (root->left)->parent = root;
-        (root->right)->parent = root;
+        (new_root->left)->parent = new_root;
+        (new_root->right)->parent = new_root;
+        if((new_root->right)->left)
+        {
+            ((new_root->right)->left)->parent = new_root->left;
+        }
+        if((new_root->right)->right)
+        {
+            ((new_root->right)->right)->parent = new_root->left;
+        }
 
         root->height = root->Height();
         new_root->height = new_root->Height();
@@ -183,10 +191,22 @@ namespace structures
         new_root->parent = root->parent;
         (new_root->left)->parent = new_root;
         (new_root->right)->parent = new_root;
-        ((new_root->left)->left)->parent = new_root->left;
-        ((new_root->left)->right)->parent = new_root->left;
-        ((new_root->right)->left)->parent = new_root->right;
-        ((new_root->right)->right)->parent = new_root->right;
+        if(new_root->left->left)
+        {
+            ((new_root->left)->left)->parent = new_root->left;
+        }
+        if(new_root->left->right)
+        {
+            ((new_root->left)->right)->parent = new_root->left;
+        }
+        if(new_root->right->left)
+        {
+            ((new_root->right)->left)->parent = new_root->right;
+        }
+        if(new_root->right->right)
+        {
+            ((new_root->right)->right)->parent = new_root->right;
+        }
 
         (new_root->left)->height = new_root->left->Height();
         (new_root->right)->height = new_root->right->Height();
@@ -210,10 +230,22 @@ namespace structures
         new_root->parent = root->parent;
         (new_root->left)->parent = new_root;
         (new_root->right)->parent = new_root;
-        ((new_root->left)->left)->parent = new_root->left;
-        ((new_root->left)->right)->parent = new_root->left;
-        ((new_root->right)->left)->parent = new_root->right;
-        ((new_root->right)->right)->parent = new_root->right;
+        if(new_root->left->left)
+        {
+            ((new_root->left)->left)->parent = new_root->left;
+        }
+        if(new_root->left->right)
+        {
+            ((new_root->left)->right)->parent = new_root->left;
+        }
+        if(new_root->right->left)
+        {
+            ((new_root->right)->left)->parent = new_root->right;
+        }
+        if(new_root->right->right)
+        {
+            ((new_root->right)->right)->parent = new_root->right;
+        }
 
         (new_root->left)->height = new_root->left->Height();
         (new_root->right)->height = new_root->right->Height();
@@ -455,7 +487,21 @@ namespace structures
         return nullptr;
     }
 
+    template<class T>
+    void structures::Tree<T>::printParent() const
+    {
+        if((this->parent) == nullptr)
+        {
+            std::cout << "no parent" << std::endl;
+            return;
+        }
+
+        std::cout << "parent is:" << *((this->parent)->Data()) << std::endl;
+        return;
+    }
+
 }
+
 
 int main()
 {
@@ -479,13 +525,37 @@ int main()
     // root = root->addIntersection(1);
     // root = root->addIntersection(2);
     root->printInOrder();
+    root->printParent();
+    root->Left()->printParent();
+    root->Right()->printParent();
+    root->Left()->Left()->printParent();
+    root->Right()->Left()->printParent();
+    root->Right()->Right()->printParent();
+
+
     std::cout << std::endl;
     root = root->removeIntersection(5);
     root->printInOrder();
     std::cout << std::endl;
     root = root->addIntersection(5);
+
+    root->printParent();
+    root->Left()->printParent();
+    root->Right()->printParent();
+    root->Left()->Right()->printParent();
+    root->Right()->Left()->printParent();
+    root->Right()->Right()->printParent();
+
     root = root->removeIntersection(12);
     root->printInOrder();
-    // root->clearTree();
+
+    root->printParent();
+    root->Left()->printParent();
+    root->Right()->printParent();
+    root->Left()->Right()->printParent();
+    root->Right()->Right()->printParent();
+
+    root->clearTree();
+
     return 0;
 }
