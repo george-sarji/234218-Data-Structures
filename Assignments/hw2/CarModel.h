@@ -19,6 +19,7 @@ namespace structures
         int& Grade();
         int& Id();
         bool isBetterModel(const CarModel& model) const;
+        bool isBetterSeller(const CarModel&) const;
 
         // Operator overload
         CarModel& operator=(const CarModel& model) = default;
