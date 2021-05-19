@@ -47,7 +47,7 @@ namespace structures
         Tree *RightRight(Tree *root);
         void printInOrder() const;
         void printPreOrder() const;
-        Tree *getSmallest() const;
+        Tree *getSmallest();
 
         // Addition/removal functions
         Tree *addIntersection(T data);
@@ -556,7 +556,7 @@ namespace structures
     }
 
     template <class T>
-    Tree<T> *structures::Tree<T>::getSmallest() const
+    Tree<T> *structures::Tree<T>::getSmallest()
     {
         if (!this)
         {
