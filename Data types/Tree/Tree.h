@@ -31,7 +31,7 @@ namespace structures
         Tree* findData(T data) const;
 
         // Utility methods
-        T* Data() const;
+        T* Data();
         Tree *Left() const;
         Tree *Right() const;
         int Height();
@@ -50,6 +50,8 @@ namespace structures
 
         // ! Required functions
         // LeftRight, RightLeft
+
+        void printParent() const;
     };
 }
 

@@ -35,7 +35,7 @@ namespace structures
     }
 
     template <class T>
-    T *structures::Tree<T>::Data() const
+    T *structures::Tree<T>::Data() 
     {
         return &this->data;
     }
@@ -487,7 +487,21 @@ namespace structures
         return nullptr;
     }
 
+    template<class T>
+    void structures::Tree<T>::printParent() const
+    {
+        if((this->parent) == nullptr)
+        {
+            std::cout << "no parent" << std::endl;
+            return;
+        }
+
+        std::cout << "parent is:" << *((this->parent)->Data()) << std::endl;
+        return;
+    }
+
 }
+
 
 int main()
 {
@@ -511,13 +525,37 @@ int main()
     // root = root->addIntersection(1);
     // root = root->addIntersection(2);
     root->printInOrder();
+    root->printParent();
+    root->Left()->printParent();
+    root->Right()->printParent();
+    root->Left()->Left()->printParent();
+    root->Right()->Left()->printParent();
+    root->Right()->Right()->printParent();
+
+
     std::cout << std::endl;
     root = root->removeIntersection(5);
     root->printInOrder();
     std::cout << std::endl;
     root = root->addIntersection(5);
+
+    root->printParent();
+    root->Left()->printParent();
+    root->Right()->printParent();
+    root->Left()->Right()->printParent();
+    root->Right()->Left()->printParent();
+    root->Right()->Right()->printParent();
+
     root = root->removeIntersection(12);
     root->printInOrder();
+
+    root->printParent();
+    root->Left()->printParent();
+    root->Right()->printParent();
+    root->Left()->Right()->printParent();
+    root->Right()->Right()->printParent();
+
     root->clearTree();
+
     return 0;
 }
