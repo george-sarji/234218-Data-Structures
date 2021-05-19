@@ -10,12 +10,20 @@ namespace structures
     {
     }
 
-    template<class T>
-    void structures::Tree<T>::clearTree() {
-        if(!this) return;
-        if(this->left)
+    template <class T>
+    structures::Tree<T>::~Tree()
+    {
+        this->clearTree();
+    }
+
+    template <class T>
+    void structures::Tree<T>::clearTree()
+    {
+        if (!this)
+            return;
+        if (this->left)
             this->left->clearTree();
-        if(this->right)
+        if (this->right)
             this->right->clearTree();
         delete this;
     }
