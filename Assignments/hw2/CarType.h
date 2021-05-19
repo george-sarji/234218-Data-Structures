@@ -24,6 +24,14 @@ namespace structures
         CarModel& bestSeller();
         CarModel* Models();
 
+        // Operator overloads
+        bool operator>(const CarType) const;
+        bool operator>=(const CarType) const;
+        bool operator<(const CarType) const;
+        bool operator<=(const CarType) const;
+        bool operator==(const CarType) const;
+
+
         // Utility functions
         void AddModel(CarModel& new_model);
         void RemoveModel(const int id);

@@ -28,6 +28,31 @@ namespace structures
         return this->models;
     }
 
+    bool structures::CarType::operator>(const CarType type) const
+    {
+        return this->id > type.id;
+    }
+
+    bool structures::CarType::operator>=(const CarType type) const
+    {
+        return this->id >= type.id;
+    }
+
+    bool structures::CarType::operator<(const CarType type) const
+    {
+        return this->id < type.id;
+    }
+
+    bool structures::CarType::operator<=(const CarType type) const
+    {
+        return this->id <= type.id;
+    }
+
+    bool structures::CarType::operator==(const CarType type) const
+    {
+        return this->id == type.id;
+    }
+
     void structures::CarType::AddModel(CarModel &new_model)
     {
         if (new_model.Id() > this->num_of_models)
@@ -62,7 +87,7 @@ namespace structures
         this->num_of_models = num;
         for (int i = 0; i < num; i++)
         {
-            CarModel *temp = new CarModel(i);
+            CarModel *temp = new CarModel(i, this->id);
             this->AddModel(*temp);
         }
     }
