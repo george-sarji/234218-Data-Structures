@@ -1,16 +1,172 @@
 #include "CarDealershipManager.h"
-
+#include "Exception.h"
+#include "TreeException.h"
 
 namespace structures
 {
 
-    structures::CarDealershipManager::CarDealershipManager()
+    structures::CarDealershipManager::CarDealershipManager() : total_models(0), bestModel(nullptr),
+                                                               sold_models(nullptr), non_sold_models(nullptr)
     {
+        types = new Tree<CarType>();
+
+        try
+        {
+            sold_models = new Tree<CarModel>();
+        }
+        catch (const std::bad_alloc &e)
+        {
+            delete types;
+            throw MemoryError();
+        }
+
+        try
+        {
+            non_sold_models = new Tree<TypeNode>();
+        }
+        catch (const std::bad_alloc &e)
+        {
+            delete types;
+            delete sold_models;
+            throw MemoryError();
+        }
     }
 
     void CarDealershipManager::AddCarType(int typeID, int numModels)
     {
+        if (typeID <= 0 || numModels <= 0)
+        {
+            throw InvalidInput();
+        }
+        CarType *newType;
+        try
+        {
+            // Allocate a new car type
+            newType = new CarType(typeID);
+            // Add the models for the car type.
+            newType->InitiateModels(numModels);
+        }
+        catch (const std::bad_alloc &e)
+        {
+            if (newType != nullptr)
+            {
+                delete newType;
+            }
+            throw MemoryError();
+        }
+        try
+        {
+            // Add the type to the types tree.
+            this->types = this->types->addIntersection(*newType);
+        }
+        catch (const structures::TreeException &error)
+        {
+            // We have a similar type already in the tree. Throw a failure.
+            if (error.errorType() == ALREADY_EXISTS)
+            {
+                throw FailureError();
+            }
+        }
+        // We need to add to the non-sold models tree.
+        TypeNode *node;
+        try
+        {
+            node = new TypeNode(typeID, numModels);
+            this->non_sold_models = this->non_sold_models->addIntersection(*node);
+        }
+        catch (const std::bad_alloc &e)
+        {
+            // We have a memory error. Release everything and throw a memory error.
+            this->types = this->types->removeIntersection(*newType);
+            delete newType;
+            if (node != nullptr)
+                this->non_sold_models = this->non_sold_models->removeIntersection(*node);
+            delete node;
+            throw MemoryError();
+        }
+        // Increase the number of models.
+        this->total_models += numModels;
+        // Update the global variables.
+        if (this->smallest_non_sold_type == nullptr || this->smallest_non_sold_type > node)
+        {
+            this->smallest_non_sold_type = node;
+        }
+    }
 
+    void CarDealershipManager::RemoveCarType(int typeID)
+    {
+        if (typeID <= 0)
+            throw InvalidInput();
+        CarType *temp;
+        Tree<CarType> *vertex;
+        bool all_sold = false;
+        try
+        {
+            temp = new CarType(typeID);
+            vertex = this->types->findData(*temp);
+        }
+        catch (const structures::TreeException &e)
+        {
+            if (e.errorType() == DOESNT_EXIST)
+            {
+                throw FailureError();
+            }
+        }
+        int total_models = vertex->Data()->numOfModels();
+        // We found the relevant car type. Start removing the car models.
+        // Get the relevant car type in the non-sold models, if it exists already.
+        Tree<TypeNode> *typeNodeTree;
+        try
+        {
+            typeNodeTree = this->non_sold_models->findData(*(new TypeNode(typeID)));
+        }
+        catch (const TreeException &e)
+        {
+            if (e.errorType() == DOESNT_EXIST)
+            {
+                all_sold = true;
+            }
+        }
+        for (int i = 0; i < total_models; i++)
+        {
+            CarModel current = vertex->Data()->Models()[i];
+            // Check if vehicle has already been sold once.
+            if (current.Sales() != 0)
+            {
+                // Check in the sold models.
+                this->sold_models->removeIntersection(current);
+            }
+            else if (all_sold)
+            {
+                // We have something problematic. Throw an error.
+                throw Exception();
+            }
+            else
+            {
+                // There shouldn't be an error. Remove the current car model.
+                typeNodeTree->Data()->getModels()->removeIntersection(current);
+            }
+        }
+        // We can now remove the type itself.
+        try
+        {
+            // Remove the car type from the non-sold tree
+            this->non_sold_models->removeIntersection(*(typeNodeTree->Data()));
+            // Remove the car type from the types tree
+            this->types = this->types->removeIntersection(*(vertex->Data()));
+        }
+        catch (const TreeException &e)
+        {
+            if (e.errorType() == DOESNT_EXIST)
+            {
+                // We have a problem. Throw a general error, shouldn't arrive here logically.
+                throw Exception();
+            }
+        }
+        // Remove from the total models.
+        this->total_models -= total_models;
+        Tree<TypeNode> *newSmallest = this->non_sold_models->getSmallest();
+        this->smallest_non_sold_type = (newSmallest != nullptr) ? newSmallest->Data() : nullptr;
     }
 
     void CarDealershipManager::RemoveCarType(int typeID)
