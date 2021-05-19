@@ -94,6 +94,12 @@ namespace structures
         {
             CarModel *temp = new CarModel(i, this->id);
             this->AddModel(*temp);
+            // Check if we have the smallest model ID.
+            if (i == 0)
+            {
+                // Set the best seller to this model.
+                this->best_seller = temp;
+            }
         }
     }
 }
