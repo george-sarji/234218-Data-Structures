@@ -6,7 +6,7 @@
 namespace structures
 {
     template <class T>
-    structures::Tree<T>::Tree(const Tree &tree) : data(tree->data), left(tree->left), right(tree->right)
+    structures::Tree<T>::Tree(const Tree &tree) : data(tree->data), left(tree->left), right(tree->right), parent(tree->parent)
     {
     }
 
@@ -90,6 +90,7 @@ namespace structures
         this->left = tree->left;
         this->right = tree->right;
         this->height = tree->height;
+        this->parent = tree->parent;
         return this;
     }
 
@@ -130,6 +131,11 @@ namespace structures
         root->left = new_root->right;
         new_root->right = root;
 
+        new_root->parent = root->parent;
+        root->parent = new_root;
+        (root->left)->parent = root;
+        (root->right)->parent = root;
+
         root->height = root->Height();
         new_root->height = new_root->Height();
 
@@ -142,6 +148,11 @@ namespace structures
         Tree *new_root = root->right;
         root->right = new_root->left;
         new_root->left = root;
+
+        new_root->parent = root->parent;
+        root->parent = new_root;
+        (root->left)->parent = root;
+        (root->right)->parent = root;
 
         root->height = root->Height();
         new_root->height = new_root->Height();
@@ -161,6 +172,14 @@ namespace structures
         (new_root->left)->right = tmp_left;
         (new_root->right)->left = tmp_right;
 
+        new_root->parent = root->parent;
+        (new_root->left)->parent = new_root;
+        (new_root->right)->parent = new_root;
+        ((new_root->left)->left)->parent = new_root->left;
+        ((new_root->left)->right)->parent = new_root->left;
+        ((new_root->right)->left)->parent = new_root->right;
+        ((new_root->right)->right)->parent = new_root->right;
+
         (new_root->left)->height = new_root->left->Height();
         (new_root->right)->height = new_root->right->Height();
         new_root->height = new_root->Height();
@@ -179,6 +198,14 @@ namespace structures
         new_root->right = root->right;
         (new_root->left)->right = tmp_left;
         (new_root->right)->left = tmp_right;
+
+        new_root->parent = root->parent;
+        (new_root->left)->parent = new_root;
+        (new_root->right)->parent = new_root;
+        ((new_root->left)->left)->parent = new_root->left;
+        ((new_root->left)->right)->parent = new_root->left;
+        ((new_root->right)->left)->parent = new_root->right;
+        ((new_root->right)->right)->parent = new_root->right;
 
         (new_root->left)->height = new_root->left->Height();
         (new_root->right)->height = new_root->right->Height();
@@ -214,6 +241,7 @@ namespace structures
             {
                 this->right = new Tree(new_data);
             }
+            (this->right)->parent = this;
         }
         // Check if the data goes to the left subtree
         else if (new_data < this->data)
@@ -228,6 +256,7 @@ namespace structures
             {
                 this->left = new Tree(new_data);
             }
+            (this->left)->parent = this;
         }
         // AVL does not allow equal keys, don't add.
         else
@@ -320,6 +349,7 @@ namespace structures
             else
             {
                 Tree<T> *son = this->left ? this->left : this->right;
+                son->parent = this->parent;
                 delete this;
                 return son;
             }
