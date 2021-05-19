@@ -2,6 +2,11 @@
 
 namespace structures
 {
+    structures::TypeNode::TypeNode() : type_id(int()), smallest_model(nullptr),
+                                       models(new Tree<CarModel>())
+    {
+    }
+
     structures::TypeNode::~TypeNode()
     {
     }
@@ -9,10 +14,6 @@ namespace structures
     structures::TypeNode::TypeNode(int type_id, int num_of_models)
     {
         this->models = new Tree<CarModel>();
-        if (this->models == nullptr)
-        {
-            return;
-        }
         this->smallest_model = nullptr;
         // Initiate the models array.
         for (int i = 0; i < num_of_models; i++)
@@ -20,6 +21,8 @@ namespace structures
             CarModel *temp = new CarModel(i, this->type_id);
             this->models = this->models->addIntersection(*temp);
         }
+        // Update the smallest model.
+        this->smallest_model = this->models->getSmallest()->Data();
     }
 
     bool structures::TypeNode::operator>(const TypeNode &node) const

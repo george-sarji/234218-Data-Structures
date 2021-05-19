@@ -9,11 +9,12 @@ namespace structures
     {
     private:
         int type_id;
-        structures::Tree<CarModel> *models;
+        Tree<structures::CarModel> *models;
         CarModel *smallest_model;
 
     public:
-        TypeNode(int type_id, int num_of_models);
+        TypeNode();
+        TypeNode(int type_id, int num_of_models = 0);
         ~TypeNode();
 
         // Operator overloads
