@@ -10,13 +10,15 @@ namespace structures
         T data;
         Tree *left;
         Tree *right;
+        Tree* parent;
         int height;
 
     public:
         Tree() = default;
-        Tree(T data, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), height(1) {}
+        Tree(T data, Tree* parent = nullptr, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), parent(parent), height(1) {}
         Tree(const Tree &tree);
         ~Tree() = default;
+        void clearTree();
 
         // Operator overloads
         T &operator*();
