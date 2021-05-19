@@ -14,6 +14,7 @@ namespace structures
     public:
         Exception() = default;
         ~Exception() = default;
+        virtual const ERRORS errorType() const noexcept;
     };
 
     class MemoryError : public Exception
