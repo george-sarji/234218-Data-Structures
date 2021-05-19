@@ -13,6 +13,7 @@ namespace structures
         CarModel *models;
 
     public:
+        CarType() : id(int()), max_sales(int()), num_of_models(int()), best_seller(nullptr), models(nullptr) {}
         CarType(int id): id(id), max_sales(0), models(nullptr), best_seller(nullptr), num_of_models(0) {}
         ~CarType();
         CarType(const CarType& car_type) = default;
@@ -23,6 +24,7 @@ namespace structures
         int& Max_sales();
         CarModel& bestSeller();
         CarModel* Models();
+        int numOfModels() const;
 
         // Operator overloads
         bool operator>(const CarType) const;

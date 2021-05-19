@@ -28,6 +28,11 @@ namespace structures
         return this->models;
     }
 
+    int structures::CarType::numOfModels() const
+    {
+        return this->num_of_models;
+    }
+
     bool structures::CarType::operator>(const CarType type) const
     {
         return this->id > type.id;
