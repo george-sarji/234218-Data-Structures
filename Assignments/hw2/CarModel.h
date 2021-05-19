@@ -5,11 +5,11 @@ namespace structures
     class CarModel
     {
     private:
-        int sales, complaints, grade, id;
+        int sales, complaints, grade, id, type;
 
     public:
         CarModel() = default;
-        CarModel(int id): id(id), complaints(0), grade(0), sales(0) {}
+        CarModel(int id, int type): id(id), complaints(0), grade(0), sales(0), type(type) {}
         ~CarModel() = default;
         CarModel(const CarModel& model) = default;
 
@@ -18,6 +18,7 @@ namespace structures
         int& Complaints();
         int& Grade();
         int& Id();
+        bool isBetterModel(const CarModel& model) const;
 
         // Operator overload
         CarModel& operator=(const CarModel& model) = default;

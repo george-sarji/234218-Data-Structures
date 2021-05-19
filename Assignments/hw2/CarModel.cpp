@@ -22,6 +22,19 @@ namespace structures
         return this->id;
     }
 
+    bool structures::CarModel::isBetterModel(const CarModel &model) const
+    {
+        if (this->grade == model.grade)
+        {
+            if (this->type == model.type)
+            {
+                return this->id < model.id;
+            }
+            return this->type < model.type;
+        }
+        return this->grade > model.grade;
+    }
+
     bool structures::CarModel::operator>(const CarModel &model) const
     {
         return this->id > model.id;
