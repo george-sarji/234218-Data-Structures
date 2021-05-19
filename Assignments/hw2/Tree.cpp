@@ -486,6 +486,6 @@ int main()
     root = root->addIntersection(5);
     root = root->removeIntersection(12);
     root->printInOrder();
-    root->clearTree();
+    // root->clearTree();
     return 0;
 }
