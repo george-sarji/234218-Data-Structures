@@ -67,6 +67,12 @@ namespace structures
                 throw FailureError();
             }
         }
+        // Check if the best seller is better than the global best seller.
+        if (newType->bestSeller().isBetterSeller(*this->bestModel))
+        {
+            // We have a better seller. Change the best seller.
+            this->bestModel = &newType->bestSeller();
+        }
         // We need to add to the non-sold models tree.
         TypeNode *node;
         try
@@ -181,12 +187,95 @@ namespace structures
 
     void CarDealershipManager::MakeComplaint(int typeID, int modelID, int t)
     {
+        // Check if the initial parameters are correct.
+        if (modelID < 0 || typeID <= 0 || t <= 0)
+            throw InvalidInput();
+        // Lets check for the type ID.
+        Tree<CarType> *typeNode;
+        try
+        {
+            typeNode = this->types->findData(*(new CarType(typeID)));
+        }
+        catch (const TreeException &e)
+        {
+            // We don't have a type with the given ID. Throw an error.
+            if (e.errorType() == DOESNT_EXIST)
+            {
+                throw FailureError();
+            }
+        }
+        // We have the type node. Check if the model ID is appropriate.
+        if (typeNode->Data()->numOfModels() <= modelID)
+            throw FailureError();
+        // Check for the model in the models tree, according to the sales.
+        CarModel currentModel = typeNode->Data()->Models()[modelID];
+        if (currentModel.Sales() != 0)
+        {
+            // This model has been sold already. Check the sold vehicles tree.
+            Tree<CarModel> *requested_model;
+            try
+            {
+                requested_model = this->sold_models->findData(currentModel);
+            }
+            catch (const TreeException &e)
+            {
+                if (e.errorType() == DOESNT_EXIST)
+                {
+                    // Model does not exist in the sold models.
+                    throw FailureError();
+                }
+            }
+            // We have the requested model. Decrease the grade accordingly.
+            currentModel.Grade() -= (10 / t);
+            // Increase the complaints counter
+            currentModel.Complaints()++;
+            // Remove the model from the sold trees.
+            this->sold_models = this->sold_models->removeIntersection(*requested_model->Data());
+            // Add the new model.
+            this->sold_models = this->sold_models->addIntersection(currentModel);
+            // We can leave now.
 
+            // TODO: Update the global variable for the best models, and for the smallest model in sold models.
+        }
     }
 
     void CarDealershipManager::GetBestSellerModelByType(int typeID, int *modelID)
     {
-
+        // Check if type ID is proper
+        if (typeID < 0)
+            throw InvalidInput();
+        // Check if type ID is zero, for global variable.
+        if (typeID == 0)
+        {
+            if (bestModel == nullptr)
+            {
+                // No best model; system is empty.
+                throw FailureError();
+            }
+            // There is a best model. Give the model ID and exit.
+            *modelID = bestModel->Id();
+            return;
+        }
+        // It's not a global request. Search for the given type ID.
+        else
+        {
+            Tree<CarType> *vertex;
+            try
+            {
+                vertex = this->types->findData(*(new CarType(typeID)));
+            }
+            catch (const TreeException &e)
+            {
+                if (e.errorType() == DOESNT_EXIST)
+                {
+                    // The requested type ID does not exist. Give a failure.
+                    throw FailureError();
+                }
+            }
+            // The type that was requested is available. Return its best model.
+            *modelID = vertex->Data()->bestSeller().Id();
+            return;
+        }
     }
 
     void CarDealershipManager::GetWorstModels(int numOfModels, int *types, int *models)
