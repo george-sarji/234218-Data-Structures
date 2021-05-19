@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include "TreeException.h"
 namespace structures
 {
     #define MAX(left, right) (left > right ? left : right)
@@ -14,12 +15,12 @@ namespace structures
         T data;
         Tree *left;
         Tree *right;
-        Tree* parent;
+        Tree *parent;
         int height;
 
     public:
         Tree() = default;
-        Tree(T data, Tree* parent = nullptr, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), parent(parent), height(1) {}
+        Tree(T data, Tree *parent = nullptr, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), parent(parent), height(1) {}
         Tree(const Tree &tree);
         ~Tree() = default;
         void clearTree();
@@ -32,10 +33,10 @@ namespace structures
         bool operator<(const Tree &tree) const;
         bool operator<=(const Tree &tree) const;
         bool operator==(const Tree &tree) const;
-        Tree* findData(T data) const;
+        Tree *findData(T data) const;
 
         // Utility methods
-        T* Data();
+        T *Data();
         Tree *Left() const;
         Tree *Right() const;
         int Height();
@@ -46,6 +47,7 @@ namespace structures
         Tree *RightRight(Tree *root);
         void printInOrder() const;
         void printPreOrder() const;
+        Tree *getSmallest() const;
 
         // Addition/removal functions
         Tree *addIntersection(T data);
@@ -189,11 +191,11 @@ namespace structures
         new_root->parent = root->parent;
         (new_root->left)->parent = new_root;
         (new_root->right)->parent = new_root;
-        if((new_root->left)->left)
+        if ((new_root->left)->left)
         {
             ((new_root->left)->left)->parent = new_root->left;
         }
-        if((new_root->left)->right)
+        if ((new_root->left)->right)
         {
             ((new_root->left)->right)->parent = new_root->left;
         }
@@ -214,11 +216,11 @@ namespace structures
         new_root->parent = root->parent;
         (new_root->left)->parent = new_root;
         (new_root->right)->parent = new_root;
-        if((new_root->right)->left)
+        if ((new_root->right)->left)
         {
             ((new_root->right)->left)->parent = new_root->left;
         }
-        if((new_root->right)->right)
+        if ((new_root->right)->right)
         {
             ((new_root->right)->right)->parent = new_root->left;
         }
@@ -244,19 +246,19 @@ namespace structures
         new_root->parent = root->parent;
         (new_root->left)->parent = new_root;
         (new_root->right)->parent = new_root;
-        if(new_root->left->left)
+        if (new_root->left->left)
         {
             ((new_root->left)->left)->parent = new_root->left;
         }
-        if(new_root->left->right)
+        if (new_root->left->right)
         {
             ((new_root->left)->right)->parent = new_root->left;
         }
-        if(new_root->right->left)
+        if (new_root->right->left)
         {
             ((new_root->right)->left)->parent = new_root->right;
         }
-        if(new_root->right->right)
+        if (new_root->right->right)
         {
             ((new_root->right)->right)->parent = new_root->right;
         }
@@ -283,19 +285,19 @@ namespace structures
         new_root->parent = root->parent;
         (new_root->left)->parent = new_root;
         (new_root->right)->parent = new_root;
-        if(new_root->left->left)
+        if (new_root->left->left)
         {
             ((new_root->left)->left)->parent = new_root->left;
         }
-        if(new_root->left->right)
+        if (new_root->left->right)
         {
             ((new_root->left)->right)->parent = new_root->left;
         }
-        if(new_root->right->left)
+        if (new_root->right->left)
         {
             ((new_root->right)->left)->parent = new_root->right;
         }
-        if(new_root->right->right)
+        if (new_root->right->right)
         {
             ((new_root->right)->right)->parent = new_root->right;
         }
@@ -354,7 +356,7 @@ namespace structures
         // AVL does not allow equal keys, don't add.
         else
         {
-            return this;
+            throw AlreadyExists();
         }
 
         this->height = this->Height();
@@ -450,7 +452,7 @@ namespace structures
         // Nothing to remove, exit.
         if (this == nullptr)
         {
-            return this;
+            throw DoesntExist();
         }
 
         this->height = this->Height();
@@ -537,13 +539,13 @@ namespace structures
             return this->left->findData(data);
         }
         // Shouldn't reach here
-        return nullptr;
+        throw DoesntExist();
     }
 
-    template<class T>
+    template <class T>
     void structures::Tree<T>::printParent() const
     {
-        if((this->parent) == nullptr)
+        if ((this->parent) == nullptr)
         {
             std::cout << "no parent" << std::endl;
             return;
@@ -551,6 +553,20 @@ namespace structures
 
         std::cout << "parent is:" << *((this->parent)->Data()) << std::endl;
         return;
+    }
+
+    template <class T>
+    Tree<T> *structures::Tree<T>::getSmallest() const
+    {
+        if (!this)
+        {
+            return nullptr;
+        }
+        if (this->left)
+        {
+            return this->left->getSmallest();
+        }
+        return this;
     }
 
 }
