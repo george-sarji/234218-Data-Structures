@@ -11,12 +11,6 @@ namespace structures
     }
 
     template <class T>
-    structures::Tree<T>::~Tree()
-    {
-        this->clearTree();
-    }
-
-    template <class T>
     void structures::Tree<T>::clearTree()
     {
         if (!this)
@@ -140,9 +134,16 @@ namespace structures
         new_root->right = root;
 
         new_root->parent = root->parent;
-        root->parent = new_root;
-        (root->left)->parent = root;
-        (root->right)->parent = root;
+        (new_root->left)->parent = new_root;
+        (new_root->right)->parent = new_root;
+        if((new_root->left)->left)
+        {
+            ((new_root->left)->left)->parent = new_root->left;
+        }
+        if((new_root->left)->right)
+        {
+            ((new_root->left)->right)->parent = new_root->left;
+        }
 
         root->height = root->Height();
         new_root->height = new_root->Height();
@@ -158,9 +159,16 @@ namespace structures
         new_root->left = root;
 
         new_root->parent = root->parent;
-        root->parent = new_root;
-        (root->left)->parent = root;
-        (root->right)->parent = root;
+        (new_root->left)->parent = new_root;
+        (new_root->right)->parent = new_root;
+        if((new_root->right)->left)
+        {
+            ((new_root->right)->left)->parent = new_root->left;
+        }
+        if((new_root->right)->right)
+        {
+            ((new_root->right)->right)->parent = new_root->left;
+        }
 
         root->height = root->Height();
         new_root->height = new_root->Height();
@@ -183,10 +191,22 @@ namespace structures
         new_root->parent = root->parent;
         (new_root->left)->parent = new_root;
         (new_root->right)->parent = new_root;
-        ((new_root->left)->left)->parent = new_root->left;
-        ((new_root->left)->right)->parent = new_root->left;
-        ((new_root->right)->left)->parent = new_root->right;
-        ((new_root->right)->right)->parent = new_root->right;
+        if(new_root->left->left)
+        {
+            ((new_root->left)->left)->parent = new_root->left;
+        }
+        if(new_root->left->right)
+        {
+            ((new_root->left)->right)->parent = new_root->left;
+        }
+        if(new_root->right->left)
+        {
+            ((new_root->right)->left)->parent = new_root->right;
+        }
+        if(new_root->right->right)
+        {
+            ((new_root->right)->right)->parent = new_root->right;
+        }
 
         (new_root->left)->height = new_root->left->Height();
         (new_root->right)->height = new_root->right->Height();
@@ -210,10 +230,22 @@ namespace structures
         new_root->parent = root->parent;
         (new_root->left)->parent = new_root;
         (new_root->right)->parent = new_root;
-        ((new_root->left)->left)->parent = new_root->left;
-        ((new_root->left)->right)->parent = new_root->left;
-        ((new_root->right)->left)->parent = new_root->right;
-        ((new_root->right)->right)->parent = new_root->right;
+        if(new_root->left->left)
+        {
+            ((new_root->left)->left)->parent = new_root->left;
+        }
+        if(new_root->left->right)
+        {
+            ((new_root->left)->right)->parent = new_root->left;
+        }
+        if(new_root->right->left)
+        {
+            ((new_root->right)->left)->parent = new_root->right;
+        }
+        if(new_root->right->right)
+        {
+            ((new_root->right)->right)->parent = new_root->right;
+        }
 
         (new_root->left)->height = new_root->left->Height();
         (new_root->right)->height = new_root->right->Height();
