@@ -33,7 +33,7 @@ namespace structures
         bool operator<(const Tree &tree) const;
         bool operator<=(const Tree &tree) const;
         bool operator==(const Tree &tree) const;
-        Tree *findData(T data) const;
+        Tree *findData(T data);
 
         // Utility methods
         T *Data();
@@ -516,7 +516,7 @@ namespace structures
     }
 
     template <class T>
-    Tree<T> *structures::Tree<T>::findData(T data) const
+    Tree<T> *structures::Tree<T>::findData(T data)
     {
         // Have we reached a deadend?
         if (!this)
