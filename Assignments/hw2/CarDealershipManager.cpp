@@ -175,14 +175,40 @@ namespace structures
         this->smallest_non_sold_type = (newSmallest != nullptr) ? newSmallest->Data() : nullptr;
     }
 
-    void CarDealershipManager::RemoveCarType(int typeID)
-    {
-
-    }
-
     void CarDealershipManager::SellCar(int typeID, int modelID)
     {
+        if (typeID <= 0 || modelID < 0)
+        {
+            throw InvalidInput();
+        }
 
+        Tree<CarType> *temp = this->types->findData(typeID);
+        if (temp == nullptr || temp->Data()->numOfModels() <= modelID)
+        {
+            throw FailureError();
+        }
+        CarModel current = temp->Data()->Models()[modelID];
+        current.Sales()++;
+        current.Grade() += 10;
+
+        if (current.isBetterSeller(temp->Data()->bestSeller()))
+        {
+            temp->Data()->bestSeller() = current;
+        }
+        if (current.isBetterSeller(*this->bestModel))
+        {
+            this->bestModel = &current;
+        }
+
+        if (current.Sales() == 1)
+        {
+            //remove from unsold tree to sold tree
+            // Tree<TypeNode> *
+        }
+        else
+        {
+            //update in sold models tree
+        }
     }
 
     void CarDealershipManager::MakeComplaint(int typeID, int modelID, int t)
@@ -280,12 +306,10 @@ namespace structures
 
     void CarDealershipManager::GetWorstModels(int numOfModels, int *types, int *models)
     {
-
     }
 
     void CarDealershipManager::Quit()
     {
-        
     }
 
 }
