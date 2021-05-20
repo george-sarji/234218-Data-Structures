@@ -16,4 +16,9 @@ namespace structures
     {
         return INVALID_INPUT;
     }
+
+    const structures::ERRORS structures::Exception::errorType() const noexcept
+    {
+        return NO_MSG;
+    }
 }

@@ -10,7 +10,8 @@ namespace structures
     {
         MEMORY_ERROR,
         INVALID_INPUT,
-        FAILURE
+        FAILURE,
+        NO_MSG
     };
     class Exception : public std::exception
     {
