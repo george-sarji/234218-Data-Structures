@@ -22,6 +22,7 @@ namespace structures
         bool operator>=(const TypeNode &) const;
         bool operator<(const TypeNode &) const;
         bool operator<=(const TypeNode &) const;
+        bool operator==(const TypeNode &) const;
 
         // Utility functions
         int getTypeId();

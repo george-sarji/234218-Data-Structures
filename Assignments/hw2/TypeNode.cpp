@@ -42,6 +42,11 @@ namespace structures
         return type_id <= node.type_id;
     }
 
+    bool structures::TypeNode::operator==(const TypeNode &node) const
+    {
+        return type_id == node.type_id;
+    }
+
     // Utility functions
     int structures::TypeNode::getTypeId()
     {
