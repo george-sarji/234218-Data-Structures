@@ -5,7 +5,7 @@
 
 namespace structures
 {
-    enum ERRORS
+    enum TREE_ERROR
     {
         ALREADY_EXISTS,
         DOESNT_EXIST,
@@ -17,19 +17,19 @@ namespace structures
     public:
         TreeException() = default;
         ~TreeException() = default;
-        virtual const ERRORS errorType() const noexcept;
+        virtual const TREE_ERROR errorType() const noexcept;
     };
 
     class AlreadyExists : public TreeException
     {
     public:
-        const ERRORS errorType() const noexcept;
+        const TREE_ERROR errorType() const noexcept;
     };
 
     class DoesntExist : public TreeException
     {
     public:
-        const ERRORS errorType() const noexcept;
+        const TREE_ERROR errorType() const noexcept;
     };
 }
 
