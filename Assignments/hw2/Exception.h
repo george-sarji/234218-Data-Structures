@@ -1,3 +1,6 @@
+#ifndef EXCEPTION_H_
+#define EXCEPTION_H_
+
 #include <exception>
 
 namespace structures
@@ -33,3 +36,5 @@ namespace structures
         const ERRORS errorType() const noexcept;
     };
 }
+
+#endif
