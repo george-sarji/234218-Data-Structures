@@ -20,7 +20,7 @@ namespace structures
         for (int i = 0; i < num_of_models; i++)
         {
             CarModel *temp = new CarModel(i, this->type_id);
-            this->models = this->models->addIntersection(*temp);
+            this->models = this->models->addIntersection(temp);
         }
         // Update the smallest model.
         this->smallest_model = this->models->getSmallest()->Data();

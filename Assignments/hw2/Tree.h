@@ -312,7 +312,7 @@ namespace structures
     Tree<T> *structures::Tree<T>::addIntersection(T *new_data)
     {
         // Check if first leaf in tree
-        if (this->data == T())
+        if (*this->data == T())
         {
             this->data = new_data;
             return this;
@@ -509,17 +509,17 @@ namespace structures
     Tree<T> *structures::Tree<T>::findData(T data)
     {
         // Did we find the data?
-        if (data == this->data)
+        if (data == *this->data)
         {
             return this;
         }
         // Should we check the right subtree?
-        else if (data > this->data && this->right != nullptr)
+        else if (data > *this->data && this->right != nullptr)
         {
             return this->right->findData(data);
         }
         // Should we check the left subtree?
-        else if (data < this->data && this->left != nullptr)
+        else if (data < *this->data && this->left != nullptr)
         {
             return this->left->findData(data);
         }

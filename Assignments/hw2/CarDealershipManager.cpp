@@ -68,7 +68,7 @@ namespace structures
         try
         {
             // Add the type to the types tree.
-            this->types = this->types->addIntersection(*newType);
+            this->types = this->types->addIntersection(newType);
         }
         catch (const structures::TreeException &error)
         {
@@ -79,7 +79,7 @@ namespace structures
                 throw FailureError();
             }
         }
-        CarModel* old_best_seller = this->bestModel;
+        CarModel *old_best_seller = this->bestModel;
         if (this->bestModel == nullptr)
         {
             // Default best seller.
@@ -96,12 +96,12 @@ namespace structures
         try
         {
             node = new TypeNode(typeID, numModels);
-            this->non_sold_models = this->non_sold_models->addIntersection(*node);
+            this->non_sold_models = this->non_sold_models->addIntersection(node);
         }
         catch (const std::bad_alloc &e)
         {
             // We have a memory error. Release everything and throw a memory error.
-            this->types = this->types->removeIntersection(*newType);
+            this->types = this->types->removeIntersection(newType);
             this->bestModel = old_best_seller;
             delete newType;
             throw MemoryError();
@@ -181,7 +181,7 @@ namespace structures
             if (current.Sales() != 0)
             {
                 // Check in the sold models.
-                this->sold_models->removeIntersection(current);
+                this->sold_models->removeIntersection(&current);
             }
             else if (all_sold)
             {
@@ -193,16 +193,16 @@ namespace structures
             else
             {
                 // There shouldn't be an error. Remove the current car model.
-                typeNodeTree->Data()->getModels()->removeIntersection(current);
+                typeNodeTree->Data()->getModels()->removeIntersection(&current);
             }
         }
         // We can now remove the type itself.
         try
         {
             // Remove the car type from the non-sold tree
-            this->non_sold_models->removeIntersection(*(typeNodeTree->Data()));
+            this->non_sold_models->removeIntersection(typeNodeTree->Data());
             // Remove the car type from the types tree
-            this->types = this->types->removeIntersection(*(vertex->Data()));
+            this->types = this->types->removeIntersection(vertex->Data());
         }
         catch (const TreeException &e)
         {
@@ -276,24 +276,22 @@ namespace structures
                 data->updateSmallestModel(model_to_sell_tree->findData(*model_to_sell)->Data());
             }
 
-            model_to_sell_tree = model_to_sell_tree->removeIntersection(*model_to_sell);
+            model_to_sell_tree = model_to_sell_tree->removeIntersection(model_to_sell);
             delete model_to_sell;
 
-            this->sold_models = this->sold_models->addIntersection(current);
+            this->sold_models = this->sold_models->addIntersection(&current);
         }
         else
         {
-            CarModel* tmp = new CarModel(modelID, typeID);
-            Tree<CarModel>* data_tree = this->sold_models->findData(*tmp);
+            CarModel *tmp = new CarModel(modelID, typeID);
+            Tree<CarModel> *data_tree = this->sold_models->findData(*tmp);
             delete tmp;
-            CarModel* data = data_tree->Data();
+            CarModel *data = data_tree->Data();
 
-
-            if(smallest_sold_model == data)
+            if (smallest_sold_model == data)
             {
-
             }
-            
+
             // if(model_to_sell_tree->findData(*model_to_sell)->Data() == this->smallest_sold_model)
             // {
 
@@ -356,9 +354,9 @@ namespace structures
             // Increase the complaints counter
             currentModel.Complaints()++;
             // Remove the model from the sold trees.
-            this->sold_models = this->sold_models->removeIntersection(*requested_model->Data());
+            this->sold_models = this->sold_models->removeIntersection(requested_model->Data());
             // Add the new model.
-            this->sold_models = this->sold_models->addIntersection(currentModel);
+            this->sold_models = this->sold_models->addIntersection(&currentModel);
             // We can leave now.
 
             // TODO: Update the global variable for the best models, and for the smallest model in sold models.
