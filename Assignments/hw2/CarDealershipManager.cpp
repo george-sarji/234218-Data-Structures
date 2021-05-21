@@ -368,6 +368,16 @@ namespace structures
 
     void CarDealershipManager::Quit()
     {
+        this->car_sales->clearTree();
+        this->non_sold_models->clearTree();
+        this->sold_models->clearTree();
+        this->types->clearTree();
+        delete this;
     }
 
+}
+
+int main()
+{
+    return 0;
 }
