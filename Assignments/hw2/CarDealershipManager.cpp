@@ -79,8 +79,13 @@ namespace structures
                 throw FailureError();
             }
         }
+        if (this->bestModel == nullptr)
+        {
+            // Default best seller.
+            this->bestModel = &newType->bestSeller();
+        }
         // Check if the best seller is better than the global best seller.
-        if (newType->bestSeller().isBetterSeller(*this->bestModel))
+        else if (newType->bestSeller().isBetterSeller(*this->bestModel))
         {
             // We have a better seller. Change the best seller.
             this->bestModel = &newType->bestSeller();
