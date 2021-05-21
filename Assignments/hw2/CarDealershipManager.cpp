@@ -5,8 +5,8 @@
 namespace structures
 {
 
-    structures::CarDealershipManager::CarDealershipManager() : bestModel(nullptr), total_models(0), 
-        smallest_sold_model(nullptr), smallest_non_sold_type(nullptr)
+    structures::CarDealershipManager::CarDealershipManager() : bestModel(nullptr), total_models(0),
+                                                               smallest_sold_model(nullptr), smallest_non_sold_type(nullptr)
     {
         types = new Tree<CarType>();
 
@@ -79,6 +79,7 @@ namespace structures
                 throw FailureError();
             }
         }
+        CarModel* old_best_seller = this->bestModel;
         if (this->bestModel == nullptr)
         {
             // Default best seller.
@@ -101,10 +102,8 @@ namespace structures
         {
             // We have a memory error. Release everything and throw a memory error.
             this->types = this->types->removeIntersection(*newType);
+            this->bestModel = old_best_seller;
             delete newType;
-            if (node != nullptr)
-                this->non_sold_models = this->non_sold_models->removeIntersection(*node);
-            delete node;
             throw MemoryError();
         }
         // Increase the number of models.
@@ -114,9 +113,6 @@ namespace structures
         {
             this->smallest_non_sold_type = node;
         }
-        // Delete the local pointers.
-        delete node;
-        delete newType;
     }
 
     void CarDealershipManager::RemoveCarType(int typeID)
@@ -371,8 +367,12 @@ namespace structures
     {
     }
 
+
     void CarDealershipManager::Quit()
     {
+        this->types->clearData();
+        this->sold_models->clearData();
+        this->non_sold_models->clearData();
         this->car_sales->clearTree();
         this->non_sold_models->clearTree();
         this->sold_models->clearTree();
