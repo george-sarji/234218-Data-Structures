@@ -17,4 +17,9 @@ namespace structures
         this->model = model;
     }
 
+    CarModel *structures::SalesNode::getModel() const
+    {
+        return this->model;
+    }
+
 }

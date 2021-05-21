@@ -16,6 +16,7 @@ namespace structures
         SalesNode(const SalesNode *node) : model(node->model) {}
 
         void setModel(CarModel* model);
+        CarModel* getModel() const;
 
         // Operator overloads
         bool operator>(const SalesNode &node) const;
