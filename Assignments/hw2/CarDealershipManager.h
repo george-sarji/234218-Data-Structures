@@ -6,6 +6,7 @@
 #include "Tree.h"
 #include "TypeNode.h"
 #include "Exception.h"
+#include "SalesNode.h"
 
 namespace structures
 {
@@ -15,6 +16,7 @@ namespace structures
             Tree<CarType>* types;
             Tree<CarModel>* sold_models;
             Tree<TypeNode>* non_sold_models;
+            Tree<SalesNode>* car_sales;
             CarModel *bestModel;
             int total_models;
             CarModel* smallest_sold_model;
