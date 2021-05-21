@@ -10,7 +10,7 @@ namespace structures
     private:
         int id, max_sales, num_of_models;
         CarModel *best_seller;
-        CarModel *models;
+        CarModel **models;
 
     public:
         CarType() : id(int()), max_sales(int()), num_of_models(int()), best_seller(nullptr), models(nullptr) {}
@@ -34,7 +34,7 @@ namespace structures
         bool operator==(const CarType) const;
 
         // Utility functions
-        void AddModel(CarModel &new_model);
+        void AddModel(CarModel *new_model);
         void RemoveModel(const int id);
         void InitiateModels(const int num);
     };
