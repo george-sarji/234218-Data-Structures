@@ -379,5 +379,8 @@ namespace structures
 
 int main()
 {
+    structures::CarDealershipManager *manager = new structures::CarDealershipManager();
+    manager->AddCarType(1, 5);
+    manager->Quit();
     return 0;
 }
