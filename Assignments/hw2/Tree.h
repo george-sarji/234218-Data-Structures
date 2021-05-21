@@ -24,6 +24,7 @@ namespace structures
         Tree(const Tree &tree);
         ~Tree() = default;
         void clearTree();
+        void clearData();
 
         // Operator overloads
         T &operator*();
@@ -74,6 +75,17 @@ namespace structures
         if (this->right != nullptr)
             this->right->clearTree();
         delete this;
+    }
+
+    template <class T>
+    void structures::Tree<T>::clearData()
+    {
+        if(this->left->data != nullptr)
+            this->left->clearData();
+        if(this->right->data != nullptr)
+            this->right->clearData();
+        
+        delete data;
     }
 
     template <class T>
