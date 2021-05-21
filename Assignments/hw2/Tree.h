@@ -12,7 +12,7 @@ namespace structures
     class Tree
     {
     private:
-        T data;
+        T *data;
         Tree *left;
         Tree *right;
         Tree *parent;
@@ -20,15 +20,19 @@ namespace structures
 
     public:
         Tree() = default;
-        Tree(T data, Tree *parent = nullptr, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), parent(parent), height(1) {}
-        Tree(const Tree &tree);
-        ~Tree() = default;
+        Tree(T *data, Tree *parent = nullptr, Tree *left = nullptr, Tree *right = nullptr) : data(new T(*data)), left(left), right(right), parent(parent), height(1) {}
+        Tree(const Tree &tree) = delete;
+        ~Tree()
+        {
+            delete data;
+        }
+        
         void clearTree();
         void clearData();
 
         // Operator overloads
         T &operator*();
-        Tree &operator=(const Tree &tree);
+        Tree &operator=(const Tree &tree) = delete;
         bool operator>(const Tree &tree) const;
         bool operator>=(const Tree &tree) const;
         bool operator<(const Tree &tree) const;
@@ -52,8 +56,8 @@ namespace structures
         Tree *getLargest();
 
         // Addition/removal functions
-        Tree *addIntersection(T data);
-        Tree *removeIntersection(T data);
+        Tree *addIntersection(T *data);
+        Tree *removeIntersection(T *data);
         Tree *inorderSuccessor();
 
         // ! Required functions
@@ -61,11 +65,6 @@ namespace structures
 
         void printParent() const;
     };
-
-    template <class T>
-    structures::Tree<T>::Tree(const Tree &tree) : data(tree->data), left(tree->left), right(tree->right), parent(tree->parent)
-    {
-    }
 
     template <class T>
     void structures::Tree<T>::clearTree()
@@ -80,11 +79,11 @@ namespace structures
     template <class T>
     void structures::Tree<T>::clearData()
     {
-        if(this->left->data != nullptr)
+        if (this->left != nullptr)
             this->left->clearData();
-        if(this->right->data != nullptr)
+        if (this->right != nullptr)
             this->right->clearData();
-        
+
         delete data;
     }
 
@@ -103,7 +102,7 @@ namespace structures
     template <class T>
     T *structures::Tree<T>::Data()
     {
-        return &this->data;
+        return this->data;
     }
 
     template <class T>
@@ -148,48 +147,37 @@ namespace structures
     template <class T>
     T &structures::Tree<T>::operator*()
     {
-        return this->data;
-    }
-
-    template <class T>
-    Tree<T> &structures::Tree<T>::operator=(const Tree<T> &tree)
-    {
-        this->data = tree->data;
-        this->left = tree->left;
-        this->right = tree->right;
-        this->height = tree->height;
-        this->parent = tree->parent;
-        return this;
+        return *(this->data);
     }
 
     template <class T>
     bool structures::Tree<T>::operator<(const Tree &tree) const
     {
-        return this->data < tree->data;
+        return *(this->data) < *(tree->data);
     }
 
     template <class T>
     bool structures::Tree<T>::operator<=(const Tree &tree) const
     {
-        return this->data <= tree->data;
+        return *(this->data) <= *(tree->data);
     }
 
     template <class T>
     bool structures::Tree<T>::operator>(const Tree &tree) const
     {
-        return this->data > tree->data;
+        return *(this->data) > *(tree->data);
     }
 
     template <class T>
     bool structures::Tree<T>::operator>=(const Tree &tree) const
     {
-        return this->data >= tree->data;
+        return *(this->data) >= *(tree->data);
     }
 
     template <class T>
     bool structures::Tree<T>::operator==(const Tree &tree) const
     {
-        return this->data == tree->data;
+        return *(this->data) == *(tree->data);
     }
 
     template <class T>
@@ -321,7 +309,7 @@ namespace structures
     }
 
     template <class T>
-    Tree<T> *structures::Tree<T>::addIntersection(T new_data)
+    Tree<T> *structures::Tree<T>::addIntersection(T *new_data)
     {
         // Check if first leaf in tree
         if (this->data == T())
@@ -330,7 +318,7 @@ namespace structures
             return this;
         }
         // Check if the data goes to the right subtree
-        if (new_data > this->data)
+        if (*new_data > *this->data)
         {
             // Is there a right subtree?
             if (this->right)
@@ -345,7 +333,7 @@ namespace structures
             (this->right)->parent = this;
         }
         // Check if the data goes to the left subtree
-        else if (new_data < this->data)
+        else if (*new_data < *this->data)
         {
             // Is there a left subtree?
             if (this->left)
@@ -394,10 +382,10 @@ namespace structures
     }
 
     template <class T>
-    Tree<T> *structures::Tree<T>::removeIntersection(T data)
+    Tree<T> *structures::Tree<T>::removeIntersection(T *data)
     {
         // Check if this goes to the left subtree
-        if (data < this->data)
+        if (*data < *this->data)
         {
             // Is there a left subtree?
             if (this->left)
@@ -411,7 +399,7 @@ namespace structures
             }
         }
         // Check if this goes to the right subtree.
-        else if (data > this->data)
+        else if (*data > *this->data)
         {
             // Is there a right subtree?
             if (this->right)
@@ -480,23 +468,29 @@ namespace structures
     template <class T>
     void structures::Tree<T>::printInOrder() const
     {
-        if (!this)
+        if (this->left)
         {
-            return;
+            this->left->printInOrder();
         }
-        this->left->printInOrder();
-        std::cout << this->data << " ";
-        this->right->printInOrder();
+        std::cout << *this->data << " ";
+        if (this->right)
+        {
+            this->right->printInOrder();
+        }
     }
 
     template <class T>
     void structures::Tree<T>::printPreOrder() const
     {
-        if (!this)
-            return;
-        std::cout << this->data << " ";
-        this->left->printPreOrder();
-        this->right->printPreOrder();
+        std::cout << *this->data << " ";
+        if (this->left)
+        {
+            this->left->printPreOrder();
+        }
+        if (this->right)
+        {
+            this->right->printPreOrder();
+        }
     }
 
     template <class T>
