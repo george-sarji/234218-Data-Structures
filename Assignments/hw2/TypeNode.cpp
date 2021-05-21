@@ -16,6 +16,7 @@ namespace structures
     {
         this->models = new Tree<CarModel>();
         this->smallest_model = nullptr;
+        this->type_id = type_id;
         // Initiate the models array.
         for (int i = 0; i < num_of_models; i++)
         {
