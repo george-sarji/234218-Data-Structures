@@ -5,7 +5,7 @@ namespace structures
     structures::CarType::~CarType()
     {
         delete best_seller;
-        delete models;
+        delete[] models;
     }
 
     int &structures::CarType::Id()
