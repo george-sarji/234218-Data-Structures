@@ -109,6 +109,9 @@ namespace structures
         {
             this->smallest_non_sold_type = node;
         }
+        // Delete the local pointers.
+        delete node;
+        delete newType;
     }
 
     void CarDealershipManager::RemoveCarType(int typeID)
@@ -152,6 +155,24 @@ namespace structures
             delete temp;
             throw MemoryError();
         }
+
+        // Check if we removed the best selling model's type.
+        if (bestModel->Type() == typeID)
+        {
+            // We have removed the best seller model. We have to update.
+            Tree<SalesNode> *temp_model = this->car_sales->getLargest();
+            if (temp_model)
+            {
+                // We have a good best seller.
+                this->bestModel = temp_model->Data()->getModel();
+            }
+            else
+            {
+                // No best seller.
+                this->bestModel = nullptr;
+            }
+        }
+        // Remove the actual models.
         for (int i = 0; i < total_models; i++)
         {
             CarModel current = vertex->Data()->Models()[i];
