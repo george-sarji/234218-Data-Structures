@@ -9,14 +9,14 @@ namespace structures
 
     structures::TypeNode::~TypeNode()
     {
-        if(models != nullptr)
-            models->clearTree();
+        delete models;
     }
 
     structures::TypeNode::TypeNode(int type_id, int num_of_models)
     {
         this->models = new Tree<CarModel>();
         this->smallest_model = nullptr;
+        this->type_id = type_id;
         // Initiate the models array.
         for (int i = 0; i < num_of_models; i++)
         {
