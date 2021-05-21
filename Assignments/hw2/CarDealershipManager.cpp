@@ -49,11 +49,11 @@ namespace structures
         {
             throw InvalidInput();
         }
-        CarType *newType;
+        
+        // Allocate a new car type
+        CarType *newType = new CarType(typeID);
         try
         {
-            // Allocate a new car type
-            newType = new CarType(typeID);
             // Add the models for the car type.
             newType->InitiateModels(numModels);
         }
@@ -231,19 +231,25 @@ namespace structures
             throw InvalidInput();
         }
 
-        Tree<CarType> *temp = this->types->findData(typeID);
+        CarType *current_type = new CarType(typeID);
+        Tree<CarType> *temp = this->types->findData(*current_type);
         if (temp == nullptr || temp->Data()->numOfModels() <= modelID)
         {
+            delete current_type;
             throw FailureError();
         }
+        delete current_type;
+
         CarModel current = temp->Data()->Models()[modelID];
         current.Sales()++;
         current.Grade() += 10;
 
+        CarModel prev_best_seller = temp->Data()->bestSeller();
         if (current.isBetterSeller(temp->Data()->bestSeller()))
         {
             temp->Data()->bestSeller() = current;
         }
+        CarModel *prev_best_model = this->bestModel;
         if (current.isBetterSeller(*this->bestModel))
         {
             this->bestModel = &current;
@@ -252,11 +258,46 @@ namespace structures
         if (current.Sales() == 1)
         {
             //remove from unsold tree to sold tree
-            // Tree<TypeNode> *
+            TypeNode *tmp = new TypeNode(typeID);
+            Tree<TypeNode> *to_sell = this->non_sold_models->findData(*tmp);
+            delete tmp;
+            TypeNode *data = to_sell->Data();
+
+            if (data == this->smallest_non_sold_type)
+            {
+                //get next smallest in the non sold tree
+            }
+
+            CarModel *prev_smallest = data->getSmallestModel();
+            Tree<CarModel> *model_to_sell_tree = to_sell->Data()->getModels();
+            CarModel *model_to_sell = new CarModel(modelID, typeID);
+            if (*prev_smallest < *model_to_sell_tree->findData(*model_to_sell)->Data())
+            {
+                data->updateSmallestModel(model_to_sell_tree->findData(*model_to_sell)->Data());
+            }
+
+            model_to_sell_tree = model_to_sell_tree->removeIntersection(*model_to_sell);
+            delete model_to_sell;
+
+            this->sold_models = this->sold_models->addIntersection(current);
         }
         else
         {
-            //update in sold models tree
+            CarModel* tmp = new CarModel(modelID, typeID);
+            Tree<CarModel>* data_tree = this->sold_models->findData(*tmp);
+            delete tmp;
+            CarModel* data = data_tree->Data();
+
+
+            if(smallest_sold_model == data)
+            {
+
+            }
+            
+            // if(model_to_sell_tree->findData(*model_to_sell)->Data() == this->smallest_sold_model)
+            // {
+
+            // }
         }
     }
 
@@ -380,9 +421,4 @@ namespace structures
         delete this;
     }
 
-}
-
-int main()
-{
-    return 0;
 }
