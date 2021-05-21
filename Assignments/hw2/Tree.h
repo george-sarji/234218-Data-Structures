@@ -20,7 +20,7 @@ namespace structures
 
     public:
         Tree() = default;
-        Tree(T *data, Tree *parent = nullptr, Tree *left = nullptr, Tree *right = nullptr) : data(new T(*data)), left(left), right(right), parent(parent), height(1) {}
+        Tree(T *data, Tree *parent = nullptr, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), parent(parent), height(1) {}
         Tree(const Tree &tree) = delete;
         ~Tree()
         {
