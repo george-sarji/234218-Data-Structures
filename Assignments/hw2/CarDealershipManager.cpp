@@ -49,7 +49,7 @@ namespace structures
         {
             throw InvalidInput();
         }
-        
+
         // Allocate a new car type
         CarType *newType = new CarType(typeID);
         try
@@ -233,12 +233,12 @@ namespace structures
 
         CarType *current_type = new CarType(typeID);
         Tree<CarType> *temp = this->types->findData(*current_type);
+        delete current_type;
+
         if (temp == nullptr || temp->Data()->numOfModels() <= modelID)
         {
-            delete current_type;
             throw FailureError();
         }
-        delete current_type;
 
         CarModel current = temp->Data()->Models()[modelID];
         current.Sales()++;
@@ -258,7 +258,20 @@ namespace structures
         if (current.Sales() == 1)
         {
             //remove from unsold tree to sold tree
-            TypeNode *tmp = new TypeNode(typeID);
+            TypeNode * tmp;
+            try
+            {
+                tmp = new TypeNode(typeID);
+            }
+            catch(const std::bad_alloc& e)
+            {
+                current.Sales()--;
+                current.Grade() -= 10;
+                temp->Data()->bestSeller() = prev_best_seller;
+                this->bestModel = prev_best_model;
+                throw;
+            }
+            
             Tree<TypeNode> *to_sell = this->non_sold_models->findData(*tmp);
             delete tmp;
             TypeNode *data = to_sell->Data();
@@ -270,7 +283,21 @@ namespace structures
 
             CarModel *prev_smallest = data->getSmallestModel();
             Tree<CarModel> *model_to_sell_tree = to_sell->Data()->getModels();
-            CarModel *model_to_sell = new CarModel(modelID, typeID);
+
+            CarModel *model_to_sell;
+            try
+            {
+                model_to_sell = new CarModel(modelID, typeID);
+            }
+            catch(const std::bad_alloc& e)
+            {
+                current.Sales()--;
+                current.Grade() -= 10;
+                temp->Data()->bestSeller() = prev_best_seller;
+                this->bestModel = prev_best_model;
+                throw;            
+            }
+            
             if (*prev_smallest < *model_to_sell_tree->findData(*model_to_sell)->Data())
             {
                 data->updateSmallestModel(model_to_sell_tree->findData(*model_to_sell)->Data());
@@ -279,17 +306,36 @@ namespace structures
             model_to_sell_tree = model_to_sell_tree->removeIntersection(model_to_sell);
             delete model_to_sell;
 
-            this->sold_models = this->sold_models->addIntersection(&current);
+            this->sold_models = this->sold_models->addIntersection(new CarModel(current));
         }
         else
         {
-            CarModel *tmp = new CarModel(modelID, typeID);
+            //update information at sold tree
+            CarModel* tmp;
+            try
+            {
+                tmp = new CarModel(modelID, typeID);
+            }
+            catch(const std::bad_alloc& e)
+            {
+                current.Sales()--;
+                current.Grade() -= 10;
+                temp->Data()->bestSeller() = prev_best_seller;
+                this->bestModel = prev_best_model;
+                throw;            }
+            
             Tree<CarModel> *data_tree = this->sold_models->findData(*tmp);
             delete tmp;
             CarModel *data = data_tree->Data();
 
-            if (smallest_sold_model == data)
+
+
+            // data->Sales() += 1;
+            // data->Grade() += 10;
+
+            if (this->smallest_sold_model == data)
             {
+
             }
 
             // if(model_to_sell_tree->findData(*model_to_sell)->Data() == this->smallest_sold_model)
@@ -409,9 +455,6 @@ namespace structures
 
     void CarDealershipManager::Quit()
     {
-        this->types->clearData();
-        this->sold_models->clearData();
-        this->non_sold_models->clearData();
         this->car_sales->clearTree();
         this->non_sold_models->clearTree();
         this->sold_models->clearTree();
