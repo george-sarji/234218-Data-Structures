@@ -6,7 +6,7 @@
 #include "TreeException.h"
 namespace structures
 {
-    #define MAX(left, right) (left > right ? left : right)
+#define MAX(left, right) (left > right ? left : right)
 
     template <class T>
     class Tree
@@ -48,6 +48,7 @@ namespace structures
         void printInOrder() const;
         void printPreOrder() const;
         Tree *getSmallest();
+        Tree *getLargest();
 
         // Addition/removal functions
         Tree *addIntersection(T data);
@@ -90,7 +91,7 @@ namespace structures
     }
 
     template <class T>
-    T *structures::Tree<T>::Data() 
+    T *structures::Tree<T>::Data()
     {
         return &this->data;
     }
@@ -565,6 +566,20 @@ namespace structures
         if (this->left)
         {
             return this->left->getSmallest();
+        }
+        return this;
+    }
+
+    template <class T>
+    Tree<T> *structures::Tree<T>::getLargest()
+    {
+        if (!this)
+        {
+            return nullptr;
+        }
+        if (this->right)
+        {
+            return this->right->getSmallest();
         }
         return this;
     }
