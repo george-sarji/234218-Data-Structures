@@ -77,7 +77,6 @@ namespace structures
         if (this->parent != nullptr)
         {
             delete data;
-            delete this;
         }
     }
 
