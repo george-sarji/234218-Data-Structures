@@ -30,6 +30,17 @@ namespace structures
             delete sold_models;
             throw MemoryError();
         }
+        try
+        {
+            car_sales = new Tree<SalesNode>();
+        }
+        catch (const std::bad_alloc &e)
+        {
+            delete types;
+            delete sold_models;
+            delete non_sold_models;
+            throw MemoryError();
+        }
     }
 
     void CarDealershipManager::AddCarType(int typeID, int numModels)
