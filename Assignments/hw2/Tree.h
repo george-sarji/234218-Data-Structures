@@ -24,6 +24,7 @@ namespace structures
         Tree(const Tree &tree) = delete;
         ~Tree()
         {
+            this->clearTree();
             delete data;
         }
 
@@ -74,7 +75,10 @@ namespace structures
         if (this->right != nullptr)
             this->right->clearTree();
         if (this->parent != nullptr)
+        {
+            delete data;
             delete this;
+        }
     }
 
     template <class T>

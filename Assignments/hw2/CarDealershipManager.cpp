@@ -9,7 +9,7 @@ namespace structures
                                                                smallest_sold_model(nullptr), smallest_non_sold_type(nullptr)
     {
         types = new Tree<CarType>();
-
+        
         try
         {
             sold_models = new Tree<CarModel>();
@@ -455,18 +455,18 @@ namespace structures
 
     void CarDealershipManager::Quit()
     {
-        this->car_sales->clearTree();
-        this->non_sold_models->clearTree();
-        this->sold_models->clearTree();
-        this->types->clearTree();
-        delete this;
+        delete this->sold_models;
+        delete this->non_sold_models;
+        delete this->car_sales;
+        delete this->types;
     }
 
 }
 
 int main() {
     structures::CarDealershipManager *m = new structures::CarDealershipManager();
-    m->AddCarType(1,1);
+    // m->AddCarType(1,1);
     m->Quit();
+    delete m;
     return 0;
 }

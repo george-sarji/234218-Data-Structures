@@ -9,8 +9,7 @@ namespace structures
 
     structures::TypeNode::~TypeNode()
     {
-        if(models != nullptr)
-            models->clearTree();
+        delete models;
     }
 
     structures::TypeNode::TypeNode(int type_id, int num_of_models)

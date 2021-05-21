@@ -11,7 +11,7 @@ namespace structures
 
     public:
         SalesNode(CarModel *model) : model(model) {}
-        ~SalesNode() = default;
+        ~SalesNode();
         SalesNode() = default;
         SalesNode(const SalesNode *node) : model(node->model) {}
 

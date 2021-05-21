@@ -2,6 +2,10 @@
 
 namespace structures
 {
+    structures::SalesNode::~SalesNode() {
+        delete model;
+    }
+
     bool structures::SalesNode::operator>(const SalesNode &node) const
     {
         return this->model->isBetterSeller(*node.model);
