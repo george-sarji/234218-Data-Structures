@@ -11,4 +11,10 @@ namespace structures
     {
         return node.model->isBetterSeller(*this->model);
     }
+
+    void structures::SalesNode::setModel(CarModel *model)
+    {
+        this->model = model;
+    }
+
 }

@@ -12,7 +12,10 @@ namespace structures
     public:
         SalesNode(CarModel *model) : model(model) {}
         ~SalesNode() = default;
+        SalesNode() = default;
         SalesNode(const SalesNode *node) : model(node->model) {}
+
+        void setModel(CarModel* model);
 
         // Operator overloads
         bool operator>(const SalesNode &node) const;
