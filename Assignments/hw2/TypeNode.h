@@ -28,6 +28,7 @@ namespace structures
         int getTypeId();
         Tree<CarModel> *getModels();
         CarModel *getSmallestModel();
+        void updateSmallestModel(CarModel* smallest_model);
     };
 }
 

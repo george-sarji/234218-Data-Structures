@@ -2,9 +2,9 @@
 
 namespace structures
 {
-    structures::TypeNode::TypeNode() : type_id(int()), smallest_model(nullptr),
-                                       models(new Tree<CarModel>())
+    structures::TypeNode::TypeNode() : type_id(int()), models(new Tree<CarModel>()), smallest_model(nullptr)
     {
+        
     }
 
     structures::TypeNode::~TypeNode()
@@ -60,4 +60,10 @@ namespace structures
     {
         return this->smallest_model;
     }
+
+    void structures::TypeNode::updateSmallestModel(CarModel* smallest_model)
+    {
+        this->smallest_model = smallest_model;
+    }
+
 }

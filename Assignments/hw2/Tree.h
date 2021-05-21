@@ -69,11 +69,9 @@ namespace structures
     template <class T>
     void structures::Tree<T>::clearTree()
     {
-        if (!this)
-            return;
-        if (this->left)
+        if (this->left != nullptr)
             this->left->clearTree();
-        if (this->right)
+        if (this->right != nullptr)
             this->right->clearTree();
         delete this;
     }
@@ -313,13 +311,8 @@ namespace structures
     template <class T>
     Tree<T> *structures::Tree<T>::addIntersection(T new_data)
     {
-        // Reached end of recursion, create new leaf.
-        if (this == nullptr)
-        {
-            return new Tree(new_data);
-        }
         // Check if first leaf in tree
-        else if (this->data == T())
+        if (this->data == T())
         {
             this->data = new_data;
             return this;
@@ -391,11 +384,6 @@ namespace structures
     template <class T>
     Tree<T> *structures::Tree<T>::removeIntersection(T data)
     {
-        // Have we reached a leaf?
-        if (!this)
-        {
-            return this;
-        }
         // Check if this goes to the left subtree
         if (data < this->data)
         {
@@ -449,11 +437,6 @@ namespace structures
                 delete this;
                 return son;
             }
-        }
-        // Nothing to remove, exit.
-        if (this == nullptr)
-        {
-            throw DoesntExist();
         }
 
         this->height = this->Height();
@@ -519,26 +502,24 @@ namespace structures
     template <class T>
     Tree<T> *structures::Tree<T>::findData(T data)
     {
-        // Have we reached a deadend?
-        if (!this)
-        {
-            return nullptr;
-        }
         // Did we find the data?
         if (data == this->data)
         {
             return this;
         }
         // Should we check the right subtree?
-        else if (data > this->data)
+        else if (data > this->data && this->right != nullptr)
         {
             return this->right->findData(data);
         }
         // Should we check the left subtree?
-        else if (data < this->data)
+        else if (data < this->data && this->left != nullptr)
         {
             return this->left->findData(data);
         }
+        // Did we reach a deadend?
+        else if (this->left == nullptr && this->right == nullptr)
+            return nullptr;
         // Shouldn't reach here
         throw DoesntExist();
     }
@@ -559,11 +540,7 @@ namespace structures
     template <class T>
     Tree<T> *structures::Tree<T>::getSmallest()
     {
-        if (!this)
-        {
-            return nullptr;
-        }
-        if (this->left)
+        if (this->left != nullptr)
         {
             return this->left->getSmallest();
         }
@@ -573,10 +550,6 @@ namespace structures
     template <class T>
     Tree<T> *structures::Tree<T>::getLargest()
     {
-        if (!this)
-        {
-            return nullptr;
-        }
         if (this->right)
         {
             return this->right->getSmallest();

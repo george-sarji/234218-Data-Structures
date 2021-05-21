@@ -5,8 +5,8 @@
 namespace structures
 {
 
-    structures::CarDealershipManager::CarDealershipManager() : total_models(0), bestModel(nullptr),
-                                                               sold_models(nullptr), non_sold_models(nullptr)
+    structures::CarDealershipManager::CarDealershipManager() : bestModel(nullptr), total_models(0), 
+        smallest_sold_model(nullptr), smallest_non_sold_type(nullptr)
     {
         types = new Tree<CarType>();
 

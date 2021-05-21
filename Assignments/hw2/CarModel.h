@@ -5,30 +5,34 @@ namespace structures
     class CarModel
     {
     private:
-        int sales, complaints, grade, id, type;
+        int sales;
+        int complaints;
+        int grade;
+        int id;
+        int type;
 
     public:
         CarModel() = default;
-        CarModel(int id, int type): id(id), complaints(0), grade(0), sales(0), type(type) {}
+        CarModel(int id, int type) : sales(0), complaints(0), grade(0), id(id), type(type) {}
         ~CarModel() = default;
-        CarModel(const CarModel& model) = default;
+        CarModel(const CarModel &model) = default;
 
         // Parameter functions
-        int& Sales();
-        int& Complaints();
-        int& Grade();
-        int& Id();
+        int &Sales();
+        int &Complaints();
+        int &Grade();
+        int &Id();
         int Type();
-        bool isBetterModel(const CarModel& model) const;
-        bool isBetterSeller(const CarModel&) const;
+        bool isBetterModel(const CarModel &model) const;
+        bool isBetterSeller(const CarModel &) const;
 
         // Operator overload
-        CarModel& operator=(const CarModel& model) = default;
-        bool operator>(const CarModel& model) const;
-        bool operator>=(const CarModel& model) const;
-        bool operator<(const CarModel& model) const;
-        bool operator<=(const CarModel& model) const;
-        bool operator==(const CarModel& model) const;
+        CarModel &operator=(const CarModel &model) = default;
+        bool operator>(const CarModel &model) const;
+        bool operator>=(const CarModel &model) const;
+        bool operator<(const CarModel &model) const;
+        bool operator<=(const CarModel &model) const;
+        bool operator==(const CarModel &model) const;
     };
 }
 

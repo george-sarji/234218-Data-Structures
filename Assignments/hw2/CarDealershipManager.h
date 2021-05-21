@@ -13,14 +13,14 @@ namespace structures
     class CarDealershipManager
     {
         private:
-            Tree<CarType>* types;
-            Tree<CarModel>* sold_models;
-            Tree<TypeNode>* non_sold_models;
-            Tree<SalesNode>* car_sales;
             CarModel *bestModel;
             int total_models;
             CarModel* smallest_sold_model;
             TypeNode* smallest_non_sold_type;
+            Tree<CarType>* types;
+            Tree<CarModel>* sold_models;
+            Tree<TypeNode>* non_sold_models;
+            Tree<SalesNode>* car_sales;
 
         public:
             CarDealershipManager();
