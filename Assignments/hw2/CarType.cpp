@@ -7,6 +7,7 @@ namespace structures
         for(int i = 0;i<num_of_models;i++) {
             delete models[i];
         }
+        delete[] models;
     }
 
     int &structures::CarType::Id()
@@ -86,10 +87,6 @@ namespace structures
         }
         // Initiate the models array.
         this->models = new CarModel*[num]();
-        if (this->models == nullptr)
-        {
-            return;
-        }
         this->num_of_models = num;
         for (int i = 0; i < num; i++)
         {
