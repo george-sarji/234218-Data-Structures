@@ -26,7 +26,7 @@ namespace structures
         {
             delete data;
         }
-        
+
         void clearTree();
         void clearData();
 
@@ -73,7 +73,8 @@ namespace structures
             this->left->clearTree();
         if (this->right != nullptr)
             this->right->clearTree();
-        delete this;
+        if (this->parent != nullptr)
+            delete this;
     }
 
     template <class T>
@@ -312,7 +313,7 @@ namespace structures
     Tree<T> *structures::Tree<T>::addIntersection(T *new_data)
     {
         // Check if first leaf in tree
-        if (*this->data == T())
+        if (data == nullptr)
         {
             this->data = new_data;
             return this;

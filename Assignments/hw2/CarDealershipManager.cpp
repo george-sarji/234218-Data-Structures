@@ -463,3 +463,10 @@ namespace structures
     }
 
 }
+
+int main() {
+    structures::CarDealershipManager *m = new structures::CarDealershipManager();
+    m->AddCarType(1,1);
+    m->Quit();
+    return 0;
+}

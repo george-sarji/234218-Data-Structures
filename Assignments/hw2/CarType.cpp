@@ -4,7 +4,9 @@ namespace structures
 {
     structures::CarType::~CarType()
     {
-        delete[] models;
+        for(int i = 0;i<num_of_models;i++) {
+            delete models[i];
+        }
     }
 
     int &structures::CarType::Id()
@@ -24,7 +26,7 @@ namespace structures
 
     CarModel *structures::CarType::Models()
     {
-        return this->models;
+        return *this->models;
     }
 
     int structures::CarType::numOfModels() const
@@ -57,13 +59,13 @@ namespace structures
         return this->id == type.id;
     }
 
-    void structures::CarType::AddModel(CarModel &new_model)
+    void structures::CarType::AddModel(CarModel *new_model)
     {
-        if (new_model.Id() > this->num_of_models)
+        if (new_model->Id() > this->num_of_models)
         {
             return;
         }
-        this->models[new_model.Id()] = new_model;
+        this->models[new_model->Id()] = new_model;
     }
 
     void structures::CarType::RemoveModel(const int id)
@@ -72,7 +74,7 @@ namespace structures
         {
             return;
         }
-        CarModel *model = &(this->models[id]);
+        CarModel *model = this->models[id];
         delete model;
     }
 
@@ -83,7 +85,7 @@ namespace structures
             return;
         }
         // Initiate the models array.
-        this->models = new CarModel[num]();
+        this->models = new CarModel*[num]();
         if (this->models == nullptr)
         {
             return;
@@ -92,7 +94,7 @@ namespace structures
         for (int i = 0; i < num; i++)
         {
             CarModel *temp = new CarModel(i, this->id);
-            this->AddModel(*temp);
+            this->AddModel(temp);
             // Check if we have the smallest model ID.
             if (i == 0)
             {
