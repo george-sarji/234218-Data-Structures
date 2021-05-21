@@ -68,6 +68,7 @@ namespace structures
         try
         {
             // Add the type to the types tree.
+            // TODO: Fix the bug with the data update in addIntersection on the second add.
             this->types = this->types->addIntersection(newType);
         }
         catch (const structures::TreeException &error)
@@ -475,7 +476,8 @@ namespace structures
 
 int main() {
     structures::CarDealershipManager *m = new structures::CarDealershipManager();
-    // m->AddCarType(1,1);
+    m->AddCarType(1,1);
+    m->AddCarType(2,1);
     m->Quit();
     delete m;
     return 0;
