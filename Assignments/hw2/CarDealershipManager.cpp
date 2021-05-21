@@ -75,6 +75,7 @@ namespace structures
             // We have a similar type already in the tree. Throw a failure.
             if (error.errorType() == ALREADY_EXISTS)
             {
+                delete newType;
                 throw FailureError();
             }
         }
@@ -133,9 +134,11 @@ namespace structures
         // We found the relevant car type. Start removing the car models.
         // Get the relevant car type in the non-sold models, if it exists already.
         Tree<TypeNode> *typeNodeTree;
+        TypeNode *temp_node;
         try
         {
-            typeNodeTree = this->non_sold_models->findData(*(new TypeNode(typeID)));
+            temp_node = new TypeNode(typeID);
+            typeNodeTree = this->non_sold_models->findData(*temp_node);
         }
         catch (const TreeException &e)
         {
@@ -143,6 +146,11 @@ namespace structures
             {
                 all_sold = true;
             }
+        }
+        catch (const std::bad_alloc &e)
+        {
+            delete temp;
+            throw MemoryError();
         }
         for (int i = 0; i < total_models; i++)
         {
@@ -155,6 +163,8 @@ namespace structures
             }
             else if (all_sold)
             {
+                delete temp;
+                delete temp_node;
                 // We have something problematic. Throw an error.
                 throw Exception();
             }
@@ -176,6 +186,8 @@ namespace structures
         {
             if (e.errorType() == DOESNT_EXIST)
             {
+                delete temp;
+                delete temp_node;
                 // We have a problem. Throw a general error, shouldn't arrive here logically.
                 throw Exception();
             }
@@ -184,6 +196,10 @@ namespace structures
         this->total_models -= total_models;
         Tree<TypeNode> *newSmallest = this->non_sold_models->getSmallest();
         this->smallest_non_sold_type = (newSmallest != nullptr) ? newSmallest->Data() : nullptr;
+
+        // Delete the local pointers
+        delete temp_node;
+        delete temp;
     }
 
     void CarDealershipManager::SellCar(int typeID, int modelID)
@@ -229,9 +245,11 @@ namespace structures
             throw InvalidInput();
         // Lets check for the type ID.
         Tree<CarType> *typeNode;
+        CarType *temp_type;
         try
         {
-            typeNode = this->types->findData(*(new CarType(typeID)));
+            temp_type = new CarType(typeID);
+            typeNode = this->types->findData(*temp_type);
         }
         catch (const TreeException &e)
         {
@@ -241,9 +259,16 @@ namespace structures
                 throw FailureError();
             }
         }
+        catch (const std::bad_alloc &e)
+        {
+            throw MemoryError();
+        }
         // We have the type node. Check if the model ID is appropriate.
         if (typeNode->Data()->numOfModels() <= modelID)
+        {
+            delete temp_type;
             throw FailureError();
+        }
         // Check for the model in the models tree, according to the sales.
         CarModel currentModel = typeNode->Data()->Models()[modelID];
         if (currentModel.Sales() != 0)
@@ -258,6 +283,7 @@ namespace structures
             {
                 if (e.errorType() == DOESNT_EXIST)
                 {
+                    delete temp_type;
                     // Model does not exist in the sold models.
                     throw FailureError();
                 }
