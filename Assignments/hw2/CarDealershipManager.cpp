@@ -68,6 +68,7 @@ namespace structures
         try
         {
             // Add the type to the types tree.
+            // TODO: Fix the bug with the data update in addIntersection on the second add.
             this->types = this->types->addIntersection(newType);
         }
         catch (const structures::TreeException &error)
@@ -234,7 +235,6 @@ namespace structures
         CarType *current_type = new CarType(typeID);
         Tree<CarType> *temp = this->types->findData(*current_type);
         delete current_type;
-
         if (temp == nullptr || temp->Data()->numOfModels() <= modelID)
         {
             throw FailureError();
@@ -276,11 +276,6 @@ namespace structures
             delete tmp;
             TypeNode *data = to_sell->Data();
 
-            if (data == this->smallest_non_sold_type)
-            {
-                //get next smallest in the non sold tree
-            }
-
             CarModel *prev_smallest = data->getSmallestModel();
             Tree<CarModel> *model_to_sell_tree = to_sell->Data()->getModels();
 
@@ -302,11 +297,16 @@ namespace structures
             {
                 data->updateSmallestModel(model_to_sell_tree->findData(*model_to_sell)->Data());
             }
-
             model_to_sell_tree = model_to_sell_tree->removeIntersection(model_to_sell);
             delete model_to_sell;
-
             this->sold_models = this->sold_models->addIntersection(new CarModel(current));
+            //get next smallest in the non sold tree
+            Tree<TypeNode>* smallest = this->non_sold_models;
+            while(smallest->Left() != nullptr)
+            {
+                smallest = smallest->Left();
+            }
+            this->smallest_non_sold_type = smallest->Data();
         }
         else
         {
@@ -322,26 +322,36 @@ namespace structures
                 current.Grade() -= 10;
                 temp->Data()->bestSeller() = prev_best_seller;
                 this->bestModel = prev_best_model;
-                throw;            }
+                throw;            
+            }
             
             Tree<CarModel> *data_tree = this->sold_models->findData(*tmp);
             delete tmp;
-            CarModel *data = data_tree->Data();
-
-
-
-            // data->Sales() += 1;
-            // data->Grade() += 10;
-
-            if (this->smallest_sold_model == data)
+            CarModel* data;
+            try
             {
-
+                data = new CarModel(*data_tree->Data());
+            }
+            catch(const std::bad_alloc& e)
+            {
+                current.Sales()--;
+                current.Grade() -= 10;
+                temp->Data()->bestSeller() = prev_best_seller;
+                this->bestModel = prev_best_model;
+                throw;            
             }
 
-            // if(model_to_sell_tree->findData(*model_to_sell)->Data() == this->smallest_sold_model)
-            // {
-
-            // }
+            this->sold_models = this->sold_models->removeIntersection(data);
+            data->Sales() += 1;
+            data->Grade() += 10;
+            this->sold_models = this->sold_models->addIntersection(data);
+            
+            Tree<CarModel>* smallest = this->sold_models;
+            while(smallest->Left() != nullptr)
+            {
+                smallest = smallest->Left();
+            }
+            this->smallest_sold_model = smallest->Data();
         }
     }
 
@@ -450,6 +460,7 @@ namespace structures
 
     void CarDealershipManager::GetWorstModels(int numOfModels, int *types, int *models)
     {
+        
     }
 
 
