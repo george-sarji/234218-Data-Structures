@@ -9,7 +9,7 @@ namespace structures
 
     structures::TypeNode::~TypeNode()
     {
-        delete models;
+        models->clearTree();
     }
 
     structures::TypeNode::TypeNode(int type_id, int num_of_models)

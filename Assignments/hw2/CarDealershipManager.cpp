@@ -455,17 +455,19 @@ namespace structures
 
     void CarDealershipManager::Quit()
     {
-        delete this->sold_models;
-        delete this->non_sold_models;
-        delete this->car_sales;
-        delete this->types;
+        types->clearTree();
+        sold_models->clearTree();
+        non_sold_models->clearTree();
+        car_sales->clearTree();
     }
 
 }
 
 int main() {
     structures::CarDealershipManager *m = new structures::CarDealershipManager();
-    // m->AddCarType(1,1);
+    m->AddCarType(1,1);
+    m->AddCarType(2,1);
+    m->AddCarType(3,5);
     m->Quit();
     delete m;
     return 0;
