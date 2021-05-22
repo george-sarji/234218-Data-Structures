@@ -35,27 +35,27 @@ namespace structures
         return this->num_of_models;
     }
 
-    bool structures::CarType::operator>(const CarType type) const
+    bool structures::CarType::operator>(const CarType& type) const
     {
         return this->id > type.id;
     }
 
-    bool structures::CarType::operator>=(const CarType type) const
+    bool structures::CarType::operator>=(const CarType& type) const
     {
         return this->id >= type.id;
     }
 
-    bool structures::CarType::operator<(const CarType type) const
+    bool structures::CarType::operator<(const CarType& type) const
     {
         return this->id < type.id;
     }
 
-    bool structures::CarType::operator<=(const CarType type) const
+    bool structures::CarType::operator<=(const CarType& type) const
     {
         return this->id <= type.id;
     }
 
-    bool structures::CarType::operator==(const CarType type) const
+    bool structures::CarType::operator==(const CarType& type) const
     {
         return this->id == type.id;
     }
@@ -86,7 +86,7 @@ namespace structures
             return;
         }
         // Initiate the models array.
-        this->models = new CarModel*[num]();
+        this->models = new CarModel *[num]();
         this->num_of_models = num;
         for (int i = 0; i < num; i++)
         {

@@ -27,11 +27,11 @@ namespace structures
         int numOfModels() const;
 
         // Operator overloads
-        bool operator>(const CarType) const;
-        bool operator>=(const CarType) const;
-        bool operator<(const CarType) const;
-        bool operator<=(const CarType) const;
-        bool operator==(const CarType) const;
+        bool operator>(const CarType&) const;
+        bool operator>=(const CarType&) const;
+        bool operator<(const CarType&) const;
+        bool operator<=(const CarType&) const;
+        bool operator==(const CarType&) const;
 
         // Utility functions
         void AddModel(CarModel *new_model);
