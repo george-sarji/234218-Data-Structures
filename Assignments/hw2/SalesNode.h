@@ -12,8 +12,9 @@ namespace structures
     public:
         SalesNode(CarModel *model) : model(model) {}
         ~SalesNode();
-        SalesNode() = default;
+        SalesNode() : model(nullptr) {}
         SalesNode(const SalesNode *node) : model(node->model) {}
+        SalesNode& operator=(const SalesNode& node);
 
         void setModel(CarModel* model);
         CarModel* getModel() const;
@@ -22,6 +23,7 @@ namespace structures
         bool operator>(const SalesNode &node) const;
         bool operator<(const SalesNode &node) const;
         bool operator==(const SalesNode& node) const;
+        SalesNode* operator*();
     };
 }
 

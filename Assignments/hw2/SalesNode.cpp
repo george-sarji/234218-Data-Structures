@@ -3,6 +3,10 @@
 namespace structures
 {
     structures::SalesNode::~SalesNode() {
+        if(model == nullptr)
+        {
+            return;
+        }
         delete model;
     }
 
@@ -29,6 +33,23 @@ namespace structures
     bool SalesNode::operator==(const SalesNode &node) const
     {
         return *(this->model) == *(node.model);
+    }
+
+    SalesNode *SalesNode::operator*()
+    {
+        return this;
+    }
+
+    SalesNode &SalesNode::operator=(const SalesNode &node)
+    {
+        CarModel* temp = this->model;
+        this->model = node.model;
+        if(temp == nullptr)
+        {
+            return *this;
+        }
+        delete temp;
+        return *this;
     }
 
 }

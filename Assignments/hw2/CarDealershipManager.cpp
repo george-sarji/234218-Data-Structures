@@ -114,6 +114,10 @@ namespace structures
         {
             this->smallest_non_sold_type = node;
         }
+        for (int i = 0; i < numModels; ++i)
+        {
+            this->car_sales = this->car_sales->addIntersection(new SalesNode(new CarModel(i, typeID)));
+        }
     }
 
     void CarDealershipManager::RemoveCarType(int typeID)
@@ -232,77 +236,49 @@ namespace structures
             throw InvalidInput();
         }
 
-        CarType *current_type = new CarType(typeID);
-        Tree<CarType> *temp = this->types->findData(*current_type);
-        delete current_type;
-        if (temp == nullptr || temp->Data()->numOfModels() <= modelID)
+        CarType current_type(typeID);
+        
+        CarType *temp = this->types->findData(current_type)->Data();
+        if (temp == nullptr || temp->numOfModels() <= modelID)
         {
             throw FailureError();
         }
 
-        CarModel current = temp->Data()->Models()[modelID];
-        current.Sales()++;
-        current.Grade() += 10;
+        CarModel *current = &(temp->Models()[modelID]);
+        current->Sales()++;
+        current->Grade() += 10;
 
-        CarModel prev_best_seller = temp->Data()->bestSeller();
-        if (current.isBetterSeller(temp->Data()->bestSeller()))
+        CarModel prev_best_seller = temp->bestSeller();
+        if (current->isBetterSeller(temp->bestSeller()))
         {
-            temp->Data()->bestSeller() = current;
+            temp->bestSeller() = *current;
         }
         CarModel *prev_best_model = this->bestModel;
-        if (current.isBetterSeller(*this->bestModel))
+        if (current->isBetterSeller(*this->bestModel))
         {
-            this->bestModel = &current;
+            this->bestModel = current;
         }
 
-        if (current.Sales() == 1)
+        if (current->Sales() == 1)
         {
             //remove from unsold tree to sold tree
-            TypeNode * tmp;
-            try
-            {
-                tmp = new TypeNode(typeID);
-            }
-            catch(const std::bad_alloc& e)
-            {
-                current.Sales()--;
-                current.Grade() -= 10;
-                temp->Data()->bestSeller() = prev_best_seller;
-                this->bestModel = prev_best_model;
-                throw;
-            }
-            
-            Tree<TypeNode> *to_sell = this->non_sold_models->findData(*tmp);
-            delete tmp;
-            TypeNode *data = to_sell->Data();
 
-            CarModel *prev_smallest = data->getSmallestModel();
-            Tree<CarModel> *model_to_sell_tree = to_sell->Data()->getModels();
+            TypeNode *to_sell = this->non_sold_models->findData(TypeNode(typeID))->Data();
 
-            CarModel *model_to_sell;
-            try
+            CarModel *prev_smallest = to_sell->getSmallestModel();
+            Tree<CarModel> *model_to_sell_tree = to_sell->getModels();
+            CarModel model_to_sell = CarModel(modelID, typeID);
+
+            if (*prev_smallest < *model_to_sell_tree->findData(model_to_sell)->Data())
             {
-                model_to_sell = new CarModel(modelID, typeID);
+                to_sell->updateSmallestModel(model_to_sell_tree->findData(model_to_sell)->Data());
             }
-            catch(const std::bad_alloc& e)
-            {
-                current.Sales()--;
-                current.Grade() -= 10;
-                temp->Data()->bestSeller() = prev_best_seller;
-                this->bestModel = prev_best_model;
-                throw;            
-            }
-            
-            if (*prev_smallest < *model_to_sell_tree->findData(*model_to_sell)->Data())
-            {
-                data->updateSmallestModel(model_to_sell_tree->findData(*model_to_sell)->Data());
-            }
-            model_to_sell_tree = model_to_sell_tree->removeIntersection(model_to_sell);
-            delete model_to_sell;
-            this->sold_models = this->sold_models->addIntersection(new CarModel(current));
+            model_to_sell_tree = model_to_sell_tree->removeIntersection(&model_to_sell);
+            //delete model_to_sell;
+            this->sold_models = this->sold_models->addIntersection(new CarModel(*current));
             //get next smallest in the non sold tree
-            Tree<TypeNode>* smallest = this->non_sold_models;
-            while(smallest->Left() != nullptr)
+            Tree<TypeNode> *smallest = this->non_sold_models;
+            while (smallest->Left() != nullptr)
             {
                 smallest = smallest->Left();
             }
@@ -311,53 +287,53 @@ namespace structures
         else
         {
             //update information at sold tree
-            CarModel* tmp;
+            CarModel *tmp;
             try
             {
                 tmp = new CarModel(modelID, typeID);
             }
-            catch(const std::bad_alloc& e)
+            catch (const std::bad_alloc &e)
             {
-                current.Sales()--;
-                current.Grade() -= 10;
-                temp->Data()->bestSeller() = prev_best_seller;
+                current->Sales()--;
+                current->Grade() -= 10;
+                temp->bestSeller() = prev_best_seller;
                 this->bestModel = prev_best_model;
-                throw;            
+                throw;
             }
-            
+
             Tree<CarModel> *data_tree = this->sold_models->findData(*tmp);
             delete tmp;
-            CarModel* data;
+            CarModel *data;
             try
             {
                 data = new CarModel(*data_tree->Data());
             }
-            catch(const std::bad_alloc& e)
+            catch (const std::bad_alloc &e)
             {
-                current.Sales()--;
-                current.Grade() -= 10;
-                temp->Data()->bestSeller() = prev_best_seller;
+                current->Sales()--;
+                current->Grade() -= 10;
+                temp->bestSeller() = prev_best_seller;
                 this->bestModel = prev_best_model;
-                throw;            
+                throw;
             }
 
             this->sold_models = this->sold_models->removeIntersection(data);
             data->Sales() += 1;
             data->Grade() += 10;
             this->sold_models = this->sold_models->addIntersection(data);
-            
-            Tree<CarModel>* smallest = this->sold_models;
-            while(smallest->Left() != nullptr)
+
+            Tree<CarModel> *smallest = this->sold_models;
+            while (smallest->Left() != nullptr)
             {
                 smallest = smallest->Left();
             }
             this->smallest_sold_model = smallest->Data();
         }
         //update information in car_sales.
-        SalesNode* data = this->car_sales->findData(&current)->Data();
+        SalesNode *data = new SalesNode(this->car_sales->findData(current)->Data());
         this->car_sales = this->car_sales->removeIntersection(data);
-        SalesNode* add_sale = new SalesNode(&current);
-        this->car_sales = this->car_sales->addIntersection(add_sale);
+        delete data;
+        this->car_sales = this->car_sales->addIntersection(new SalesNode(current));
     }
 
     void CarDealershipManager::MakeComplaint(int typeID, int modelID, int t)
