@@ -181,7 +181,7 @@ namespace structures
         // Remove the actual models.
         for (int i = 0; i < total_models; i++)
         {
-            CarModel current = vertex->Data()->Models()[i];
+            CarModel current = *vertex->Data()->Models()[i];
             // Check if vehicle has already been sold once.
             if (current.Sales() != 0)
             {
