@@ -25,9 +25,9 @@ namespace structures
         return *(this->best_seller);
     }
 
-    CarModel *structures::CarType::Models()
+    CarModel **structures::CarType::Models()
     {
-        return *this->models;
+        return this->models;
     }
 
     int structures::CarType::numOfModels() const

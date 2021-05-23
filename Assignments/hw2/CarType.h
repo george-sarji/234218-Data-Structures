@@ -23,7 +23,7 @@ namespace structures
         int &Id();
         int &Max_sales();
         CarModel &bestSeller();
-        CarModel *Models();
+        CarModel **Models();
         int numOfModels() const;
 
         // Operator overloads

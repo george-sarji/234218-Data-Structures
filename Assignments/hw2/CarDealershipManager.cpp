@@ -244,7 +244,7 @@ namespace structures
             throw FailureError();
         }
 
-        CarModel *current = &(temp->Models()[modelID]);
+        CarModel *current = (temp->Models()[modelID]);
         current->Sales()++;
         current->Grade() += 10;
 
@@ -369,7 +369,7 @@ namespace structures
             throw FailureError();
         }
         // Check for the model in the models tree, according to the sales.
-        CarModel currentModel = typeNode->Data()->Models()[modelID];
+        CarModel currentModel = *typeNode->Data()->Models()[modelID];
         if (currentModel.Sales() != 0)
         {
             // This model has been sold already. Check the sold vehicles tree.
