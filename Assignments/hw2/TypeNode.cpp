@@ -4,7 +4,7 @@ namespace structures
 {
     structures::TypeNode::TypeNode() : type_id(int()), models(new Tree<CarModel>()), smallest_model(nullptr)
     {
-        
+
     }
 
     structures::TypeNode::~TypeNode()

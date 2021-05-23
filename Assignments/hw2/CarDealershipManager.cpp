@@ -86,7 +86,7 @@ namespace structures
             // Default best seller.
             this->bestModel = &newType->bestSeller();
         }
-        // Check if the best seller is better than the global best seller.
+            // Check if the best seller is better than the global best seller.
         else if (newType->bestSeller().isBetterSeller(*this->bestModel))
         {
             // We have a better seller. Change the best seller.
@@ -418,7 +418,7 @@ namespace structures
             *modelID = bestModel->Id();
             return;
         }
-        // It's not a global request. Search for the given type ID.
+            // It's not a global request. Search for the given type ID.
         else
         {
             Tree<CarType> *vertex;
@@ -455,14 +455,14 @@ namespace structures
 
 }
 
-int main()
-{
-    structures::CarDealershipManager *m = new structures::CarDealershipManager();
-    m->AddCarType(1, 1);
-    m->AddCarType(2, 1);
-    m->AddCarType(3, 5);
-    m->SellCar(1, 0);
-    m->Quit();
-    delete m;
-    return 0;
-}
+//int main()
+//{
+//    structures::CarDealershipManager *m = new structures::CarDealershipManager();
+//    m->AddCarType(1, 1);
+//    m->AddCarType(2, 1);
+//    m->AddCarType(3, 5);
+//    m->SellCar(1, 0);
+//    m->Quit();
+//    delete m;
+//    return 0;
+//}

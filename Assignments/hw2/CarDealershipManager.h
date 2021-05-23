@@ -12,28 +12,27 @@ namespace structures
 {
     class CarDealershipManager
     {
-        private:
-            CarModel *bestModel;
-            int total_models;
-            CarModel* smallest_sold_model;
-            TypeNode* smallest_non_sold_type;
-            Tree<CarType>* types;
-            Tree<CarModel>* sold_models;
-            Tree<TypeNode>* non_sold_models;
-            Tree<SalesNode>* car_sales;
+    private:
+        CarModel *bestModel;
+        int total_models;
+        CarModel *smallest_sold_model;
+        TypeNode *smallest_non_sold_type;
+        Tree<CarType> *types;
+        Tree<CarModel> *sold_models;
+        Tree<TypeNode> *non_sold_models;
+        Tree<SalesNode> *car_sales;
 
-        public:
-            CarDealershipManager();
-            ~CarDealershipManager() = default;
+    public:
+        CarDealershipManager();
+        ~CarDealershipManager() = default;
 
-            void AddCarType(int typeID, int numModels);
-            void RemoveCarType(int typeID);
-            void SellCar(int typeID, int modelID);
-            void MakeComplaint(int typeID, int modelID, int t);
-            void GetBestSellerModelByType(int typeID, int *modelID);
-            void GetWorstModels(int numOfModels , int *types, int *models);
-            void Quit();
-
+        void AddCarType(int typeID, int numModels);
+        void RemoveCarType(int typeID);
+        void SellCar(int typeID, int modelID);
+        void MakeComplaint(int typeID, int modelID, int t);
+        void GetBestSellerModelByType(int typeID, int *modelID);
+        void GetWorstModels(int numOfModels, int *types, int *models);
+        void Quit();
     };
 }
 

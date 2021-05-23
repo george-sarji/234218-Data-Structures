@@ -121,7 +121,7 @@ namespace structures
         {
             return this->right->height + 1;
         }
-        return this->height;
+        return 0;
     }
 
     template <class T>
@@ -137,11 +137,11 @@ namespace structures
         }
         else if (this->left && !this->right)
         {
-            return this->left->height;
+            return this->height;
         }
         else
         {
-            return this->right->height;
+            return - this->height;
         }
     }
 
@@ -326,14 +326,14 @@ namespace structures
             {
                 this->right = this->right->addIntersection(new_data);
             }
-            // There isn't. Add a new subtree.
+                // There isn't. Add a new subtree.
             else
             {
                 this->right = new Tree(new_data);
             }
             (this->right)->parent = this;
         }
-        // Check if the data goes to the left subtree
+            // Check if the data goes to the left subtree
         else if (*new_data < *this->data)
         {
             // Is there a left subtree?
@@ -341,14 +341,14 @@ namespace structures
             {
                 this->left = this->left->addIntersection(new_data);
             }
-            // There isn't. Add a new subtree.
+                // There isn't. Add a new subtree.
             else
             {
                 this->left = new Tree(new_data);
             }
             (this->left)->parent = this;
         }
-        // AVL does not allow equal keys, don't add.
+            // AVL does not allow equal keys, don't add.
         else
         {
             throw AlreadyExists();
@@ -393,13 +393,13 @@ namespace structures
             {
                 this->left = this->left->removeIntersection(data);
             }
-            // There isn't. Nothing to remove.
+                // There isn't. Nothing to remove.
             else
             {
                 return this;
             }
         }
-        // Check if this goes to the right subtree.
+            // Check if this goes to the right subtree.
         else if (*data > *this->data)
         {
             // Is there a right subtree?
@@ -407,14 +407,14 @@ namespace structures
             {
                 this->right = this->right->removeIntersection(data);
             }
-            // There isn't. Nothing to remove.
+                // There isn't. Nothing to remove.
             else
             {
                 return this;
             }
         }
 
-        // We have reached the intersection to delete
+            // We have reached the intersection to delete
         else
         {
             // Is the intersection a leaf?
@@ -423,14 +423,14 @@ namespace structures
                 delete this;
                 return nullptr;
             }
-            // Does the intersection have two children?
+                // Does the intersection have two children?
             else if (this->left != nullptr && this->right != nullptr)
             {
                 Tree<T> *next = this->inorderSuccessor();
                 this->data = next->data;
                 this->right = this->right->removeIntersection(next->data);
             }
-            // The intersection has only one child
+                // The intersection has only one child
             else
             {
                 Tree<T> *son = this->left ? this->left : this->right;
@@ -514,17 +514,17 @@ namespace structures
         {
             return this;
         }
-        // Should we check the right subtree?
+            // Should we check the right subtree?
         else if (data > *this->data && this->right != nullptr)
         {
             return this->right->findData(data);
         }
-        // Should we check the left subtree?
+            // Should we check the left subtree?
         else if (data < *this->data && this->left != nullptr)
         {
             return this->left->findData(data);
         }
-        // Did we reach a deadend?
+            // Did we reach a deadend?
         else if (this->left == nullptr && this->right == nullptr)
             return nullptr;
         // Shouldn't reach here
