@@ -26,4 +26,9 @@ namespace structures
         return this->model;
     }
 
+    bool SalesNode::operator==(const SalesNode &node) const
+    {
+        return *(this->model) == *(node.model);
+    }
+
 }

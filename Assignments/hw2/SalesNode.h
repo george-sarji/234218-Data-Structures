@@ -21,6 +21,7 @@ namespace structures
         // Operator overloads
         bool operator>(const SalesNode &node) const;
         bool operator<(const SalesNode &node) const;
+        bool operator==(const SalesNode& node) const;
     };
 }
 

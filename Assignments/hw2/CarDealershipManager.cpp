@@ -353,6 +353,11 @@ namespace structures
             }
             this->smallest_sold_model = smallest->Data();
         }
+        //update information in car_sales.
+        SalesNode* data = this->car_sales->findData(&current)->Data();
+        this->car_sales = this->car_sales->removeIntersection(data);
+        SalesNode* add_sale = new SalesNode(&current);
+        this->car_sales = this->car_sales->addIntersection(add_sale);
     }
 
     void CarDealershipManager::MakeComplaint(int typeID, int modelID, int t)
