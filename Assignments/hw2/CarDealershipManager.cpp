@@ -447,7 +447,8 @@ namespace structures
             Tree<CarType> *vertex;
             try
             {
-                vertex = this->types->findData(*(new CarType(typeID)));
+                CarType type(typeID);
+                vertex = this->types->findData(type);
             }
             catch (const TreeException &e)
             {
