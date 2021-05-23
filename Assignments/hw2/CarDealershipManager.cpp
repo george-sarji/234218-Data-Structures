@@ -9,7 +9,7 @@ namespace structures
                                                                smallest_sold_model(nullptr), smallest_non_sold_type(nullptr)
     {
         types = new Tree<CarType>();
-        
+
         try
         {
             sold_models = new Tree<CarModel>();
@@ -237,7 +237,7 @@ namespace structures
         }
 
         CarType current_type(typeID);
-        
+
         CarType *temp = this->types->findData(current_type)->Data();
         if (temp == nullptr || temp->numOfModels() <= modelID)
         {
@@ -262,8 +262,8 @@ namespace structures
         if (current->Sales() == 1)
         {
             //remove from unsold tree to sold tree
-
-            TypeNode *to_sell = this->non_sold_models->findData(TypeNode(typeID))->Data();
+            TypeNode type(typeID);
+            TypeNode *to_sell = this->non_sold_models->findData(type)->Data();
 
             CarModel *prev_smallest = to_sell->getSmallestModel();
             Tree<CarModel> *model_to_sell_tree = to_sell->getModels();
@@ -330,7 +330,8 @@ namespace structures
             this->smallest_sold_model = smallest->Data();
         }
         //update information in car_sales.
-        SalesNode *data = new SalesNode(this->car_sales->findData(current)->Data());
+        SalesNode current_node(current);
+        SalesNode *data = new SalesNode(this->car_sales->findData(current_node)->Data());
         this->car_sales = this->car_sales->removeIntersection(data);
         delete data;
         this->car_sales = this->car_sales->addIntersection(new SalesNode(current));
@@ -442,9 +443,7 @@ namespace structures
 
     void CarDealershipManager::GetWorstModels(int numOfModels, int *types, int *models)
     {
-        
     }
-
 
     void CarDealershipManager::Quit()
     {
@@ -456,11 +455,13 @@ namespace structures
 
 }
 
-int main() {
+int main()
+{
     structures::CarDealershipManager *m = new structures::CarDealershipManager();
-    m->AddCarType(1,1);
-    m->AddCarType(2,1);
-    m->AddCarType(3,5);
+    m->AddCarType(1, 1);
+    m->AddCarType(2, 1);
+    m->AddCarType(3, 5);
+    m->SellCar(1, 0);
     m->Quit();
     delete m;
     return 0;
