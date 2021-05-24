@@ -433,7 +433,7 @@ namespace structures
             else if (this->left != nullptr && this->right != nullptr)
             {
                 Tree<T> *next = this->inorderSuccessor();
-                this->data = next->data;
+                *(this->data) = *(next->data);
                 this->right = this->right->removeIntersection(next->data);
             }
                 // The intersection has only one child

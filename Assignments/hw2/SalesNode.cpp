@@ -42,13 +42,7 @@ namespace structures
 
     SalesNode &SalesNode::operator=(const SalesNode &node)
     {
-        CarModel *temp = this->model;
-        this->model = node.model;
-        if (temp == nullptr)
-        {
-            return *this;
-        }
-        delete temp;
+        *this->model = *node.model;
         return *this;
     }
 

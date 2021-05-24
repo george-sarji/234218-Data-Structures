@@ -55,7 +55,7 @@ namespace structures
 
     bool structures::CarModel::operator>(const CarModel &model) const
     {
-        return this->id > model.id;
+        return this->isBetterModel(model);
     }
 
     bool structures::CarModel::operator>=(const CarModel &model) const
@@ -65,7 +65,7 @@ namespace structures
 
     bool structures::CarModel::operator<(const CarModel &model) const
     {
-        return this->id < model.id;
+        return model.isBetterModel(*this);
     }
 
     bool structures::CarModel::operator<=(const CarModel &model) const
