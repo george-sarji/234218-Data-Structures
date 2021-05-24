@@ -361,66 +361,46 @@ namespace structures
 
     void CarDealershipManager::MakeComplaint(int typeID, int modelID, int t)
     {
-        // Check if the initial parameters are correct.
         if (modelID < 0 || typeID <= 0 || t <= 0)
+        {
             throw InvalidInput();
-        // Lets check for the type ID.
-        Tree<CarType> *typeNode;
-        CarType *temp_type;
+        }
+        // We need to get the type.
+        CarType *temp_type = new CarType(typeID);
+        Tree<CarType> *current_type;
         try
         {
-            temp_type = new CarType(typeID);
-            typeNode = this->types->findData(*temp_type);
+            current_type = this->types->findData(*temp_type);
         }
-        catch (const TreeException &e)
+        catch (const DoesntExist &e)
         {
-            // We don't have a type with the given ID. Throw an error.
-            if (e.errorType() == DOESNT_EXIST)
-            {
-                throw FailureError();
-            }
-        }
-        catch (const std::bad_alloc &e)
-        {
-            throw MemoryError();
-        }
-        // We have the type node. Check if the model ID is appropriate.
-        if (typeNode->Data()->numOfModels() <= modelID)
-        {
-            delete temp_type;
             throw FailureError();
         }
-        // Check for the model in the models tree, according to the sales.
-        CarModel currentModel = *typeNode->Data()->Models()[modelID];
-        if (currentModel.Sales() != 0)
+        // Did we find the given type?
+        if (current_type == nullptr)
         {
-            // This model has been sold already. Check the sold vehicles tree.
-            Tree<CarModel> *requested_model;
-            try
-            {
-                requested_model = this->sold_models->findData(currentModel);
-            }
-            catch (const TreeException &e)
-            {
-                if (e.errorType() == DOESNT_EXIST)
-                {
-                    delete temp_type;
-                    // Model does not exist in the sold models.
-                    throw FailureError();
-                }
-            }
-            // We have the requested model. Decrease the grade accordingly.
-            currentModel.Grade() -= (10 / t);
-            // Increase the complaints counter
-            currentModel.Complaints()++;
-            // Remove the model from the sold trees.
-            this->sold_models = this->sold_models->removeIntersection(requested_model->Data());
-            // Add the new model.
-            this->sold_models = this->sold_models->addIntersection(&currentModel);
-            // We can leave now.
-
-            // TODO: Update the global variable for the best models, and for the smallest model in sold models.
+            throw FailureError();
         }
+        // We have the type in the tree. Let's check for the model.
+        if (current_type->Data()->numOfModels() <= modelID)
+        {
+            // No proper model.
+            throw FailureError();
+        }
+        // We have the model, confirmed. Fetch it.
+        CarModel *current_model = current_type->Data()->Models()[modelID];
+        // We should have sold it earlier, according to the documentation. That means we check in the sold_cars and the car_sales.
+        current_model->Grade() -= 10 / t;
+        current_model->Complaints()++;
+        // We have to remove the current model and update it.
+        this->sold_models = this->sold_models->removeIntersection(current_model);
+        if (this->sold_models == nullptr)
+        {
+            this->sold_models = new Tree<CarModel>();
+        }
+        this->sold_models = this->sold_models->addIntersection(new CarModel(*current_model));
+
+        delete temp_type;
     }
 
     void CarDealershipManager::GetBestSellerModelByType(int typeID, int *modelID)
