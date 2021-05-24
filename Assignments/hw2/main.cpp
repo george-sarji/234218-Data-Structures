@@ -7,6 +7,7 @@ int main()
     m->AddCarType(2, 1);
     m->AddCarType(3, 5);
     m->SellCar(1, 0);
+    m->RemoveCarType(1);
     m->Quit();
     delete m;
     return 0;
