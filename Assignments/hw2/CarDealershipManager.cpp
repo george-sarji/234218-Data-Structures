@@ -122,7 +122,7 @@ namespace structures
         {
             this->smallest_non_sold_type = best;
         }
-        for (int i = 0; i < numModels; ++i)
+        for (int i = 0; i < numModels; i++)
         {
             this->car_sales = this->car_sales->addIntersection(new SalesNode(new CarModel(i, typeID)));
         }
@@ -145,6 +145,10 @@ namespace structures
             {
                 throw FailureError();
             }
+        }
+        if (vertex == nullptr)
+        {
+            throw FailureError();
         }
         int total_models = vertex->Data()->numOfModels();
         // We found the relevant car type. Start removing the car models.
@@ -263,7 +267,9 @@ namespace structures
         }
         // We need to search for the model. Check if the sales of the model are 0.
         CarModel *requested_model = requested_node->Data()->Models()[modelID];
+        CarModel *old_model = new CarModel(*requested_model);
         Tree<CarModel> *new_sold_node;
+        bool deleted_smallest = false;
         // We still have to update the data.
         requested_model->Sales()++;
         requested_model->Grade() += 10;
@@ -276,10 +282,10 @@ namespace structures
             // We should have the model in here.
             // We have to add the new car model into the sales tree with a NEW variable
             sold_models = sold_models->addIntersection(new CarModel(*requested_model));
-            new_sold_node = sold_models->findData(*requested_model);
+            new_sold_node = sold_models->findData(*old_model);
             // We need to remove it from the given tree.
             // We have to update the car_sales tree.
-            SalesNode car_sales_node(new CarModel(*requested_model));
+            SalesNode car_sales_node(new CarModel(*old_model));
             // Check for the sales node, we have to update it.
             Tree<SalesNode> *node_for_update = this->car_sales->findData(car_sales_node);
             // We have to remove the given node, and add it with the requested model.
@@ -293,7 +299,7 @@ namespace structures
             this->car_sales = this->car_sales->addIntersection(new SalesNode(new CarModel(*requested_model)));
             // We can now finally remove the requested model:
             Tree<CarModel> *models = sales_node->Data()->getModels();
-            models = models->removeIntersection(requested_model);
+            models = models->removeIntersection(old_model);
             sales_node->Data()->updateModels(models);
             // Check if this was the last model in the type in the non sold model tree.
             if (models == nullptr)
@@ -317,7 +323,11 @@ namespace structures
         {
             // Search in the sales tree and update accordingly.
             // We need the remove the requested model and add it again for the updated data.
-            this->sold_models = this->sold_models->removeIntersection(requested_model);
+            if (*old_model == *this->smallest_sold_model->Data())
+            {
+                deleted_smallest = true;
+            }
+            this->sold_models = this->sold_models->removeIntersection(old_model);
             if (this->sold_models == nullptr)
             {
                 this->sold_models = new Tree<CarModel>();
@@ -325,25 +335,25 @@ namespace structures
             this->sold_models = this->sold_models->addIntersection(new CarModel(*requested_model));
             // We have to update the car_sales tree.
             // We need to remove the old sales node and add the new one.
-            SalesNode *new_node = new SalesNode(new CarModel(*requested_model));
-            this->car_sales = this->car_sales->removeIntersection(new_node);
+            SalesNode *new_node = new SalesNode(new CarModel(*requested_model)), *to_remove = new SalesNode(new CarModel(*old_model));
+            this->car_sales = this->car_sales->removeIntersection(to_remove);
             if (this->car_sales == nullptr)
             {
                 this->car_sales = new Tree<SalesNode>();
             }
             this->car_sales = this->car_sales->addIntersection(new_node);
+            delete to_remove;
         }
 
-        // // Check if this is the new smallest sold model.
-        if (this->smallest_sold_model == nullptr)
+        // Check if this is the new smallest sold model.
+        if (this->smallest_sold_model == nullptr || deleted_smallest)
         {
             this->smallest_sold_model = new_sold_node;
         }
         else if (*requested_model < *this->smallest_sold_model->Data())
         {
-            // We have a new smallest sold model.
-            // Delete the smallest model.
-            this->smallest_sold_model = new_sold_node;
+                // We have a new smallest sold model.
+                this->smallest_sold_model = new_sold_node;
         }
         // Let's check the best seller now.
         if (this->bestModel == nullptr)
@@ -356,6 +366,8 @@ namespace structures
             delete this->bestModel;
             this->bestModel = new CarModel(*requested_model);
         }
+
+        delete old_model;
     }
 
     void CarDealershipManager::MakeComplaint(int typeID, int modelID, int t)
