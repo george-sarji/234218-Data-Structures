@@ -24,7 +24,7 @@ namespace structures
             this->models = this->models->addIntersection(temp);
         }
         // Update the smallest model.
-        this->smallest_model = this->models->getSmallest()->Data();
+        this->smallest_model = this->models->getSmallest();
     }
 
     bool structures::TypeNode::operator>(const TypeNode &node) const
@@ -63,12 +63,12 @@ namespace structures
     {
         this->models = t;
     }
-    CarModel *structures::TypeNode::getSmallestModel()
+    Tree<CarModel> *structures::TypeNode::getSmallestModel()
     {
         return this->smallest_model;
     }
 
-    void structures::TypeNode::updateSmallestModel(CarModel *smallest_model)
+    void structures::TypeNode::updateSmallestModel(Tree<CarModel> *smallest_model)
     {
         this->smallest_model = smallest_model;
     }

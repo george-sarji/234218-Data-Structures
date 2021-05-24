@@ -33,6 +33,8 @@ namespace structures
         void GetBestSellerModelByType(int typeID, int *modelID);
         void GetWorstModels(int numOfModels, int *types, int *models);
         void Quit();
+
+        static void getWorstModelsMInOrder(Tree<CarModel> *sold_models, Tree<TypeNode> *non_sold_models, int &counter, int threshhold, int *type_array, int *model_array);
     };
 }
 

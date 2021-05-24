@@ -150,7 +150,7 @@ namespace structures
         {
             throw FailureError();
         }
-        int total_models = vertex->Data()->numOfModels();
+        int total_models_num = vertex->Data()->numOfModels();
         // We found the relevant car type. Start removing the car models.
         // Get the relevant car type in the non-sold models, if it exists already.
         Tree<TypeNode> *typeNodeTree;
@@ -189,7 +189,7 @@ namespace structures
             }
         }
         // Remove the actual models.
-        for (int i = 0; i < total_models; i++)
+        for (int i = 0; i < total_models_num; i++)
         {
             CarModel current = *vertex->Data()->Models()[i];
             // Check if vehicle has already been sold once.
@@ -282,7 +282,7 @@ namespace structures
             // We should have the model in here.
             // We have to add the new car model into the sales tree with a NEW variable
             sold_models = sold_models->addIntersection(new CarModel(*requested_model));
-            new_sold_node = sold_models->findData(*old_model);
+            new_sold_node = sold_models->findData(*requested_model);
             // We need to remove it from the given tree.
             // We have to update the car_sales tree.
             SalesNode car_sales_node(new CarModel(*old_model));
@@ -318,6 +318,11 @@ namespace structures
                     this->non_sold_models = new Tree<TypeNode>();
                 }
             }
+            // We have to update the smallest sold node.
+            if (this->smallest_sold_model == nullptr || *this->smallest_sold_model->Data() < *requested_model)
+            {
+                this->smallest_sold_model = new_sold_node;
+            }
         }
         else
         {
@@ -352,8 +357,8 @@ namespace structures
         }
         else if (*requested_model < *this->smallest_sold_model->Data())
         {
-                // We have a new smallest sold model.
-                this->smallest_sold_model = new_sold_node;
+            // We have a new smallest sold model.
+            this->smallest_sold_model = new_sold_node;
         }
         // Let's check the best seller now.
         if (this->bestModel == nullptr)
@@ -456,6 +461,12 @@ namespace structures
 
     void CarDealershipManager::GetWorstModels(int numOfModels, int *types, int *models)
     {
+        if (numOfModels <= 0)
+            throw InvalidInput();
+        if (numOfModels > this->total_models)
+            throw FailureError();
+        int c = 0;
+        CarDealershipManager::getWorstModelsMInOrder(this->smallest_sold_model, this->smallest_non_sold_type, c, numOfModels, types, models);
     }
 
     void CarDealershipManager::Quit()
@@ -464,6 +475,88 @@ namespace structures
         sold_models->clearTree();
         non_sold_models->clearTree();
         car_sales->clearTree();
+    }
+
+    void CarDealershipManager::getWorstModelsMInOrder(Tree<CarModel> *sold_models, Tree<TypeNode> *non_sold_models, int &counter, int threshhold, int *type_array, int *model_array)
+    {
+        // Check if we have reached the threshold.
+        if (counter == threshhold)
+            return;
+        Tree<CarModel> *prev_model;
+        Tree<TypeNode> *prev_node;
+        Tree<CarModel> *prev_type_model;
+        while (counter != threshhold)
+        {
+            // Check if we have to use the non-sold models.
+            if (sold_models == nullptr || (sold_models->Data()->Grade() >= 0 && sold_models->Left() != nullptr && sold_models->Left()->Data()->Grade() <= 0) || (sold_models->Data()->Grade() >= 0))
+            {
+                // We need to use the non-sold models. Let's advance through them.
+                // Do we have a left for the non_sold_models?
+                if (non_sold_models->Left() != nullptr && prev_node != non_sold_models->Left())
+                {
+                    // We can go through this node.
+                    prev_node = non_sold_models;
+                    non_sold_models = non_sold_models->Left();
+                }
+                // Use the current.
+                Tree<CarModel> *models = non_sold_models->Data()->getSmallestModel();
+                while (counter != threshhold && models != nullptr)
+                {
+                    // Check if we have a left.
+                    if (models->Left() != nullptr && prev_type_model != models->Left())
+                    {
+                        prev_type_model = models;
+                        models = models->Left();
+                        continue;
+                    }
+                    // Use the current model.
+                    type_array[counter] = models->Data()->Type();
+                    model_array[counter] = models->Data()->Id();
+                    counter++;
+                    // Check if we have a right.
+                    if (models->Right() != nullptr && prev_type_model != models->Right())
+                    {
+                        prev_type_model = models;
+                        models = models->Left();
+                        continue;
+                    }
+                    prev_type_model = models;
+                    models = models->Parent();
+                }
+                // Do we have a right for the non_sold_models?
+                if (non_sold_models->Right() != nullptr && prev_node != non_sold_models->Right())
+                {
+                    // We can go through this node.
+                    prev_node = non_sold_models;
+                    non_sold_models = non_sold_models->Right();
+                }
+            }
+            else
+            {
+                // Use the sold models.
+                // Check if we have a left.
+                if (sold_models->Left() != nullptr && prev_model != sold_models)
+                {
+                    prev_model = sold_models;
+                    sold_models = sold_models->Left();
+                    continue;
+                }
+                // Use the current.
+                type_array[counter] = sold_models->Data()->Type();
+                model_array[counter] = sold_models->Data()->Id();
+                counter++;
+                // Check if we have a right.
+                if (sold_models->Right() != nullptr && prev_model != sold_models)
+                {
+                    prev_model = sold_models;
+                    sold_models = sold_models->Right();
+                    continue;
+                }
+                // Advance the pointer back up.
+                prev_model = sold_models;
+                sold_models = sold_models->Parent();
+            }
+        }
     }
 
 }
@@ -479,3 +572,75 @@ namespace structures
 //    delete m;
 //    return 0;
 //}
+
+//  // Check if we have to use the zero grade.
+//         Tree<TypeNode> *prev_node;
+//         while ((non_sold_models != nullptr || sold_models != nullptr) && sold_models->Data()->Grade() <= 0 && sold_models->Left()->Data()->Grade() >= 0 && counter != threshhold)
+//         {
+//             if(non_sold_models != nullptr)
+//             // Use the non sold models, as they have a grade of zero.
+//             // Do we have a left branch that has not been gone through?
+//             if (non_sold_models->Left() != nullptr && prev_node != non_sold_models->Left())
+//             {
+//                 prev_node = non_sold_models;
+//                 non_sold_models = non_sold_models->Left();
+//                 continue;
+//             }
+//             // Add the current.
+//             Tree<CarModel> *models = non_sold_models->Data()->getSmallestModel();
+//             Tree<CarModel> *prev;
+//             while (models != nullptr && counter != threshhold)
+//             {
+//                 // Check the left.
+//                 if (models->Left() != nullptr && prev != models->Left())
+//                 {
+//                     prev = models;
+//                     models = models->Left();
+//                     continue;
+//                 }
+//                 // Add the current type.
+//                 type_array[counter] = models->Data()->Type();
+//                 model_array[counter] = models->Data()->Id();
+//                 counter++;
+//                 // Check the right.
+//                 if (models->Right() != nullptr && prev != models->Right())
+//                 {
+//                     prev = models;
+//                     models = models->Right();
+//                     continue;
+//                 }
+//                 prev = models;
+//                 models = models->Parent();
+//             }
+//             // Check the right.
+//             if (non_sold_models->Right() != nullptr && prev_node != non_sold_models->Right())
+//             {
+//                 prev_node = non_sold_models;
+//                 non_sold_models = non_sold_models->Left();
+//                 continue;
+//             }
+//         }
+//         Tree<CarModel> *prev_model;
+//         // Check the sold models.
+//         while (counter != threshhold && sold_models != nullptr)
+//         {
+//             if (sold_models->Left() != nullptr && prev_model != sold_models)
+//             {
+//                 prev_model = sold_models;
+//                 sold_models = sold_models->Left();
+//                 continue;
+//             }
+//             // Add the current.
+//             CarModel *current = sold_models->Data();
+//             type_array[counter] = current->Type();
+//             model_array[counter] = current->Id();
+//             counter++;
+//             if (sold_models->Right() != nullptr && prev_model != sold_models)
+//             {
+//                 prev_model = sold_models;
+//                 sold_models = sold_models->Right();
+//                 continue;
+//             }
+//             prev_model = sold_models;
+//             sold_models = sold_models->Parent();
+//         }

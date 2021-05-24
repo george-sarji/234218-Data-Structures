@@ -10,7 +10,7 @@ namespace structures
     private:
         int type_id;
         Tree<structures::CarModel> *models;
-        CarModel *smallest_model;
+        Tree<CarModel> *smallest_model;
 
     public:
         TypeNode();
@@ -27,9 +27,9 @@ namespace structures
         // Utility functions
         int getTypeId();
         Tree<CarModel> *getModels();
-        void updateModels(Tree<CarModel>* t);
-        CarModel *getSmallestModel();
-        void updateSmallestModel(CarModel* smallest_model);
+        void updateModels(Tree<CarModel> *t);
+        Tree<CarModel> *getSmallestModel();
+        void updateSmallestModel(Tree<CarModel> *smallest_model);
     };
 }
 
