@@ -252,6 +252,7 @@ namespace structures
         if (requested_node == nullptr)
         {
             // No type to remove.
+            throw FailureError();
             return;
         }
         // We found the requested type for the sale. Check if it has the proper number of models.
@@ -324,7 +325,7 @@ namespace structures
             this->sold_models = this->sold_models->addIntersection(new CarModel(*requested_model));
             // We have to update the car_sales tree.
             // We need to remove the old sales node and add the new one.
-            SalesNode *new_node = new SalesNode(requested_model);
+            SalesNode *new_node = new SalesNode(new CarModel(*requested_model));
             this->car_sales = this->car_sales->removeIntersection(new_node);
             if (this->car_sales == nullptr)
             {
