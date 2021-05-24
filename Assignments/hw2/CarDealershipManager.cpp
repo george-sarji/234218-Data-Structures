@@ -4,7 +4,8 @@
 
 namespace structures
 {
-    structures::CarDealershipManager::~CarDealershipManager() {
+    structures::CarDealershipManager::~CarDealershipManager()
+    {
         delete bestModel;
     }
 
@@ -98,7 +99,7 @@ namespace structures
         }
         // We need to add to the non-sold models tree.
         TypeNode *node;
-        Tree<TypeNode>* best;
+        Tree<TypeNode> *best;
         try
         {
             node = new TypeNode(typeID, numModels);
@@ -177,11 +178,13 @@ namespace structures
             if (temp_model)
             {
                 // We have a good best seller.
-                this->bestModel = temp_model->Data()->getModel();
+                delete this->bestModel;
+                this->bestModel = new CarModel(*temp_model->Data()->getModel());
             }
             else
             {
                 // No best seller.
+                delete this->bestModel;
                 this->bestModel = nullptr;
             }
         }
@@ -193,26 +196,23 @@ namespace structures
             if (current.Sales() != 0)
             {
                 // Check in the sold models.
-                this->sold_models->removeIntersection(&current);
-            }
-            else if (all_sold)
-            {
-                delete temp;
-                delete temp_node;
-                // We have something problematic. Throw an error.
-                throw Exception();
+                this->sold_models = this->sold_models->removeIntersection(&current);
             }
             else
             {
                 // There shouldn't be an error. Remove the current car model.
-                typeNodeTree->Data()->getModels()->removeIntersection(&current);
+                typeNodeTree->Data()->updateModels(typeNodeTree->Data()->getModels()->removeIntersection(&current));
             }
+        }
+        if (this->sold_models == nullptr)
+        {
+            this->sold_models = new Tree<CarModel>();
         }
         // We can now remove the type itself.
         try
         {
             // Remove the car type from the non-sold tree
-            this->non_sold_models->removeIntersection(typeNodeTree->Data());
+            this->non_sold_models = this->non_sold_models->removeIntersection(temp_node);
             // Remove the car type from the types tree
             this->types = this->types->removeIntersection(vertex->Data());
         }
@@ -226,12 +226,18 @@ namespace structures
                 throw Exception();
             }
         }
+        if(this->non_sold_models == nullptr) {
+            this->non_sold_models = new Tree<TypeNode>();
+        }
+        if(this->types == nullptr) {
+            this->types = new Tree<CarType>();
+        }
         // Remove from the total models.
         this->total_models -= total_models;
         Tree<TypeNode> *newSmallest = this->non_sold_models->getSmallest();
         this->smallest_non_sold_type = (newSmallest != nullptr) ? newSmallest : nullptr;
 
-        // Delete the local pointers
+        // // Delete the local pointers
         delete temp_node;
         delete temp;
     }
@@ -258,13 +264,13 @@ namespace structures
         }
         // We need to search for the model. Check if the sales of the model are 0.
         CarModel *requested_model = requested_node->Data()->Models()[modelID];
-        Tree<CarModel>* new_sold_node;
+        Tree<CarModel> *new_sold_node;
         // We still have to update the data.
         requested_model->Sales()++;
         requested_model->Grade() += 10;
         if (requested_model->Sales() == 1)
         {
-        //     // We need to search in the no sales tree.
+            //     // We need to search in the no sales tree.
             TypeNode requested_type(typeID);
             Tree<TypeNode> *sales_node = this->non_sold_models->findData(requested_type);
             // We are supposed to get a valid node.
