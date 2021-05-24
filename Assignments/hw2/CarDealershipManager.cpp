@@ -235,7 +235,7 @@ namespace structures
         Tree<TypeNode> *newSmallest = this->non_sold_models->getSmallest();
         this->smallest_non_sold_type = (newSmallest != nullptr) ? newSmallest : nullptr;
 
-        // // Delete the local pointers
+        // Delete the local pointers
         delete temp_node;
         delete temp;
     }
@@ -343,7 +343,6 @@ namespace structures
         {
             // We have a new smallest sold model.
             // Delete the smallest model.
-            delete this->smallest_sold_model;
             this->smallest_sold_model = new_sold_node;
         }
         // Let's check the best seller now.
