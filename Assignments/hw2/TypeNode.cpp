@@ -4,12 +4,12 @@ namespace structures
 {
     structures::TypeNode::TypeNode() : type_id(int()), models(new Tree<CarModel>()), smallest_model(nullptr)
     {
-
     }
 
     structures::TypeNode::~TypeNode()
     {
-        models->clearTree();
+        if (models != nullptr)
+            models->clearTree();
     }
 
     structures::TypeNode::TypeNode(int type_id, int num_of_models)
@@ -58,12 +58,17 @@ namespace structures
     {
         return this->models;
     }
+
+    void structures::TypeNode::updateModels(Tree<CarModel> *t)
+    {
+        this->models = t;
+    }
     CarModel *structures::TypeNode::getSmallestModel()
     {
         return this->smallest_model;
     }
 
-    void structures::TypeNode::updateSmallestModel(CarModel* smallest_model)
+    void structures::TypeNode::updateSmallestModel(CarModel *smallest_model)
     {
         this->smallest_model = smallest_model;
     }

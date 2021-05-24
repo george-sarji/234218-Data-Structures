@@ -75,6 +75,6 @@ namespace structures
 
     bool structures::CarModel::operator==(const CarModel &model) const
     {
-        return this->id == model.id;
+        return this->id == model.id && this->type == model.type;
     }
 }

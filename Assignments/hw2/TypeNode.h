@@ -27,6 +27,7 @@ namespace structures
         // Utility functions
         int getTypeId();
         Tree<CarModel> *getModels();
+        void updateModels(Tree<CarModel>* t);
         CarModel *getSmallestModel();
         void updateSmallestModel(CarModel* smallest_model);
     };

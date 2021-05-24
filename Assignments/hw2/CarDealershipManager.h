@@ -15,8 +15,8 @@ namespace structures
     private:
         CarModel *bestModel;
         int total_models;
-        CarModel *smallest_sold_model;
-        TypeNode *smallest_non_sold_type;
+        Tree<CarModel> *smallest_sold_model;
+        Tree<TypeNode> *smallest_non_sold_type;
         Tree<CarType> *types;
         Tree<CarModel> *sold_models;
         Tree<TypeNode> *non_sold_models;
@@ -24,7 +24,7 @@ namespace structures
 
     public:
         CarDealershipManager();
-        ~CarDealershipManager() = default;
+        ~CarDealershipManager();
 
         void AddCarType(int typeID, int numModels);
         void RemoveCarType(int typeID);

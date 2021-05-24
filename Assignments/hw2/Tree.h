@@ -44,6 +44,7 @@ namespace structures
         T *Data();
         Tree *Left() const;
         Tree *Right() const;
+        Tree* Parent() const;
         int Height();
         int getBalanceFactor() const;
         Tree *LeftLeft(Tree *root);
@@ -98,6 +99,11 @@ namespace structures
     Tree<T> *structures::Tree<T>::Right() const
     {
         return this->right;
+    }
+
+    template<class T>
+    Tree<T>* structures::Tree<T>::Parent() const {
+        return this->parent;
     }
 
     template <class T>
