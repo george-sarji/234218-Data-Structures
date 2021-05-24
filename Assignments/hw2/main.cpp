@@ -12,8 +12,8 @@ int main()
     int model = 5;
     m->GetBestSellerModelByType(1, &model);
     std::cout << model << std::endl;
-    m->MakeComplaint(1, 0, 1);
-    m->MakeComplaint(1, 0, 1);
+    m->MakeComplaint(4, 0, 1);
+    m->MakeComplaint(4, 0, 2);
     m->RemoveCarType(4);
     m->RemoveCarType(1);
     m->RemoveCarType(2);
