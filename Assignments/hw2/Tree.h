@@ -12,7 +12,7 @@ namespace structures
     class Tree
     {
     private:
-        T data;
+        T *data;
         Tree *left;
         Tree *right;
         Tree *parent;
@@ -20,20 +20,25 @@ namespace structures
 
     public:
         Tree() = default;
-        Tree(T data, Tree *parent = nullptr, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), parent(parent), height(1) {}
-        Tree(const Tree &tree);
-        ~Tree() = default;
+        Tree(T *data, Tree *parent = nullptr, Tree *left = nullptr, Tree *right = nullptr) : data(data), left(left), right(right), parent(parent), height(0) {}
+        Tree(const Tree &tree) = delete;
+        ~Tree()
+        {
+            delete data;
+        }
+
         void clearTree();
+        void clearData();
 
         // Operator overloads
         T &operator*();
-        Tree &operator=(const Tree &tree);
+        Tree &operator=(const Tree &tree) = delete;
         bool operator>(const Tree &tree) const;
         bool operator>=(const Tree &tree) const;
         bool operator<(const Tree &tree) const;
         bool operator<=(const Tree &tree) const;
         bool operator==(const Tree &tree) const;
-        Tree *findData(T data);
+        Tree *findData(T& data);
 
         // Utility methods
         T *Data();
@@ -51,8 +56,8 @@ namespace structures
         Tree *getLargest();
 
         // Addition/removal functions
-        Tree *addIntersection(T data);
-        Tree *removeIntersection(T data);
+        Tree *addIntersection(T *data);
+        Tree *removeIntersection(T *data);
         Tree *inorderSuccessor();
 
         // ! Required functions
@@ -62,20 +67,25 @@ namespace structures
     };
 
     template <class T>
-    structures::Tree<T>::Tree(const Tree &tree) : data(tree->data), left(tree->left), right(tree->right), parent(tree->parent)
+    void structures::Tree<T>::clearTree()
     {
+        if (this->left != nullptr)
+            this->left->clearTree();
+        if (this->right != nullptr)
+            this->right->clearTree();
+
+        delete this;
     }
 
     template <class T>
-    void structures::Tree<T>::clearTree()
+    void structures::Tree<T>::clearData()
     {
-        if (!this)
-            return;
-        if (this->left)
-            this->left->clearTree();
-        if (this->right)
-            this->right->clearTree();
-        delete this;
+        if (this->left != nullptr)
+            this->left->clearData();
+        if (this->right != nullptr)
+            this->right->clearData();
+
+        delete data;
     }
 
     template <class T>
@@ -93,7 +103,7 @@ namespace structures
     template <class T>
     T *structures::Tree<T>::Data()
     {
-        return &this->data;
+        return this->data;
     }
 
     template <class T>
@@ -111,7 +121,7 @@ namespace structures
         {
             return this->right->height + 1;
         }
-        return this->height;
+        return 0;
     }
 
     template <class T>
@@ -127,59 +137,48 @@ namespace structures
         }
         else if (this->left && !this->right)
         {
-            return this->left->height;
+            return this->height;
         }
         else
         {
-            return this->right->height;
+            return - this->height;
         }
     }
 
     template <class T>
     T &structures::Tree<T>::operator*()
     {
-        return this->data;
-    }
-
-    template <class T>
-    Tree<T> &structures::Tree<T>::operator=(const Tree<T> &tree)
-    {
-        this->data = tree->data;
-        this->left = tree->left;
-        this->right = tree->right;
-        this->height = tree->height;
-        this->parent = tree->parent;
-        return this;
+        return *(this->data);
     }
 
     template <class T>
     bool structures::Tree<T>::operator<(const Tree &tree) const
     {
-        return this->data < tree->data;
+        return *(this->data) < *(tree->data);
     }
 
     template <class T>
     bool structures::Tree<T>::operator<=(const Tree &tree) const
     {
-        return this->data <= tree->data;
+        return *(this->data) <= *(tree->data);
     }
 
     template <class T>
     bool structures::Tree<T>::operator>(const Tree &tree) const
     {
-        return this->data > tree->data;
+        return *(this->data) > *(tree->data);
     }
 
     template <class T>
     bool structures::Tree<T>::operator>=(const Tree &tree) const
     {
-        return this->data >= tree->data;
+        return *(this->data) >= *(tree->data);
     }
 
     template <class T>
     bool structures::Tree<T>::operator==(const Tree &tree) const
     {
-        return this->data == tree->data;
+        return *(this->data) == *(tree->data);
     }
 
     template <class T>
@@ -311,50 +310,45 @@ namespace structures
     }
 
     template <class T>
-    Tree<T> *structures::Tree<T>::addIntersection(T new_data)
+    Tree<T> *structures::Tree<T>::addIntersection(T *new_data)
     {
-        // Reached end of recursion, create new leaf.
-        if (this == nullptr)
-        {
-            return new Tree(new_data);
-        }
         // Check if first leaf in tree
-        else if (this->data == T())
+        if (data == nullptr)
         {
             this->data = new_data;
             return this;
         }
         // Check if the data goes to the right subtree
-        if (new_data > this->data)
+        if (*new_data > *this->data)
         {
             // Is there a right subtree?
             if (this->right)
             {
                 this->right = this->right->addIntersection(new_data);
             }
-            // There isn't. Add a new subtree.
+                // There isn't. Add a new subtree.
             else
             {
                 this->right = new Tree(new_data);
             }
             (this->right)->parent = this;
         }
-        // Check if the data goes to the left subtree
-        else if (new_data < this->data)
+            // Check if the data goes to the left subtree
+        else if (*new_data < *this->data)
         {
             // Is there a left subtree?
             if (this->left)
             {
                 this->left = this->left->addIntersection(new_data);
             }
-            // There isn't. Add a new subtree.
+                // There isn't. Add a new subtree.
             else
             {
                 this->left = new Tree(new_data);
             }
             (this->left)->parent = this;
         }
-        // AVL does not allow equal keys, don't add.
+            // AVL does not allow equal keys, don't add.
         else
         {
             throw AlreadyExists();
@@ -389,43 +383,38 @@ namespace structures
     }
 
     template <class T>
-    Tree<T> *structures::Tree<T>::removeIntersection(T data)
+    Tree<T> *structures::Tree<T>::removeIntersection(T *data)
     {
-        // Have we reached a leaf?
-        if (!this)
-        {
-            return this;
-        }
         // Check if this goes to the left subtree
-        if (data < this->data)
+        if (*data < *this->data)
         {
             // Is there a left subtree?
             if (this->left)
             {
                 this->left = this->left->removeIntersection(data);
             }
-            // There isn't. Nothing to remove.
+                // There isn't. Nothing to remove.
             else
             {
                 return this;
             }
         }
-        // Check if this goes to the right subtree.
-        else if (data > this->data)
+            // Check if this goes to the right subtree.
+        else if (*data > *this->data)
         {
             // Is there a right subtree?
             if (this->right)
             {
                 this->right = this->right->removeIntersection(data);
             }
-            // There isn't. Nothing to remove.
+                // There isn't. Nothing to remove.
             else
             {
                 return this;
             }
         }
 
-        // We have reached the intersection to delete
+            // We have reached the intersection to delete
         else
         {
             // Is the intersection a leaf?
@@ -434,14 +423,14 @@ namespace structures
                 delete this;
                 return nullptr;
             }
-            // Does the intersection have two children?
+                // Does the intersection have two children?
             else if (this->left != nullptr && this->right != nullptr)
             {
                 Tree<T> *next = this->inorderSuccessor();
                 this->data = next->data;
                 this->right = this->right->removeIntersection(next->data);
             }
-            // The intersection has only one child
+                // The intersection has only one child
             else
             {
                 Tree<T> *son = this->left ? this->left : this->right;
@@ -449,11 +438,6 @@ namespace structures
                 delete this;
                 return son;
             }
-        }
-        // Nothing to remove, exit.
-        if (this == nullptr)
-        {
-            throw DoesntExist();
         }
 
         this->height = this->Height();
@@ -485,23 +469,29 @@ namespace structures
     template <class T>
     void structures::Tree<T>::printInOrder() const
     {
-        if (!this)
+        if (this->left)
         {
-            return;
+            this->left->printInOrder();
         }
-        this->left->printInOrder();
-        std::cout << this->data << " ";
-        this->right->printInOrder();
+        std::cout << *this->data << " ";
+        if (this->right)
+        {
+            this->right->printInOrder();
+        }
     }
 
     template <class T>
     void structures::Tree<T>::printPreOrder() const
     {
-        if (!this)
-            return;
-        std::cout << this->data << " ";
-        this->left->printPreOrder();
-        this->right->printPreOrder();
+        std::cout << *this->data << " ";
+        if (this->left)
+        {
+            this->left->printPreOrder();
+        }
+        if (this->right)
+        {
+            this->right->printPreOrder();
+        }
     }
 
     template <class T>
@@ -517,28 +507,26 @@ namespace structures
     }
 
     template <class T>
-    Tree<T> *structures::Tree<T>::findData(T data)
+    Tree<T> *structures::Tree<T>::findData(T& data)
     {
-        // Have we reached a deadend?
-        if (!this)
-        {
-            return nullptr;
-        }
         // Did we find the data?
-        if (data == this->data)
+        if (data == *this->data)
         {
             return this;
         }
-        // Should we check the right subtree?
-        else if (data > this->data)
+            // Should we check the right subtree?
+        else if (data > *this->data && this->right != nullptr)
         {
             return this->right->findData(data);
         }
-        // Should we check the left subtree?
-        else if (data < this->data)
+            // Should we check the left subtree?
+        else if (data < *this->data && this->left != nullptr)
         {
             return this->left->findData(data);
         }
+            // Did we reach a deadend?
+        else if (this->left == nullptr && this->right == nullptr)
+            return nullptr;
         // Shouldn't reach here
         throw DoesntExist();
     }
@@ -559,11 +547,7 @@ namespace structures
     template <class T>
     Tree<T> *structures::Tree<T>::getSmallest()
     {
-        if (!this)
-        {
-            return nullptr;
-        }
-        if (this->left)
+        if (this->left != nullptr)
         {
             return this->left->getSmallest();
         }
@@ -573,10 +557,6 @@ namespace structures
     template <class T>
     Tree<T> *structures::Tree<T>::getLargest()
     {
-        if (!this)
-        {
-            return nullptr;
-        }
         if (this->right)
         {
             return this->right->getSmallest();
