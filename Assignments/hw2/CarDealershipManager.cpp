@@ -359,6 +359,7 @@ namespace structures
                 this->sold_models = new Tree<CarModel>();
             }
             this->sold_models = this->sold_models->addIntersection(new CarModel(*requested_model));
+            new_sold_node = this->sold_models->findData(*requested_model);
             // We have to update the car_sales tree.
             // We need to remove the old sales node and add the new one.
             SalesNode *new_node = new SalesNode(new CarModel(*requested_model)), *to_remove = new SalesNode(new CarModel(*old_model));
