@@ -325,6 +325,10 @@ namespace structures
                         this->smallest_non_sold_type = smallest->Parent();
                     }
                 }
+                else
+                {
+                    this->non_sold_models = this->non_sold_models->removeIntersection(&requested_type);
+                }
                 // Check if we have a null tree.
                 if (this->non_sold_models == nullptr)
                 {
