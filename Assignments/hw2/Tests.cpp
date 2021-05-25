@@ -3011,7 +3011,7 @@ bool testSegfaults() {
     return true;
 }
 
-const int NUMBER_OF_TESTS = 13;
+const int NUMBER_OF_TESTS = 14;
 
 #define TEST_NAMES \
     X(testConstructorDestructor) \
@@ -3026,8 +3026,8 @@ const int NUMBER_OF_TESTS = 13;
     X(testMakeComplaint2)        \
     X(testGetBestSellerModelByType) \
     X(testGetWorstModels1) \
-    X(testGetWorstModels2)       
-    // X(testSegfaults)
+    X(testGetWorstModels2)  \ 
+    X(testSegfaults)
 
 const char* testNames[] = {
 #define X(name) #name,
