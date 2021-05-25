@@ -547,7 +547,7 @@ namespace structures
                     if (models->Right() != nullptr && prev_type_model != models->Right())
                     {
                         prev_type_model = models;
-                        models = models->Left();
+                        models = models->Right();
                         continue;
                     }
                     prev_type_model = models;
