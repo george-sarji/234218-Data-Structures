@@ -438,7 +438,7 @@ namespace structures
                 T* temp = this->data;
                 this->data = next->data;
                 next->data = temp;
-                this->right = this->right->removeIntersection(next->data);
+                this->right = this->right->removeIntersection(this->data);
             }
                 // The intersection has only one child
             else
