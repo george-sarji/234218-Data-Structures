@@ -335,6 +335,10 @@ namespace structures
                     this->non_sold_models = new Tree<TypeNode>();
                 }
             }
+            else
+            {
+                sales_node->Data()->updateSmallestModel(sales_node->Data()->getModels()->getSmallest());
+            }
             // We have to update the smallest sold node.
             if (this->smallest_sold_model == nullptr || *this->smallest_sold_model->Data() < *requested_model)
             {
