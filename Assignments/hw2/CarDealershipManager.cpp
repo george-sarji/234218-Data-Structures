@@ -158,7 +158,8 @@ namespace structures
         try
         {
             temp_node = new TypeNode(typeID);
-            typeNodeTree = this->non_sold_models->findData(*temp_node);
+            if (this->non_sold_models != nullptr && this->non_sold_models->Data() != nullptr)
+                typeNodeTree = this->non_sold_models->findData(*temp_node);
         }
         catch (const DoesntExist &e)
         {
@@ -212,7 +213,10 @@ namespace structures
         try
         {
             // Remove the car type from the non-sold tree
-            this->non_sold_models = this->non_sold_models->removeIntersection(temp_node);
+            if (this->non_sold_models != nullptr && this->non_sold_models->Data() != nullptr)
+            {
+                this->non_sold_models = this->non_sold_models->removeIntersection(temp_node);
+            }
             // Remove the car type from the types tree
             this->types = this->types->removeIntersection(vertex->Data());
         }
@@ -309,9 +313,18 @@ namespace structures
                 if (*sales_node->Data() == *this->smallest_non_sold_type->Data())
                 {
                     // We can update according to the getSmallest.
-                    this->smallest_non_sold_type = this->non_sold_models->getSmallest()->Parent();
+                    this->non_sold_models = this->non_sold_models->removeIntersection(&requested_type);
+                    // Check if we have a parent to the getSmallest.
+                    Tree<TypeNode> *smallest = this->non_sold_models->getSmallest();
+                    if (smallest->Parent() == nullptr)
+                    {
+                        this->smallest_non_sold_type = this->non_sold_models->getSmallest();
+                    }
+                    else
+                    {
+                        this->smallest_non_sold_type = smallest->Parent();
+                    }
                 }
-                this->non_sold_models = this->non_sold_models->removeIntersection(&requested_type);
                 // Check if we have a null tree.
                 if (this->non_sold_models == nullptr)
                 {
