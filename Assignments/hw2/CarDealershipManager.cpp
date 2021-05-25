@@ -239,7 +239,7 @@ namespace structures
             this->types = new Tree<CarType>();
         }
         // Remove from the total models.
-        this->total_models -= total_models;
+        this->total_models -= total_models_num;
         Tree<TypeNode> *newSmallest = this->non_sold_models->getSmallest();
         this->smallest_non_sold_type = (newSmallest != nullptr) ? newSmallest : nullptr;
 
