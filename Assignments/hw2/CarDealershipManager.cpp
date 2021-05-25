@@ -433,17 +433,19 @@ namespace structures
         }
         // We have the model, confirmed. Fetch it.
         CarModel *current_model = current_type->Data()->Models()[modelID];
+        CarModel *old_model = new CarModel(*current_model);
         // We should have sold it earlier, according to the documentation. That means we check in the sold_cars and the car_sales.
-        current_model->Grade() -= 10 / t;
+        current_model->Grade() -= 100 / t;
         current_model->Complaints()++;
         // We have to remove the current model and update it.
-        this->sold_models = this->sold_models->removeIntersection(current_model);
+        this->sold_models = this->sold_models->removeIntersection(old_model);
         if (this->sold_models == nullptr)
         {
             this->sold_models = new Tree<CarModel>();
         }
         this->sold_models = this->sold_models->addIntersection(new CarModel(*current_model));
-
+        this->smallest_sold_model = this->sold_models->getSmallest();
+        delete old_model;
         delete temp_type;
     }
 
