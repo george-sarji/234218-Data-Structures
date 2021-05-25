@@ -371,6 +371,12 @@ namespace structures
             delete this->bestModel;
             this->bestModel = new CarModel(*requested_model);
         }
+        // Update the type-specific best seller.
+        if (requested_model->isBetterSeller(requested_node->Data()->bestSeller()))
+        {
+            // Change the type's best seller.
+            requested_node->Data()->updateBestSeller(requested_model);
+        }
 
         delete old_model;
     }

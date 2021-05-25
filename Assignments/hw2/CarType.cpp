@@ -4,7 +4,8 @@ namespace structures
 {
     structures::CarType::~CarType()
     {
-        for(int i = 0;i<num_of_models;i++) {
+        for (int i = 0; i < num_of_models; i++)
+        {
             delete models[i];
         }
         delete[] models;
@@ -25,6 +26,11 @@ namespace structures
         return *(this->best_seller);
     }
 
+    void structures::CarType::updateBestSeller(CarModel *bestSeller)
+    {
+        this->best_seller = bestSeller;
+    }
+
     CarModel **structures::CarType::Models()
     {
         return this->models;
@@ -35,27 +41,27 @@ namespace structures
         return this->num_of_models;
     }
 
-    bool structures::CarType::operator>(const CarType& type) const
+    bool structures::CarType::operator>(const CarType &type) const
     {
         return this->id > type.id;
     }
 
-    bool structures::CarType::operator>=(const CarType& type) const
+    bool structures::CarType::operator>=(const CarType &type) const
     {
         return this->id >= type.id;
     }
 
-    bool structures::CarType::operator<(const CarType& type) const
+    bool structures::CarType::operator<(const CarType &type) const
     {
         return this->id < type.id;
     }
 
-    bool structures::CarType::operator<=(const CarType& type) const
+    bool structures::CarType::operator<=(const CarType &type) const
     {
         return this->id <= type.id;
     }
 
-    bool structures::CarType::operator==(const CarType& type) const
+    bool structures::CarType::operator==(const CarType &type) const
     {
         return this->id == type.id;
     }

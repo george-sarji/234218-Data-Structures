@@ -23,6 +23,7 @@ namespace structures
         int &Id();
         int &Max_sales();
         CarModel &bestSeller();
+        void updateBestSeller(CarModel* bestSeller);
         CarModel **Models();
         int numOfModels() const;
 
