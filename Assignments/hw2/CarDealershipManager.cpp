@@ -418,11 +418,6 @@ namespace structures
             {
                 sales_node->Data()->updateSmallestModel(sales_node->Data()->getModels()->getSmallest());
             }
-            // We have to update the smallest sold node.
-            if (this->smallest_sold_model == nullptr || this->smallest_sold_model->Data() == nullptr || *this->smallest_sold_model->Data() < *requested_model)
-            {
-                this->smallest_sold_model = new_sold_node;
-            }
         }
         else
         {
@@ -491,15 +486,7 @@ namespace structures
         }
 
         // Check if this is the new smallest sold model.
-        if (this->smallest_sold_model == nullptr || deleted_smallest)
-        {
-            this->smallest_sold_model = new_sold_node;
-        }
-        else if (*requested_model < *this->smallest_sold_model->Data())
-        {
-            // We have a new smallest sold model.
-            this->smallest_sold_model = new_sold_node;
-        }
+        this->smallest_sold_model = this->sold_models->getSmallest();
         // Let's check the best seller now.
         if (this->bestModel == nullptr)
         {
@@ -684,31 +671,44 @@ namespace structures
         // Check if we have reached the threshold.
         if (counter == threshhold)
             return;
-        Tree<CarModel> *prev_model = nullptr;
-        Tree<TypeNode> *prev_node = nullptr;
-        Tree<CarModel> *prev_type_model = nullptr;
+        Tree<CarModel> *prev_model = nullptr, *prev_right = nullptr;
+        Tree<TypeNode> *prev_node = nullptr, *prev_right_node = nullptr;
+        Tree<CarModel> *prev_type_model = nullptr, *prev_type_right = nullptr;
         while (counter != threshhold)
         {
             // Check if we have to use the non-sold models.
-            if (sold_models == nullptr || (sold_models->Data()->Grade() >= 0 && sold_models->Left() != nullptr && sold_models->Left()->Data()->Grade() <= 0) || (sold_models->Data()->Grade() >= 0))
+            if ((non_sold_models != nullptr && non_sold_models->Data() != nullptr) && (sold_models == nullptr || (sold_models->Data()->Grade() >= 0 && sold_models->Left() != nullptr && sold_models->Left()->Data()->Grade() <= 0) || (sold_models->Data()->Grade() >= 0)))
             {
                 // We need to use the non-sold models. Let's advance through them.
                 // Do we have a left for the non_sold_models?
-                if (non_sold_models->Left() != nullptr && prev_node != non_sold_models->Left())
+                if (non_sold_models->Left() != nullptr && prev_node != non_sold_models->Left() && prev_right_node != non_sold_models->Right())
                 {
                     // We can go through this node.
                     prev_node = non_sold_models;
                     non_sold_models = non_sold_models->Left();
+                    continue;
+                }
+                if (prev_node == non_sold_models->Right() && prev_node != nullptr)
+                {
+                    prev_node = non_sold_models;
+                    non_sold_models = non_sold_models->Parent();
+                    continue;
                 }
                 // Use the current.
                 Tree<CarModel> *models = non_sold_models->Data()->getSmallestModel();
                 while (counter != threshhold && models != nullptr)
                 {
                     // Check if we have a left.
-                    if (models->Left() != nullptr && prev_type_model != models->Left())
+                    if (models->Left() != nullptr && prev_type_model != models->Left() && prev_type_right != models->Right())
                     {
                         prev_type_model = models;
                         models = models->Left();
+                        continue;
+                    }
+                    if (prev_type_model == models->Right() && prev_type_model != nullptr)
+                    {
+                        prev_type_model = models;
+                        models = models->Parent();
                         continue;
                     }
                     // Use the current model.
@@ -716,9 +716,10 @@ namespace structures
                     model_array[counter] = models->Data()->Id();
                     counter++;
                     // Check if we have a right.
-                    if (models->Right() != nullptr && prev_type_model != models->Right())
+                    if (models->Right() != nullptr && prev_type_model != models->Right() && prev_type_right != models->Right())
                     {
                         prev_type_model = models;
+                        prev_type_right = models;
                         models = models->Right();
                         continue;
                     }
@@ -726,21 +727,31 @@ namespace structures
                     models = models->Parent();
                 }
                 // Do we have a right for the non_sold_models?
-                if (non_sold_models->Right() != nullptr && prev_node != non_sold_models->Right())
+                if (non_sold_models->Right() != nullptr && prev_node != non_sold_models->Right() && prev_right_node != non_sold_models->Right())
                 {
                     // We can go through this node.
                     prev_node = non_sold_models;
+                    prev_right_node = non_sold_models;
                     non_sold_models = non_sold_models->Right();
+                    continue;
                 }
+                prev_node = non_sold_models;
+                non_sold_models = non_sold_models->Parent();
             }
             else
             {
                 // Use the sold models.
                 // Check if we have a left.
-                if (sold_models->Left() != nullptr && prev_model != sold_models)
+                if (sold_models->Left() && prev_right != sold_models->Right() && prev_model != sold_models->Left())
                 {
                     prev_model = sold_models;
                     sold_models = sold_models->Left();
+                    continue;
+                }
+                if (prev_model == sold_models->Right() && prev_model != nullptr)
+                {
+                    prev_model = sold_models;
+                    sold_models = sold_models->Parent();
                     continue;
                 }
                 // Use the current.
@@ -748,9 +759,10 @@ namespace structures
                 model_array[counter] = sold_models->Data()->Id();
                 counter++;
                 // Check if we have a right.
-                if (sold_models->Right() != nullptr && prev_model != sold_models)
+                if (sold_models->Right() && prev_model != sold_models->Right() && prev_right != sold_models->Right())
                 {
                     prev_model = sold_models;
+                    prev_right = sold_models;
                     sold_models = sold_models->Right();
                     continue;
                 }
