@@ -158,6 +158,7 @@ namespace structures
         // Get the relevant car type in the non-sold models, if it exists already.
         Tree<TypeNode> *typeNodeTree = nullptr;
         TypeNode *temp_node = nullptr;
+        bool not_all_sold = true;
         try
         {
             temp_node = new TypeNode(typeID);
@@ -166,6 +167,7 @@ namespace structures
         }
         catch (const DoesntExist &e)
         {
+            not_all_sold = false;
             // We don't have a non-sold model.
         }
         catch (const std::bad_alloc &e)
@@ -173,13 +175,41 @@ namespace structures
             delete temp;
             throw MemoryError();
         }
-
+        for (int i = 0; i < total_models_num; i++)
+        {
+            try
+            {
+                SalesNode temp(new CarModel(i, typeID));
+                this->car_sales = this->car_sales->removeIntersection(&temp);
+            }
+            catch (const std::bad_alloc &e)
+            {
+                delete temp_node;
+                throw MemoryError();
+            }
+        }
+        if (this->car_sales == nullptr)
+        {
+            try
+            {
+                this->car_sales = new Tree<SalesNode>();
+            }
+            catch (const std::bad_alloc &e)
+            {
+                delete temp_node;
+                throw MemoryError();
+            }
+        }
+        if (typeNodeTree == nullptr)
+        {
+            not_all_sold = false;
+        }
         // Check if we removed the best selling model's type.
         if (bestModel->Type() == typeID)
         {
             // We have removed the best seller model. We have to update.
             Tree<SalesNode> *temp_model = this->car_sales->getLargest();
-            if (temp_model)
+            if (temp_model != nullptr && temp_model->Data() != nullptr)
             {
                 CarModel *old_best = this->bestModel;
                 // We have a good best seller.
@@ -211,11 +241,10 @@ namespace structures
                 // Check in the sold models.
                 this->sold_models = this->sold_models->removeIntersection(&current);
             }
-            else
-            {
-                // There shouldn't be an error. Remove the current car model.
-                typeNodeTree->Data()->updateModels(typeNodeTree->Data()->getModels()->removeIntersection(&current));
-            }
+        }
+        if (not_all_sold)
+        {
+            this->non_sold_models = this->non_sold_models->removeIntersection(temp_node);
         }
         if (this->sold_models == nullptr)
         {
