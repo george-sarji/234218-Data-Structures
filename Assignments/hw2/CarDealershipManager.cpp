@@ -307,8 +307,6 @@ namespace structures
         {
             throw MemoryError();
         }
-        Tree<CarModel> *new_sold_node = nullptr;
-        bool deleted_smallest = false;
         // We still have to update the data.
         requested_model->Sales()++;
         requested_model->Grade() += 10;
@@ -329,7 +327,6 @@ namespace structures
                 delete old_model;
                 throw MemoryError();
             }
-            new_sold_node = sold_models->findData(*requested_model);
             // We need to remove it from the given tree.
             // We have to update the car_sales tree.
             SalesNode car_sales_node(new CarModel(*old_model));
@@ -423,10 +420,6 @@ namespace structures
         {
             // Search in the sales tree and update accordingly.
             // We need the remove the requested model and add it again for the updated data.
-            if (*old_model == *this->smallest_sold_model->Data())
-            {
-                deleted_smallest = true;
-            }
             this->sold_models = this->sold_models->removeIntersection(old_model);
             if (this->sold_models == nullptr)
             {
@@ -449,7 +442,6 @@ namespace structures
                 delete old_model;
                 throw MemoryError();
             }
-            new_sold_node = this->sold_models->findData(*requested_model);
             // We have to update the car_sales tree.
             // We need to remove the old sales node and add the new one.
             SalesNode *new_node = nullptr, *to_remove = nullptr;
