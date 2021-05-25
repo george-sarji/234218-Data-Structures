@@ -23,16 +23,16 @@ namespace structures
         int &Id();
         int &Max_sales();
         CarModel &bestSeller();
-        void updateBestSeller(CarModel* bestSeller);
+        void updateBestSeller(CarModel *bestSeller);
         CarModel **Models();
         int numOfModels() const;
 
         // Operator overloads
-        bool operator>(const CarType&) const;
-        bool operator>=(const CarType&) const;
-        bool operator<(const CarType&) const;
-        bool operator<=(const CarType&) const;
-        bool operator==(const CarType&) const;
+        bool operator>(const CarType &) const;
+        bool operator>=(const CarType &) const;
+        bool operator<(const CarType &) const;
+        bool operator<=(const CarType &) const;
+        bool operator==(const CarType &) const;
 
         // Utility functions
         void AddModel(CarModel *new_model);

@@ -433,8 +433,6 @@ namespace structures
             else if (this->left != nullptr && this->right != nullptr)
             {
                 Tree<T> *next = this->inorderSuccessor();
-                // TODO: removeIntersection removes the data from next->data, giving garbage values in this->data
-                // TODO: This only happens with sellCar(2, 0). Fix it before carrying on (gives segmentation fault)
                 T* temp = this->data;
                 this->data = next->data;
                 next->data = temp;

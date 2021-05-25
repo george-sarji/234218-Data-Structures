@@ -49,7 +49,6 @@ namespace structures
 
     void CarDealershipManager::AddCarType(int typeID, int numModels)
     {
-        // TODO: Add the new constructor for each update of best model pointers.
         if (typeID <= 0 || numModels <= 0)
         {
             throw InvalidInput();
