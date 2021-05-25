@@ -98,8 +98,8 @@ namespace structures
             this->bestModel = new CarModel(newType->bestSeller());
         }
         // We need to add to the non-sold models tree.
-        TypeNode *node;
-        Tree<TypeNode> *best;
+        TypeNode *node = nullptr;
+        Tree<TypeNode> *best = nullptr;
         try
         {
             node = new TypeNode(typeID, numModels);
@@ -132,8 +132,8 @@ namespace structures
     {
         if (typeID <= 0)
             throw InvalidInput();
-        CarType *temp;
-        Tree<CarType> *vertex;
+        CarType *temp = nullptr;
+        Tree<CarType> *vertex = nullptr;
         try
         {
             temp = new CarType(typeID);
@@ -153,8 +153,8 @@ namespace structures
         int total_models_num = vertex->Data()->numOfModels();
         // We found the relevant car type. Start removing the car models.
         // Get the relevant car type in the non-sold models, if it exists already.
-        Tree<TypeNode> *typeNodeTree;
-        TypeNode *temp_node;
+        Tree<TypeNode> *typeNodeTree = nullptr;
+        TypeNode *temp_node = nullptr;
         try
         {
             temp_node = new TypeNode(typeID);
@@ -272,7 +272,7 @@ namespace structures
         // We need to search for the model. Check if the sales of the model are 0.
         CarModel *requested_model = requested_node->Data()->Models()[modelID];
         CarModel *old_model = new CarModel(*requested_model);
-        Tree<CarModel> *new_sold_node;
+        Tree<CarModel> *new_sold_node = nullptr;
         bool deleted_smallest = false;
         // We still have to update the data.
         requested_model->Sales()++;
@@ -411,7 +411,7 @@ namespace structures
         }
         // We need to get the type.
         CarType *temp_type = new CarType(typeID);
-        Tree<CarType> *current_type;
+        Tree<CarType> *current_type = nullptr;
         try
         {
             current_type = this->types->findData(*temp_type);
@@ -467,7 +467,7 @@ namespace structures
         // It's not a global request. Search for the given type ID.
         else
         {
-            Tree<CarType> *vertex;
+            Tree<CarType> *vertex = nullptr;
             try
             {
                 CarType type(typeID);
@@ -510,9 +510,9 @@ namespace structures
         // Check if we have reached the threshold.
         if (counter == threshhold)
             return;
-        Tree<CarModel> *prev_model;
-        Tree<TypeNode> *prev_node;
-        Tree<CarModel> *prev_type_model;
+        Tree<CarModel> *prev_model = nullptr;
+        Tree<TypeNode> *prev_node = nullptr;
+        Tree<CarModel> *prev_type_model = nullptr;
         while (counter != threshhold)
         {
             // Check if we have to use the non-sold models.
