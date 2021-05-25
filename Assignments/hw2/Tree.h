@@ -435,7 +435,9 @@ namespace structures
                 Tree<T> *next = this->inorderSuccessor();
                 // TODO: removeIntersection removes the data from next->data, giving garbage values in this->data
                 // TODO: This only happens with sellCar(2, 0). Fix it before carrying on (gives segmentation fault)
-                *(this->data) = *(next->data);
+                T* temp = this->data;
+                this->data = next->data;
+                next->data = temp;
                 this->right = this->right->removeIntersection(next->data);
             }
                 // The intersection has only one child
