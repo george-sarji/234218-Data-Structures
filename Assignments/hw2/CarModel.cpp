@@ -53,7 +53,7 @@ namespace structures
         return this->sales > model.sales;
     }
 
-    bool structures::CarModel::operator<(const CarModel &model) const
+    bool structures::CarModel::operator>(const CarModel &model) const
     {
         return this->isBetterModel(model);
     }
@@ -63,7 +63,7 @@ namespace structures
         return this->id >= model.id;
     }
 
-    bool structures::CarModel::operator>(const CarModel &model) const
+    bool structures::CarModel::operator<(const CarModel &model) const
     {
         return model.isBetterModel(*this);
     }
