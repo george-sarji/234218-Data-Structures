@@ -151,6 +151,7 @@ namespace structures
         }
         if (vertex == nullptr)
         {
+            delete temp;
             throw FailureError();
         }
         int total_models_num = vertex->Data()->numOfModels();
@@ -175,31 +176,6 @@ namespace structures
             delete temp;
             throw MemoryError();
         }
-        for (int i = 0; i < total_models_num; i++)
-        {
-            try
-            {
-                SalesNode temp(new CarModel(i, typeID));
-                this->car_sales = this->car_sales->removeIntersection(&temp);
-            }
-            catch (const std::bad_alloc &e)
-            {
-                delete temp_node;
-                throw MemoryError();
-            }
-        }
-        if (this->car_sales == nullptr)
-        {
-            try
-            {
-                this->car_sales = new Tree<SalesNode>();
-            }
-            catch (const std::bad_alloc &e)
-            {
-                delete temp_node;
-                throw MemoryError();
-            }
-        }
         if (typeNodeTree == nullptr)
         {
             not_all_sold = false;
@@ -219,6 +195,7 @@ namespace structures
                 }
                 catch (const std::bad_alloc &e)
                 {
+                    delete temp_node;
                     delete temp;
                     throw MemoryError();
                 }
@@ -234,12 +211,28 @@ namespace structures
         // Remove the actual models.
         for (int i = 0; i < total_models_num; i++)
         {
-            CarModel current = *vertex->Data()->Models()[i];
+            CarModel* current = vertex->Data()->Models()[i];
+            CarModel* temp_model = new CarModel(*current);
+            SalesNode* temp = new SalesNode(temp_model);
             // Check if vehicle has already been sold once.
-            if (current.Sales() != 0)
+            if (current->Sales() != 0)
             {
                 // Check in the sold models.
-                this->sold_models = this->sold_models->removeIntersection(&current);
+                this->sold_models = this->sold_models->removeIntersection(current);
+            }
+            this->car_sales = this->car_sales->removeIntersection(temp);
+            delete temp;
+        }
+        if (this->car_sales == nullptr)
+        {
+            try
+            {
+                this->car_sales = new Tree<SalesNode>();
+            }
+            catch (const std::bad_alloc &e)
+            {
+                delete temp_node;
+                throw MemoryError();
             }
         }
         if (not_all_sold)
