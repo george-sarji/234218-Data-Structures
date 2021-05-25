@@ -219,6 +219,7 @@ namespace structures
         if (this->sold_models == nullptr)
         {
             this->sold_models = new Tree<CarModel>();
+            this->smallest_sold_model = nullptr;
         }
         // We can now remove the type itself.
         try
@@ -253,7 +254,14 @@ namespace structures
         this->total_models -= total_models_num;
         Tree<TypeNode> *newSmallest = this->non_sold_models->getSmallest();
         this->smallest_non_sold_type = (newSmallest != nullptr) ? newSmallest : nullptr;
-
+        if (this->sold_models->Data() == nullptr)
+        {
+            this->smallest_sold_model = nullptr;
+        }
+        else
+        {
+            this->smallest_sold_model = this->sold_models->getSmallest();
+        }
         // Delete the local pointers
         delete temp_node;
         delete temp;
@@ -266,8 +274,16 @@ namespace structures
             throw InvalidInput();
         // We need to find the given type.
         CarType type(typeID);
+        Tree<CarType> *requested_node = nullptr;
         // Find the requested data.
-        Tree<CarType> *requested_node = this->types->findData(type);
+        try
+        {
+            requested_node = this->types->findData(type);
+        }
+        catch (const DoesntExist &e)
+        {
+            throw FailureError();
+        }
         if (requested_node == nullptr)
         {
             // No type to remove.
@@ -358,6 +374,18 @@ namespace structures
                     // We can update according to the getSmallest.
                     this->non_sold_models = this->non_sold_models->removeIntersection(&requested_type);
                     // Check if we have a parent to the getSmallest.
+                    if (this->non_sold_models == nullptr)
+                    {
+                        try
+                        {
+                            this->non_sold_models = new Tree<TypeNode>();
+                        }
+                        catch (const std::bad_alloc &e)
+                        {
+                            delete old_model;
+                            throw MemoryError();
+                        }
+                    }
                     Tree<TypeNode> *smallest = this->non_sold_models->getSmallest();
                     if (smallest->Parent() == nullptr)
                     {
@@ -391,7 +419,7 @@ namespace structures
                 sales_node->Data()->updateSmallestModel(sales_node->Data()->getModels()->getSmallest());
             }
             // We have to update the smallest sold node.
-            if (this->smallest_sold_model == nullptr || *this->smallest_sold_model->Data() < *requested_model)
+            if (this->smallest_sold_model == nullptr || this->smallest_sold_model->Data() == nullptr || *this->smallest_sold_model->Data() < *requested_model)
             {
                 this->smallest_sold_model = new_sold_node;
             }

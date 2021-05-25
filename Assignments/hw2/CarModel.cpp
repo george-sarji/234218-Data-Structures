@@ -17,7 +17,7 @@ namespace structures
         return this->grade;
     }
 
-    int &structures::CarModel::Id()
+    int structures::CarModel::Id()
     {
         return this->id;
     }
@@ -33,9 +33,9 @@ namespace structures
         {
             if (this->type == model.type)
             {
-                return this->id < model.id;
+                return this->id > model.id;
             }
-            return this->type < model.type;
+            return this->type > model.type;
         }
         return this->grade > model.grade;
     }

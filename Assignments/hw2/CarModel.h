@@ -21,7 +21,7 @@ namespace structures
         int &Sales();
         int &Complaints();
         int &Grade();
-        int &Id();
+        int Id();
         int Type();
         bool isBetterModel(const CarModel &model) const;
         bool isBetterSeller(const CarModel &) const;

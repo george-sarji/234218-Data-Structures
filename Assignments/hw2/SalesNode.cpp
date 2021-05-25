@@ -12,12 +12,20 @@ namespace structures
 
     bool structures::SalesNode::operator>(const SalesNode &node) const
     {
-        return this->model->isBetterSeller(*node.model);
+        if (this->model->Sales() == node.model->Sales())
+        {
+            if (this->model->Type() == node.model->Type())
+            {
+                return this->model->Id() > node.model->Id();
+            }
+            return this->model->Type() > node.model->Type();
+        }
+        return this->model->Sales() > node.model->Sales();
     }
 
     bool structures::SalesNode::operator<(const SalesNode &node) const
     {
-        return node.model->isBetterSeller(*this->model);
+        return node > *this;
     }
 
     void structures::SalesNode::setModel(CarModel *model)

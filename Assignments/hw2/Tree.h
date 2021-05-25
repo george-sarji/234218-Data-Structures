@@ -517,6 +517,9 @@ namespace structures
     template <class T>
     Tree<T> *structures::Tree<T>::findData(T& data)
     {
+        if(this->data == nullptr) {
+            throw DoesntExist();
+        }
         // Did we find the data?
         if (data == *this->data)
         {
@@ -534,7 +537,9 @@ namespace structures
         }
             // Did we reach a deadend?
         else if (this->left == nullptr && this->right == nullptr)
-            return nullptr;
+        {
+            throw DoesntExist();
+        }
         // Shouldn't reach here
         throw DoesntExist();
     }
