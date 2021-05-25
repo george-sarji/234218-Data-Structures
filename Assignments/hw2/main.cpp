@@ -3,29 +3,27 @@
 int main()
 {
     structures::CarDealershipManager *m = new structures::CarDealershipManager();
-    m->AddCarType(1, 1);
-    m->AddCarType(2, 1);
-    // m->AddCarType(3, 1);
-    m->AddCarType(4, 4);
-    m->SellCar(4, 0);
-    m->SellCar(4, 1);
-    m->SellCar(2, 0);
-    // m->MakeComplaint(1, 0, 1);
-    int model = 5;
-    // m->GetBestSellerModelByType(1, &model);
-    std::cout << model << std::endl;
-    int *types = new int[1];
-    types[0] = 0;
-    int *models = new int[1];
-    models[0] = 0;
-    m->GetWorstModels(1, types, models);
+    m->AddCarType(10, 3);
+    m->AddCarType(21, 5);
+    m->RemoveCarType(21);
+    m->SellCar(10, 1);
+    m->SellCar(10, 2);
+    m->SellCar(10, 1);
+    m->MakeComplaint(10, 2, 5);
+    int i = 0;
+    m->GetBestSellerModelByType(10, &i);
+    std::cout << i << std::endl;
+    int *types = new int[3];
+    int *models = new int[3];
+    for (int i = 0; i < 3; i++)
+    {
+        types[i] = 0;
+        models[i] = 0;
+    }
+    m->GetWorstModels(3, types, models);
     std::cout << types[0] << models[0] << std::endl;
-    m->MakeComplaint(4, 0, 1);
-    m->MakeComplaint(4, 0, 2);
-    m->RemoveCarType(4);
-    m->RemoveCarType(3);
-    m->RemoveCarType(1);
-    m->RemoveCarType(2);
+    std::cout << types[1] << models[1] << std::endl;
+    std::cout << types[2] << models[2] << std::endl;
     m->Quit();
     delete[] types;
     delete[] models;
