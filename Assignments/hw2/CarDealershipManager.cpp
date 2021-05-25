@@ -141,6 +141,7 @@ namespace structures
         {
             if (e.errorType() == DOESNT_EXIST)
             {
+                delete temp;
                 throw FailureError();
             }
         }
