@@ -11,6 +11,7 @@ set(WET_1 "Assignments/hw2")
 set (TYPES "Data types/")
 set (LINKED_LIST ${TYPES}/LinkedList)
 set(TREE ${TYPES}/Tree)
+set(WET_2 "Assignment/wet 2")
 
 add_executable(linkedlist ${LINKED_LIST}/LinkedList.cpp)
 add_executable(model ${WET_1}/CarModel.cpp)
