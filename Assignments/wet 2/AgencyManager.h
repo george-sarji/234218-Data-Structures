@@ -2,6 +2,7 @@
 #define AGENCY_MANAGER_H
 
 // ! #include "Tree.h"
+#include "Agency.h"
 
 namespace structures
 {
@@ -9,7 +10,7 @@ namespace structures
     {
     private:
         int total_agencies;
-        // Tree<T>* agencies_tree
+        // Tree<Agency>* agencies_tree
     public:
         AgencyManager();
         ~AgencyManager();
@@ -17,9 +18,9 @@ namespace structures
 
         // * Setters/Getters
         int getTotalAgencies() const;
-        // Tree<T> *getAgenciesTree() const;
+        // Tree<Agency> *getAgenciesTree() const;
         void setTotalAgencies(int num);
-        // void setAgenciesTree(Tree<T>* tree);
+        // void setAgenciesTree(Tree<Agency>* tree);
 
         // * Requested functions
         void addAgency();
