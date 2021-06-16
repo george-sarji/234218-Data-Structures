@@ -13,6 +13,7 @@ namespace structures
         // Tree<CarSale> car_sales;
     public:
         Agency() = default;
+        Agency(const int i) : agency_id(i), total_types(0), total_sales(0);
         ~Agency();
         Agency(const Agency &);
 
@@ -36,7 +37,7 @@ namespace structures
         bool operator==(const Agency &);
 
         // * Utility functions
-        void updateAgency(const Agency&);
+        void updateAgency(const Agency &);
     };
 }
 
