@@ -89,6 +89,7 @@ namespace structures
         int new_size = *this->sizes->getElementAt(smaller) + *this->sizes->getElementAt(bigger);
         this->sizes->updateElementAt(smaller, new int(new_size));
         this->sizes->updateElementAt(bigger, new int(new_size));
+        this->elements->getElementAt(bigger)->updateAgency(*this->elements->getElementAt(smaller));
         return this->elements->getElementAt(bigger);
     }
 
