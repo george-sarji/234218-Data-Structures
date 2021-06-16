@@ -1,5 +1,5 @@
 #ifndef DYN_ARRAY_H
-#define DYN_ARRRAY_H
+#define DYN_ARRAY_H
 #include <exception>
 
 namespace structures
