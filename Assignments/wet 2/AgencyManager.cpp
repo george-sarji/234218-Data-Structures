@@ -31,7 +31,29 @@ namespace structures
         this->total_agencies++;
     }
 
-    void structures::AgencyManager::sellCar(int agency_id, int type_id, int num) {}
+    void AgencyManager::sellCar(int agencyID, int typeID, int k)
+    {
+        if(k <= 0 || agencyID < 0)
+        {
+            throw InvalidInput();
+        }
+
+        //Find the agency to sell the car to.
+        Agency temp(agencyID);
+        Agency* wanted_agency = sets->findAgency(&temp);
+
+        CarType temp_car(typeID);
+
+        //first check if car with typeID was already sold before with wanted_agency.
+        try
+        {
+            Tree<CarType>* wanted_car = wanted_agency->getCarTypes()->findData(temp_car);
+        }
+        catch (const TreeException& e)
+        {
+
+        }
+    }
 
     void structures::AgencyManager::uniteAgencies(int agency1, int agency2)
     {
@@ -47,4 +69,6 @@ namespace structures
     }
 
     void structures::AgencyManager::getIthSoldType(int agency_id, int i, int *ptr) {}
+
+
 }
