@@ -26,7 +26,7 @@ namespace structures
 
         // * Requested functions
         void addAgency();
-        void sellCar(int, int, int);
+        void sellCar(int agencyID, int typeID, int k);
         void uniteAgencies(int, int);
         void getIthSoldType(int, int, int *);
     };
