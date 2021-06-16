@@ -25,6 +25,9 @@ namespace structures
         // * Utility functions
         void addElement(T *);
         void removeElement(const int i);
+        T *getElementAt(const int i) const;
+        void updateElementAt(const int i, T *new_element);
+
     };
 
     template <class T>
@@ -116,6 +119,27 @@ namespace structures
     T **structures::DynamicArray<T>::getElements() const
     {
         return this->elements;
+    }
+
+    template <class T>
+    T *structures::DynamicArray<T>::getElementAt(const int i) const
+    {
+        if (i > count)
+            return nullptr;
+        return this->elements[i];
+    }
+
+    template <class T>
+    void structures::DynamicArray<T>::updateElementAt(const int i, T *item)
+    {
+        // Check if we can even add.
+        if (i > count)
+            return;
+        // Grab the old item.
+        T *temp = this->elements[i];
+        // Delete temp, and add the new item.
+        delete temp;
+        this->elements[i] = item;
     }
 }
 
