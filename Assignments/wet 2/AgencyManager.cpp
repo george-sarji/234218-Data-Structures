@@ -4,7 +4,10 @@ namespace structures
 {
     structures::AgencyManager::AgencyManager() {}
 
-    structures::AgencyManager::~AgencyManager() {}
+    structures::AgencyManager::~AgencyManager() {
+        delete sets;
+        // TODO: Clear tree
+    }
 
     structures::AgencyManager::AgencyManager(const AgencyManager &manager) {}
 
@@ -21,16 +24,15 @@ namespace structures
     // Tree<T>* structures::AgencyManager::getAgenciesTree() const {}
     // void structures::AgencyManager::setAgenciesTree(Tree<T>* tree) {}
 
-    void addAgency() {}
+    void structures::AgencyManager::addAgency()
+    {
+        this->sets->initiateAgency();
+        this->total_agencies++;
+    }
 
-    void sellCar(int agency_id, int type_id);
+    void structures::AgencyManager::sellCar(int agency_id, int type_id, int num);
 
-    void uniteAgencies(int agency1, int agency2);
+    void structures::AgencyManager::uniteAgencies(int agency1, int agency2);
 
-    void getIthSoldType(int agency_id, int i, int *ptr);
-}
-
-int main()
-{
-    return 0;
+    void structures::AgencyManager::getIthSoldType(int agency_id, int i, int *ptr);
 }

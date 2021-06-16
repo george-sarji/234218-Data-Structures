@@ -1,6 +1,7 @@
 #ifndef DYN_ARRAY_H
 #define DYN_ARRAY_H
 #include <exception>
+#include "Exception.h"
 
 namespace structures
 {
@@ -60,7 +61,7 @@ namespace structures
         }
         catch (const std::bad_alloc &)
         {
-            throw std::bad_alloc();
+            throw MemoryError();
         }
         // We had a successful memory allocation. We now need to move the items into the proper cells.
         for (int i = 0; i < this->size; i++)

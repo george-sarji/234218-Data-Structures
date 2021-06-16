@@ -3,6 +3,7 @@
 
 // ! #include "Tree.h"
 #include "Agency.h"
+#include "SetManager.h"
 
 namespace structures
 {
@@ -10,6 +11,7 @@ namespace structures
     {
     private:
         int total_agencies;
+        SetManager* sets;
         // Tree<Agency>* agencies_tree
     public:
         AgencyManager();
@@ -24,7 +26,7 @@ namespace structures
 
         // * Requested functions
         void addAgency();
-        void sellCar(int, int);
+        void sellCar(int, int, int);
         void uniteAgencies(int, int);
         void getIthSoldType(int, int, int *);
     };

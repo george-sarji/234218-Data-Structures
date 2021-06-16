@@ -28,7 +28,15 @@ namespace structures
     void structures::SetManager::initiateAgency()
     {
         // Create a new structure according to the size.
-        Agency *new_agency = new Agency(this->size);
+        Agency *new_agency = nullptr;
+        try
+        {
+            new_agency = new Agency(this->size);
+        }
+        catch (const std::bad_alloc &)
+        {
+            throw MemoryError();
+        }
         this->addAgency(new_agency);
     }
 
@@ -58,8 +66,7 @@ namespace structures
         // Check if we have valid IDs.
         if (agency1 > this->size || agency2 > this->size)
         {
-            // TODO: Throw an error.
-            return nullptr;
+            throw InvalidInput();
         }
         // We have two valid agencies. Now we need to create the union according to the parents.
         int bigger, smaller;
