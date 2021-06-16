@@ -13,6 +13,8 @@ namespace structures
     structures::SetManager::~SetManager()
     {
         delete this->elements;
+        delete this->sizes;
+        delete this->parents;
     }
 
     void structures::SetManager::addAgency(Agency *agency)
