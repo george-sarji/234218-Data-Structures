@@ -18,7 +18,10 @@ namespace structures
         SetManager();
         ~SetManager();
 
+        int getSize() const;
+
         void addAgency(Agency* agency);
+        void initiateAgency();
         Agency* findAgency(Agency* agency);
         Agency* uniteAgencies(int agency1, int agency2);
     };

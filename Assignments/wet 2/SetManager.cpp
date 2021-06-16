@@ -25,6 +25,13 @@ namespace structures
         this->sizes->addElement(new int(1));
     }
 
+    void structures::SetManager::initiateAgency()
+    {
+        // Create a new structure according to the size.
+        Agency *new_agency = new Agency(this->size);
+        this->addAgency(new_agency);
+    }
+
     Agency *structures::SetManager::findAgency(Agency *agency)
     {
         int current_id = agency->getAgencyId();
@@ -76,5 +83,10 @@ namespace structures
         this->sizes->updateElementAt(smaller, new int(new_size));
         this->sizes->updateElementAt(bigger, new int(new_size));
         return this->elements->getElementAt(bigger);
+    }
+
+    int structures::SetManager::getSize() const
+    {
+        return this->size;
     }
 }
