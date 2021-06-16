@@ -4,7 +4,8 @@ namespace structures
 {
     structures::AgencyManager::AgencyManager() {}
 
-    structures::AgencyManager::~AgencyManager() {
+    structures::AgencyManager::~AgencyManager()
+    {
         delete sets;
         // TODO: Clear tree
     }
@@ -30,9 +31,20 @@ namespace structures
         this->total_agencies++;
     }
 
-    void structures::AgencyManager::sellCar(int agency_id, int type_id, int num);
+    void structures::AgencyManager::sellCar(int agency_id, int type_id, int num) {}
 
-    void structures::AgencyManager::uniteAgencies(int agency1, int agency2);
+    void structures::AgencyManager::uniteAgencies(int agency1, int agency2)
+    {
+        if (agency1 < 0 || agency2 < 0)
+        {
+            throw InvalidInput();
+        }
+        if (agency1 > this->total_agencies || agency2 > this->total_agencies)
+        {
+            throw FailureError();
+        }
+        this->sets->uniteAgencies(agency1, agency2);
+    }
 
-    void structures::AgencyManager::getIthSoldType(int agency_id, int i, int *ptr);
+    void structures::AgencyManager::getIthSoldType(int agency_id, int i, int *ptr) {}
 }
