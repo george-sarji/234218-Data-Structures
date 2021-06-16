@@ -3,7 +3,6 @@
 namespace structures
 {
 
-    structures::Agency::Agency() {}
     structures::Agency::~Agency() {}
     structures::Agency::Agency(const Agency &agency) {}
 
@@ -68,5 +67,13 @@ namespace structures
     bool structures::Agency::operator==(const Agency &agency)
     {
         return this->agency_id == agency.agency_id;
+    }
+
+    void structures::Agency::updateAgency(const Agency &agency)
+    {
+        // Update the proper agency items.
+        this->total_sales += agency.total_sales;
+        this->total_types += agency.total_types;
+        // TODO: Update the trees accordingly.
     }
 }
