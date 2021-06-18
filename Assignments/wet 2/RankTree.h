@@ -751,6 +751,10 @@ namespace structures
     template<class T>
     T **RankTree<T>::getArrayFromTree()
     {
+        if(this->num_of_subtrees == 1 && this->data == nullptr)
+        {
+            return nullptr;
+        }
         T** array = new T*[this->num_of_subtrees];
         int* counter = new int(0);
         this->getArrayFromTreeAux(array, counter);
