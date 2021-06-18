@@ -70,6 +70,7 @@ namespace structures
         int getRank(const T& data) const;
         int getRankAux(const T& data, int counter = 0) const;
         RankTree* Select(int index);
+        void fullRankUpdate();
 
         T** getArrayFromTree();
         void getArrayFromTreeAux(T** array, int* counter);
@@ -751,7 +752,7 @@ namespace structures
     template<class T>
     T **RankTree<T>::getArrayFromTree()
     {
-        if(this->num_of_subtrees == 1 && this->data == nullptr)
+        if(this->data == nullptr)
         {
             return nullptr;
         }
@@ -784,6 +785,20 @@ namespace structures
     int RankTree<T>::numOfSubtrees() const
     {
         return this->num_of_subtrees;
+    }
+
+    template<class T>
+    void RankTree<T>::fullRankUpdate()
+    {
+        if(this->left)
+        {
+            this->left->fullRankUpdate();
+        }
+        if(this->right)
+        {
+            this->right->fullRankUpdate();
+        }
+        this->updateRank();
     }
 
 }
