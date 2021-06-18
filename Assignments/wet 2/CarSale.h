@@ -10,7 +10,7 @@ namespace structures
             int typeId, sales;
 
         public:
-            CarSale(int typeID, int sales) : typeId(typeId), sales(sales) {}
+            CarSale(int typeID, int sales) : typeId(typeID), sales(sales) {}
             CarSale(const CarSale& carType) = default;
             ~CarSale() = default;
             CarSale& operator=(const CarSale& carType) = default;
