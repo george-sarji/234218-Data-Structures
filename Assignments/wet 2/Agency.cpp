@@ -4,7 +4,8 @@
 namespace structures
 {
 
-    structures::Agency::~Agency() {
+    structures::Agency::~Agency()
+    {
         this->car_sales->clearRankTree();
         this->car_types->clearTree();
     }
@@ -94,7 +95,7 @@ namespace structures
         // We need to remove the current tree and add the new one.
         this->car_types->clearTree();
         //delete this->car_types;
-        this->car_types = createAVLFromArray(merged_arr, 0, current_size + other_size);
+        this->car_types = createAVLFromArray(merged_arr, 0, current_size + other_size - 1);
         // We can delete the merged array and the previous arrays now.
         delete[] merged_arr;
         delete[] current;
@@ -108,7 +109,7 @@ namespace structures
         // Delete the previous tree and add the new one.
         this->car_sales->clearRankTree();
         //delete this->car_sales;
-        this->car_sales = createRankTreeFromArray(merged_sales, 0, current_size + other_size);
+        this->car_sales = createRankTreeFromArray(merged_sales, 0, current_size + other_size - 1);
         // Delete the arrays.
         delete[] merged_sales;
         delete[] current_sales;
@@ -142,7 +143,7 @@ namespace structures
 
     int Agency::getTreeSize() const
     {
-        if(this->car_sales->Data() == nullptr)
+        if (this->car_sales->Data() == nullptr)
         {
             return 0;
         }
