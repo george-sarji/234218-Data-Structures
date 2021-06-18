@@ -57,6 +57,9 @@ namespace structures
         RankTree *getSmallest();
         RankTree *getLargest();
 
+        void setLeft(RankTree *new_left);
+        void setRight(RankTree *new_right);
+
         // Addition/removal functions
         RankTree *addIntersection(T *data);
         RankTree *removeIntersection(T *data);
@@ -106,10 +109,35 @@ namespace structures
     }
 
     template <class T>
+    void structures::RankTree<T>::setLeft(RankTree<T> *new_left)
+    {
+        if (this->left != nullptr)
+        {
+            // Free the current left.
+            this->left->clearRankTree();
+            delete this->left;
+        }
+        this->left = new_left;
+    }
+
+    template <class T>
     RankTree<T> *structures::RankTree<T>::Right() const
     {
         return this->right;
     }
+
+    template <class T>
+    void structures::RankTree<T>::setRight(RankTree<T> *new_right)
+    {
+        if (this->right != nullptr)
+        {
+            // Free the current right.
+            this->right->clearRankTree();
+            delete this->right;
+        }
+        this->right = new_right;
+    }
+
 
     template<class T>
     RankTree<T>* structures::RankTree<T>::Parent() const {
