@@ -54,9 +54,9 @@ namespace structures
         Tree<T> *root = new Tree<T>(arr[middle]);
 
         // Create the left child.
-        root->Left() = createAVLFromArray(arr, begin, middle - 1);
+        root->setLeft(createAVLFromArray(arr, begin, middle - 1));
         // Create the right child.
-        root->Right() = createAVLFromArray(arr, middle + 1, end);
+        root->setRight(createAVLFromArray(arr, middle + 1, end));
 
         return root;
     }
@@ -72,9 +72,9 @@ namespace structures
         RankTree<T> *root = new RankTree<T>(arr[middle]);
 
         // Create the left child.
-        root->Left() = createRankTreeFromArray(arr, begin, middle - 1);
+        root->setLeft(createRankTreeFromArray(arr, begin, middle - 1));
         // Create the right child.
-        root->Right() = createRankTreeFromArray(arr, middle + 1, end);
+        root->setRight(createRankTreeFromArray(arr, middle + 1, end));
 
         return root;
     }

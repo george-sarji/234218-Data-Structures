@@ -44,7 +44,7 @@ namespace structures
         // * Utility functions
         void updateAgency(const Agency &);
 
-        CarType** getArrayFromNormalTree();
+        CarType** getArrayFromNormalTree() const;
         int getTreeSize() const;
     };
 }
