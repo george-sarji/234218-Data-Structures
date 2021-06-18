@@ -21,7 +21,7 @@ namespace structures
             else
             {
                 new_array[k] = right[j];
-                j++
+                j++;
             }
             k++;
         }
@@ -46,7 +46,7 @@ namespace structures
     template <class T>
     Tree<T> *createAVLFromArray(T **arr, int begin, int end)
     {
-        if (start > end)
+        if (begin > end)
             return NULL;
 
         int middle = (begin + end) / 2;
@@ -54,9 +54,9 @@ namespace structures
         Tree<T> *root = new Tree<T>(arr[middle]);
 
         // Create the left child.
-        root->left = createAVLFromArray(arr, begin, middle - 1);
+        root->Left() = createAVLFromArray(arr, begin, middle - 1);
         // Create the right child.
-        root->right = createAVLFromArray(arr, middle + 1, end);
+        root->Right() = createAVLFromArray(arr, middle + 1, end);
 
         return root;
     }
@@ -64,7 +64,7 @@ namespace structures
     template <class T>
     RankTree<T> *createRankTreeFromArray(T **arr, int begin, int end)
     {
-        if (start > end)
+        if (begin > end)
             return NULL;
 
         int middle = (begin + end) / 2;
@@ -72,9 +72,9 @@ namespace structures
         RankTree<T> *root = new RankTree<T>(arr[middle]);
 
         // Create the left child.
-        root->left = createRankTreeFromArray(arr, begin, middle - 1);
+        root->Left() = createRankTreeFromArray(arr, begin, middle - 1);
         // Create the right child.
-        root->right = createRankTreeFromArray(arr, middle + 1, end);
+        root->Right() = createRankTreeFromArray(arr, middle + 1, end);
 
         return root;
     }
