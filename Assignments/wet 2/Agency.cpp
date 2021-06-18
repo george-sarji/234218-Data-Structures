@@ -93,7 +93,7 @@ namespace structures
         CarType **merged_arr = mergeArrays(current, other, current_size, other_size);
         // We need to remove the current tree and add the new one.
         this->car_types->clearTree();
-        delete this->car_types;
+        //delete this->car_types;
         this->car_types = createAVLFromArray(merged_arr, 0, current_size + other_size);
         // We can delete the merged array and the previous arrays now.
         delete[] merged_arr;
@@ -107,7 +107,7 @@ namespace structures
         CarSale **merged_sales = mergeArrays(current_sales, other_sales, current_size, other_size);
         // Delete the previous tree and add the new one.
         this->car_sales->clearRankTree();
-        delete this->car_sales;
+        //delete this->car_sales;
         this->car_sales = createRankTreeFromArray(merged_sales, 0, current_size + other_size);
         // Delete the arrays.
         delete[] merged_sales;
