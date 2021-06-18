@@ -12,7 +12,6 @@ namespace structures
     private:
         int total_agencies;
         SetManager* sets;
-        // Tree<Agency>* agencies_tree
     public:
         AgencyManager();
         ~AgencyManager();
@@ -20,9 +19,7 @@ namespace structures
 
         // * Setters/Getters
         int getTotalAgencies() const;
-        // Tree<Agency> *getAgenciesTree() const;
         void setTotalAgencies(int num);
-        // void setAgenciesTree(Tree<Agency>* tree);
 
         // * Requested functions
         void addAgency();
