@@ -47,7 +47,7 @@ namespace structures
     Tree<T> *createAVLFromArray(T **arr, int begin, int end)
     {
         if (begin > end)
-            return NULL;
+            return nullptr;
 
         int middle = (begin + end) / 2;
         // Start a new tree.
