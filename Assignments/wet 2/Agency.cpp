@@ -76,4 +76,24 @@ namespace structures
         this->total_types += agency.total_types;
         // TODO: Update the trees accordingly.
     }
+
+    Tree<CarType>* Agency::getCarTypes() const
+    {
+        return this->car_types;
+    }
+
+    RankTree<CarSale> *Agency::getCarSales() const
+    {
+        return this->car_sales;
+    }
+
+    void Agency::setCarTypes(Tree<CarType> *carType)
+    {
+        this->car_types = carType;
+    }
+
+    void Agency::setCarSales(RankTree<CarSale> *carSale)
+    {
+        this->car_sales = carSale;
+    }
 }
