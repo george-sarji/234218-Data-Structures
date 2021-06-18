@@ -4,7 +4,10 @@
 namespace structures
 {
 
-    structures::Agency::~Agency() {}
+    structures::Agency::~Agency() {
+        this->car_sales->clearRankTree();
+        this->car_types->clearTree();
+    }
     structures::Agency::Agency(const Agency &agency) {}
 
     int structures::Agency::getAgencyId() const
@@ -76,6 +79,11 @@ namespace structures
         this->total_sales += agency.total_sales;
         this->total_types += agency.total_types;
         // Get the relevant arrays.
+        // Check if we even need to merge the trees.
+        if (this->car_sales->Data() == nullptr && agency.getCarSales()->Data() == nullptr)
+        {
+            return;
+        }
         CarType **current = nullptr, **other = nullptr;
         current = this->getArrayFromNormalTree();
         other = agency.getArrayFromNormalTree();
