@@ -2,6 +2,7 @@
 #define DYN_ARRAY_H
 #include <exception>
 #include "Exception.h"
+#include <iostream>
 
 namespace structures
 {
@@ -59,7 +60,7 @@ namespace structures
             new_array = new T *[size * 2];
             // Check if we had a successful memory allocation.
         }
-        catch (const std::bad_alloc &)
+        catch (const std::bad_alloc& e)
         {
             throw MemoryError();
         }
@@ -139,8 +140,8 @@ namespace structures
         // Grab the old item.
         T *temp = this->elements[i];
         // Delete temp, and add the new item.
-        delete temp;
         this->elements[i] = item;
+        delete temp;
     }
 }
 
