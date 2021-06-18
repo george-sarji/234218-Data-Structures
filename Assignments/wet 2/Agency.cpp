@@ -142,6 +142,10 @@ namespace structures
 
     int Agency::getTreeSize() const
     {
+        if(this->car_sales->numOfSubtrees() == 1 && this->car_sales->Data() == nullptr)
+        {
+            return 0;
+        }
         return car_sales->numOfSubtrees();
     }
 }
