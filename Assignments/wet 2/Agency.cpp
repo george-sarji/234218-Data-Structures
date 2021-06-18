@@ -86,4 +86,14 @@ namespace structures
     {
         return this->car_sales;
     }
+
+    void Agency::setCarTypes(Tree<CarType> *carType)
+    {
+        this->car_types = carType;
+    }
+
+    void Agency::setCarSales(RankTree<CarSale> *carSale)
+    {
+        this->car_sales = carSale;
+    }
 }
