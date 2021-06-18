@@ -73,13 +73,19 @@ namespace structures
             wanted_car_type->setSales(new_sales);
 
             //remove car from car_sales tree then add it again with updated data.
-            CarSale wanted_car_sale(wanted_car_type->getTypeID(), wanted_car_type->getSales());
+            CarSale wanted_car_sale(wanted_car_type->getTypeID(), wanted_car_type->getSales() - k);
             RankTree<CarSale> *temp_tree_ptr = wanted_agency->getCarSales()->removeIntersection(&wanted_car_sale);
-            wanted_agency->setCarSales(temp_tree_ptr);
+            if(temp_tree_ptr == nullptr)
+            {
+                wanted_agency->setCarSales(new RankTree<CarSale>());
+            }
+            else
+            {
+                wanted_agency->setCarSales(temp_tree_ptr);
+            }
 
             temp_tree_ptr = wanted_agency->getCarSales()->addIntersection(new CarSale(typeID, new_sales));
             wanted_agency->setCarSales(temp_tree_ptr);
-
             wanted_agency->setTotalSales(wanted_agency->getTotalSales() + k);
         }
         else
