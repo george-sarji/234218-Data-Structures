@@ -1,4 +1,5 @@
 #include "Agency.h"
+#include "Utilities.h"
 
 namespace structures
 {
@@ -74,10 +75,39 @@ namespace structures
         // Update the proper agency items.
         this->total_sales += agency.total_sales;
         this->total_types += agency.total_types;
-        // TODO: Update the trees accordingly.
+        // Get the relevant arrays.
+        CarType **current = nullptr, **other = nullptr;
+        current = this->getArrayFromNormalTree();
+        other = agency.getArrayFromNormalTree();
+        // Get the relevant sizes.
+        int current_size = this->getTreeSize(), other_size = agency.getTreeSize();
+        // Get a new array.
+        CarType **merged_arr = mergeArrays(current, other, current_size, other_size);
+        // We need to remove the current tree and add the new one.
+        this->car_types->clearTree();
+        delete this->car_types;
+        this->car_types = createAVLFromArray(merged_arr, 0, current_size + other_size);
+        // We can delete the merged array and the previous arrays now.
+        delete[] merged_arr;
+        delete[] current;
+        delete[] other;
+        // We need to merge the car sales now.
+        CarSale **current_sales = nullptr, **other_sales = nullptr;
+        current_sales = this->car_sales->getArrayFromTree();
+        other_sales = agency.getCarSales()->getArrayFromTree();
+        // Merge the arrays.
+        CarSale **merged_sales = mergeArrays(current_sales, other_sales, current_size, other_size);
+        // Delete the previous tree and add the new one.
+        this->car_sales->clearRankTree();
+        delete this->car_sales;
+        this->car_sales = createRankTreeFromArray(merged_sales, 0, current_size + other_size);
+        // Delete the arrays.
+        delete[] merged_sales;
+        delete[] current_sales;
+        delete[] other_sales;
     }
 
-    Tree<CarType>* Agency::getCarTypes() const
+    Tree<CarType> *Agency::getCarTypes() const
     {
         return this->car_types;
     }
@@ -97,7 +127,7 @@ namespace structures
         this->car_sales = carSale;
     }
 
-    CarType** Agency::getArrayFromNormalTree()
+    CarType **Agency::getArrayFromNormalTree() const
     {
         return car_types->getArrayFromTree(car_sales->numOfSubtrees());
     }
