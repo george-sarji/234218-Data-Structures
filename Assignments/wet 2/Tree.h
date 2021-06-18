@@ -61,6 +61,9 @@ namespace structures
         Tree *removeIntersection(T *data);
         Tree *inorderSuccessor();
 
+        T** getArrayFromTree(int size);
+        void getArrayFromTreeAux(T** array, int* counter);
+
         // ! Required functions
         // LeftRight, RightLeft
 
@@ -575,6 +578,34 @@ namespace structures
             return this->right->getSmallest();
         }
         return this;
+    }
+
+    template<class T>
+    T **Tree<T>::getArrayFromTree(int size)
+    {
+        T** array = new T*[size];
+        int* counter = new int(0);
+        this->getArrayFromTreeAux(array, counter);
+        delete counter;
+        return array;
+    }
+
+    template<class T>
+    void Tree<T>::getArrayFromTreeAux(T **array, int *counter)
+    {
+        if(this->left)
+        {
+            this->left->getArrayFromTreeAux(array, counter);
+        }
+
+        T* temp_data = new T(*data);
+        array[*counter] = temp_data;
+        (*counter)++;
+
+        if(this->right)
+        {
+            this->right->getArrayFromTreeAux(array, counter);
+        }
     }
 
 }
