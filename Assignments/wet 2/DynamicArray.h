@@ -79,7 +79,7 @@ namespace structures
     void structures::DynamicArray<T>::addElement(T *item)
     {
         // Check if we have to resize the array.
-        if (count == size)
+        if (count == size/2)
         {
             // Resize the array.
             this->resizeArray();
