@@ -44,6 +44,10 @@ namespace structures
     {
         int current_id = agency->getAgencyId();
         // Check if we have a parent.
+        if(this->parents->getElementAt(current_id) == nullptr)
+        {
+            return nullptr;
+        }
         if (*this->parents->getElementAt(current_id) != -1)
         {
             // We have a valid parent. Let's carry on.
