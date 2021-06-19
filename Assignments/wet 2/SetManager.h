@@ -23,7 +23,7 @@ namespace structures
         void addAgency(Agency* agency);
         void initiateAgency();
         Agency* findAgency(Agency* agency);
-        Agency* uniteAgencies(int agency1, int agency2);
+        void uniteAgencies(int agency1, int agency2);
     };
 }
 

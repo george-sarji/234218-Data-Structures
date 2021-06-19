@@ -58,7 +58,11 @@ namespace structures
             this->parents->updateElementAt(current_id, new int(root->getAgencyId()));
             return root;
         }
-        // We don't have a parent. Return the current agency.
+            // We don't have a parent. Return the current agency.
+        else if(this->elements->getElements()[agency->getAgencyId()] == agency)
+        {
+            return agency;
+        }
         else
         {
             return this->elements->getElementAt(current_id);
