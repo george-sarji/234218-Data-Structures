@@ -13,14 +13,15 @@ namespace structures
         int i = 0, j = 0, k = 0;
         while (i < left_size && j < right_size)
         {
-            if (left[i] < right[j])
+            T* current_left = left[i], *current_right = right[j];
+            if (*current_left < *current_right)
             {
-                new_array[k] = left[i];
+                new_array[k] = current_left;
                 i++;
             }
             else
             {
-                new_array[k] = right[j];
+                new_array[k] = current_right;
                 j++;
             }
             k++;
