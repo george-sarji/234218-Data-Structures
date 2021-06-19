@@ -38,6 +38,11 @@ namespace structures
             throw InvalidInput();
         }
 
+        if(agencyID >= this->total_agencies)
+        {
+            throw FailureError();
+        }
+
         //Find the agency to sell the car to.
         Agency temp(agencyID);
         Agency *wanted_agency = sets->findAgency(&temp);
@@ -121,6 +126,11 @@ namespace structures
         if (agencyID < 0 || i < 0 || res == nullptr)
         {
             throw InvalidInput();
+        }
+
+        if(agencyID >= this->total_agencies)
+        {
+            throw FailureError();
         }
 
         //Find the agency to sell the car to.
