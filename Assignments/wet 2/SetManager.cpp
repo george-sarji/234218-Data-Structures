@@ -58,8 +58,8 @@ namespace structures
             this->parents->updateElementAt(current_id, new int(root->getAgencyId()));
             return root;
         }
-            // We don't have a parent. Return the current agency.
-        else if(this->elements->getElements()[agency->getAgencyId()] == agency)
+        // We don't have a parent. Return the current agency.
+        else if (this->elements->getElements()[agency->getAgencyId()] == agency)
         {
             return agency;
         }
@@ -107,9 +107,10 @@ namespace structures
         // Update the size for the child and the parent.
         this->sizes->updateElementAt(parent, new int(new_size));
         this->sizes->updateElementAt(child, new int(new_size));
+        this->parents->updateElementAt(child, new int(parent));
         // Get the child element and the parent element.
-        Agency* parent_agency = this->elements->getElementAt(parent);
-        Agency* child_agency = this->elements->getElementAt(child);
+        Agency *parent_agency = this->elements->getElementAt(parent);
+        Agency *child_agency = this->elements->getElementAt(child);
         // Update the parent agency with the new data.
         parent_agency->updateAgency(*child_agency);
         // We have updated the parent. We can now exit.
