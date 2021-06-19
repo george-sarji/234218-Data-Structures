@@ -72,7 +72,7 @@ namespace structures
     Agency *structures::SetManager::uniteAgencies(int agency1, int agency2)
     {
         // Check if we have valid IDs.
-        if (agency1 > this->size || agency2 > this->size)
+        if (agency1 >= this->size || agency2 >= this->size)
         {
             throw InvalidInput();
         }
