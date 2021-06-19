@@ -42,35 +42,41 @@ namespace structures
 
     Agency *structures::SetManager::findAgency(Agency *agency)
     {
+        // Get the current agency's ID.
         int current_id = agency->getAgencyId();
-        // Check if we have a parent.
-        if (this->parents->getElementAt(current_id) == nullptr)
+        // Check if we have a parent for the agency.
+        int *parent = this->parents->getElementAt(current_id);
+        if (parent == nullptr || *parent == -1 || *parent == current_id)
         {
-            return nullptr;
-        }
-        else if (*this->parents->getElementAt(current_id) != -1)
-        {
-            // We have a valid parent. Let's carry on.
-            int *parent = this->parents->getElementAt(current_id);
-            // Call the findAgency on the parent.
-            Agency *root = this->findAgency(this->elements->getElementAt(*parent));
-            // Update the parent accordingly.
-            this->parents->updateElementAt(current_id, new int(root->getAgencyId()));
-            return root;
-        }
-        // We don't have a parent. Return the current agency.
-        else if (this->elements->getElements()[agency->getAgencyId()] == agency)
-        {
-            return agency;
+            // We don't have a parent. Return the given agency.
+            return this->elements->getElementAt(current_id);
         }
         else
         {
-            return this->elements->getElementAt(current_id);
+            // We have a parent. Check if they have a parent as well.
+            // Create a mock parent.
+            Agency *mock_parent = new Agency(*parent);
+            // Look for the mock parent's parent.
+            Agency *root = this->findAgency(mock_parent);
+            // Check if we got any result.
+            if (root == nullptr)
+            {
+                // We found the ultimate parent. Return it.
+                return this->elements->getElementAt(*parent);
+            }
+            // We got an ultimate parent through root. Return it.
+            return root;
         }
+        // Not supposed to get here.
+        return nullptr;
     }
 
     void structures::SetManager::uniteAgencies(int agency1, int agency2)
     {
+        if (agency1 >= this->size || agency2 >= this->size)
+        {
+            throw FailureError();
+        }
         // We need to check which agency to merge into the other. Get each parent.
         int parent1 = *this->parents->getElementAt(agency1);
         int parent2 = *this->parents->getElementAt(agency2);
