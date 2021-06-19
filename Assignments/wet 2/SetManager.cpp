@@ -44,11 +44,11 @@ namespace structures
     {
         int current_id = agency->getAgencyId();
         // Check if we have a parent.
-        if(this->parents->getElementAt(current_id) == nullptr)
+        if (this->parents->getElementAt(current_id) == nullptr)
         {
             return nullptr;
         }
-        if (*this->parents->getElementAt(current_id) != -1)
+        else if (*this->parents->getElementAt(current_id) != -1)
         {
             // We have a valid parent. Let's carry on.
             int *parent = this->parents->getElementAt(current_id);
@@ -58,55 +58,57 @@ namespace structures
             this->parents->updateElementAt(current_id, new int(root->getAgencyId()));
             return root;
         }
-            // We don't have a parent. Return the current agency.
-        else if(this->elements->getElements()[agency->getAgencyId()] == agency)
-        {
-            return agency;
-        }
+        // We don't have a parent. Return the current agency.
         else
         {
-            return this->elements->getElements()[agency->getAgencyId()];
+            return this->elements->getElementAt(current_id);
         }
     }
 
-    Agency *structures::SetManager::uniteAgencies(int agency1, int agency2)
+    void structures::SetManager::uniteAgencies(int agency1, int agency2)
     {
-        // Check if we have valid IDs.
-        if (agency1 >= this->size || agency2 >= this->size)
+        // We need to check which agency to merge into the other. Get each parent.
+        int parent1 = *this->parents->getElementAt(agency1);
+        int parent2 = *this->parents->getElementAt(agency2);
+        // Check if the parents are actually available.
+        if (parent1 == -1)
         {
-            throw InvalidInput();
+            // Change the parent to the actual agency itself.
+            parent1 = agency1;
         }
-        // We have two valid agencies. Now we need to create the union according to the parents.
-        int bigger, smaller;
-        int left_size = *this->sizes->getElementAt(agency1), right_size = *this->sizes->getElementAt(agency2);
-        // Check which one is a smaller size.
-        if (left_size > right_size)
+        // Do the same for the second agency.
+        if (parent2 == -1)
         {
-            // Second is smaller than the first. We have to use that as reference for the union.
-            smaller = agency2;
-            bigger = agency1;
+            parent2 = agency2;
+        }
+
+        // We should now start checking according to the sizes.
+        int size1 = *this->sizes->getElementAt(parent1);
+        int size2 = *this->sizes->getElementAt(parent2);
+        // Let's check who needs to be the parent agency.
+        int parent, child;
+        if (size1 > size2)
+        {
+            // Parent needs to be parent1.
+            parent = parent1;
+            child = parent2;
         }
         else
         {
-            // First is smaller than the second. Use that for the union.
-            smaller = agency1;
-            bigger = agency2;
+            parent = parent2;
+            child = parent1;
         }
-        // Now wwe perform the union according to the algorithm in the lecture.
-        this->parents->updateElementAt(smaller, new int(bigger));
-        // Let's check if there's a parent for bigger.
-        int parent = *this->parents->getElementAt(bigger);
-        if(parent == -1) {
-            // Use the bigger item.
-            parent = bigger;
-        }
-        this->parents->updateElementAt(smaller, new int(parent));
-        // Update the sizes.
-        int new_size = left_size + right_size;
-        this->sizes->updateElementAt(smaller, new int(new_size));
-        this->sizes->updateElementAt(bigger, new int(new_size));
-        this->elements->getElementAt(parent)->updateAgency(*this->elements->getElementAt(smaller));
-        return this->elements->getElementAt(parent);
+        // We now need to unite the agencies and set the sizes properly.
+        int new_size = size1 + size2;
+        // Update the size for the child and the parent.
+        this->sizes->updateElementAt(parent, new int(new_size));
+        this->sizes->updateElementAt(child, new int(new_size));
+        // Get the child element and the parent element.
+        Agency* parent_agency = this->elements->getElementAt(parent);
+        Agency* child_agency = this->elements->getElementAt(child);
+        // Update the parent agency with the new data.
+        parent_agency->updateAgency(*child_agency);
+        // We have updated the parent. We can now exit.
     }
 
     int structures::SetManager::getSize() const
