@@ -126,7 +126,7 @@ namespace structures
     template <class T>
     T *structures::DynamicArray<T>::getElementAt(const int i) const
     {
-        if (i > count)
+        if (i >= count)
             return nullptr;
         return this->elements[i];
     }
@@ -135,7 +135,7 @@ namespace structures
     void structures::DynamicArray<T>::updateElementAt(const int i, T *item)
     {
         // Check if we can even add.
-        if (i > count)
+        if (i >= count)
             return;
         // Grab the old item.
         T *temp = this->elements[i];
