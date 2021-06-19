@@ -74,8 +74,9 @@ namespace structures
         }
         // We have two valid agencies. Now we need to create the union according to the parents.
         int bigger, smaller;
+        int left_size = *this->sizes->getElementAt(agency1), right_size = *this->sizes->getElementAt(agency2);
         // Check which one is a smaller size.
-        if (this->sizes->getElementAt(agency1) > this->sizes->getElementAt(agency2))
+        if (left_size > right_size)
         {
             // Second is smaller than the first. We have to use that as reference for the union.
             smaller = agency2;
@@ -89,12 +90,19 @@ namespace structures
         }
         // Now wwe perform the union according to the algorithm in the lecture.
         this->parents->updateElementAt(smaller, new int(bigger));
+        // Let's check if there's a parent for bigger.
+        int parent = *this->parents->getElementAt(bigger);
+        if(parent == -1) {
+            // Use the bigger item.
+            parent = bigger;
+        }
+        this->parents->updateElementAt(smaller, new int(parent));
         // Update the sizes.
-        int new_size = *this->sizes->getElementAt(smaller) + *this->sizes->getElementAt(bigger);
+        int new_size = left_size + right_size;
         this->sizes->updateElementAt(smaller, new int(new_size));
         this->sizes->updateElementAt(bigger, new int(new_size));
-        this->elements->getElementAt(bigger)->updateAgency(*this->elements->getElementAt(smaller));
-        return this->elements->getElementAt(bigger);
+        this->elements->getElementAt(parent)->updateAgency(*this->elements->getElementAt(smaller));
+        return this->elements->getElementAt(parent);
     }
 
     int structures::SetManager::getSize() const
