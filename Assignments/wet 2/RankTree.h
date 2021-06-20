@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "TreeException.h"
+#include "Exception.h"
 namespace structures
 {
 #define MAX(left, right) (left > right ? left : right)
@@ -724,7 +725,14 @@ namespace structures
             }
             else
             {
-                return nullptr;
+                if(this->right)
+                {
+                    return this->right->Select(index - 1);
+                }
+                else
+                {
+                    throw FailureError();
+                }
             }
         }
         if(this->left->num_of_subtrees == index - 1)
