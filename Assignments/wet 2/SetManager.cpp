@@ -103,16 +103,11 @@ namespace structures
         // Update the size for both items.
         int new_size = size1 + size2;
         // Update the size for the child and the parent.
-        this->sizes->updateElementAt(parent, new int(new_size));
-        this->sizes->updateElementAt(child, new int(new_size));
+        this->sizes->updateElementAt(parent->getAgencyId(), new int(new_size));
+        this->sizes->updateElementAt(child->getAgencyId(), new int(new_size));
         // Get the child element and the parent element.
-        Agency mock_parent(parent), mock_child(child);
-        Agency *parent_agency = this->findAgency(&mock_parent);
-        Agency *child_agency = this->findAgency(&mock_child);
-        // Update the parent agency with the new data.
-        parent_agency->updateAgency(*child_agency);
         // We have updated the parent. We can now exit.
-        this->parents->updateElementAt(child, new int(parent));
+        this->parents->updateElementAt(child->getAgencyId(), new int(parent->getAgencyId()));
     }
 
     int structures::SetManager::getSize() const
@@ -122,7 +117,7 @@ namespace structures
 
     int SetManager::getParent(int typeID) const
     {
-        if(*this->parents->getElementAt(typeID) == -1)
+        if (*this->parents->getElementAt(typeID) == -1)
         {
             return typeID;
         }
