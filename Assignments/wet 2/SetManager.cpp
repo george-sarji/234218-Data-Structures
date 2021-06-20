@@ -78,29 +78,18 @@ namespace structures
         {
             throw FailureError();
         }
-        // We need to check which agency to merge into the other. Get each parent.
-        int parent1 = *this->parents->getElementAt(agency1);
-        int parent2 = *this->parents->getElementAt(agency2);
-        // Check if the parents are actually available.
-        if (parent1 == -1)
-        {
-            // Change the parent to the actual agency itself.
-            parent1 = agency1;
-        }
-        // Do the same for the second agency.
-        if (parent2 == -1)
-        {
-            parent2 = agency2;
-        }
-
-        // We should now start checking according to the sizes.
-        int size1 = *this->sizes->getElementAt(parent1);
-        int size2 = *this->sizes->getElementAt(parent2);
-        // Let's check who needs to be the parent agency.
-        int parent, child;
+        // We need to get the parent agencies. Use findAgency.
+        Agency mock1(agency1), mock2(agency2);
+        Agency *parent1 = this->findAgency(&mock1);
+        Agency *parent2 = this->findAgency(&mock2);
+        // Check which one is supposed to be the proper parent.
+        int size1 = *this->sizes->getElementAt(parent1->getAgencyId());
+        int size2 = *this->sizes->getElementAt(parent2->getAgencyId());
+        // Check which one has to be the parent, and which has to be the child.
+        Agency *parent, *child;
         if (size1 > size2)
         {
-            // Parent needs to be parent1.
+            // Parent 1 is the proper parent.
             parent = parent1;
             child = parent2;
         }
@@ -109,23 +98,29 @@ namespace structures
             parent = parent2;
             child = parent1;
         }
-        // We now need to unite the agencies and set the sizes properly.
+        // We now have to update the agencies accordingly, update the sizes and exit.
+        parent->updateAgency(*child);
+        // Update the size for both items.
         int new_size = size1 + size2;
         // Update the size for the child and the parent.
-        this->sizes->updateElementAt(parent, new int(new_size));
-        this->sizes->updateElementAt(child, new int(new_size));
+        this->sizes->updateElementAt(parent->getAgencyId(), new int(new_size));
+        this->sizes->updateElementAt(child->getAgencyId(), new int(new_size));
         // Get the child element and the parent element.
-        Agency mock_parent(parent), mock_child(child);
-        Agency *parent_agency = this->findAgency(&mock_parent);
-        Agency *child_agency = this->findAgency(&mock_child);
-        // Update the parent agency with the new data.
-        parent_agency->updateAgency(*child_agency);
         // We have updated the parent. We can now exit.
-        this->parents->updateElementAt(child, new int(parent));
+        this->parents->updateElementAt(child->getAgencyId(), new int(parent->getAgencyId()));
     }
 
     int structures::SetManager::getSize() const
     {
         return this->size;
+    }
+
+    int SetManager::getParent(int typeID) const
+    {
+        if (*this->parents->getElementAt(typeID) == -1)
+        {
+            return typeID;
+        }
+        return getParent(*this->parents->getElementAt(typeID));
     }
 }
