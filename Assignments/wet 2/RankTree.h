@@ -712,17 +712,6 @@ namespace structures
             {
                 return this;
             }
-            else if(index == 2)
-            {
-                if(this->right)
-                {
-                    return this->right;
-                }
-                else
-                {
-                    return nullptr;
-                }
-            }
             else
             {
                 if(this->right)
@@ -734,6 +723,7 @@ namespace structures
                     throw FailureError();
                 }
             }
+
         }
         if(this->left->num_of_subtrees == index - 1)
         {
