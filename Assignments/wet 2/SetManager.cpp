@@ -58,6 +58,7 @@ namespace structures
             Agency *mock_parent = new Agency(*parent);
             // Look for the mock parent's parent.
             Agency *root = this->findAgency(mock_parent);
+            delete mock_parent;
             // Check if we got any result.
             if (root == nullptr)
             {
