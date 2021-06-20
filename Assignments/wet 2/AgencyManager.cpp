@@ -118,6 +118,10 @@ namespace structures
         {
             throw FailureError();
         }
+        if(this->sets->getParent(agency1) == this->sets->getParent(agency2))
+        {
+            return;
+        }
         this->sets->uniteAgencies(agency1, agency2);
     }
 
