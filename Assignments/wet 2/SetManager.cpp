@@ -112,4 +112,13 @@ namespace structures
     {
         return this->size;
     }
+
+    int SetManager::getParent(int typeID) const
+    {
+        if(*this->parents->getElementAt(typeID) == -1)
+        {
+            return typeID;
+        }
+        return getParent(*this->parents->getElementAt(typeID));
+    }
 }

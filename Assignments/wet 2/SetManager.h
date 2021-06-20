@@ -19,6 +19,7 @@ namespace structures
         ~SetManager();
 
         int getSize() const;
+        int getParent(int typeID) const;
 
         void addAgency(Agency* agency);
         void initiateAgency();
