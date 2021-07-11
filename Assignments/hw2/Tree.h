@@ -197,9 +197,9 @@ namespace structures
         new_root->parent = root->parent;
         (new_root->left)->parent = new_root;
         (new_root->right)->parent = new_root;
-        if ((new_root->left)->left)
+        if ((new_root->right)->left)
         {
-            ((new_root->left)->left)->parent = new_root->left;
+            ((new_root->right)->left)->parent = new_root->right;
         }
         if ((new_root->left)->right)
         {
@@ -224,11 +224,11 @@ namespace structures
         (new_root->right)->parent = new_root;
         if ((new_root->right)->left)
         {
-            ((new_root->right)->left)->parent = new_root->left;
+            ((new_root->right)->left)->parent = new_root->right;
         }
         if ((new_root->right)->right)
         {
-            ((new_root->right)->right)->parent = new_root->left;
+            //((new_root->right)->right)->parent = new_root->left;
         }
 
         root->height = root->Height();
