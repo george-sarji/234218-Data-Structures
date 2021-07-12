@@ -689,11 +689,21 @@ namespace structures
         Tree<CarModel> *prev_model = nullptr, *prev_right = nullptr;
         Tree<TypeNode> *prev_node = nullptr, *prev_right_node = nullptr;
         Tree<CarModel> *prev_type_model = nullptr, *prev_type_right = nullptr;
+        Tree<TypeNode> **non_sold_depth = new Tree<TypeNode> *[non_sold_models->Height()];
+        Tree<CarModel> **non_models_depth = nullptr, **sold_models_depth = new Tree<CarModel> *[sold_models->Height()];
+        int depth_non_sold = 0, depth_non_models = 0, depth_sold = 0;
         while (counter != threshhold)
         {
             // Check if we have to use the non-sold models.
             if ((non_sold_models != nullptr && non_sold_models->Data() != nullptr) && (sold_models == nullptr || (sold_models->Data()->Grade() >= 0 && sold_models->Left() != nullptr && sold_models->Left()->Data()->Grade() <= 0) || (sold_models->Data()->Grade() >= 0)))
             {
+                if (depth_non_sold >= 1 && non_sold_depth[depth_non_sold - 1] == non_sold_models)
+                {
+                    non_sold_models = non_sold_models->Parent();
+                    non_sold_depth[depth_non_sold - 1] = nullptr;
+                    depth_non_sold--;
+                    continue;
+                }
                 if (non_sold_models->Left() && prev_right_node && prev_right_node != non_sold_models && prev_node != non_sold_models->Left())
                 {
                     // We can go through this node.
@@ -709,8 +719,16 @@ namespace structures
                 }
                 // Use the current.
                 Tree<CarModel> *models = non_sold_models->Data()->getSmallestModel();
+                non_models_depth = new Tree<CarModel> *[non_sold_models->Data()->getModels()->Height()];
                 while (counter != threshhold && models != nullptr)
                 {
+                    if (depth_non_models >= 1 && non_models_depth[depth_non_models - 1] == models)
+                    {
+                        models = models->Parent();
+                        non_models_depth[depth_non_models - 1] = nullptr;
+                        depth_non_models--;
+                        continue;
+                    }
                     // Check if we have a left.
                     if (models->Left() && prev_type_right && prev_type_right != models && prev_type_model != models->Left())
                     {
@@ -733,6 +751,8 @@ namespace structures
                     {
                         prev_type_model = models;
                         prev_type_right = models;
+                        non_models_depth[depth_non_models] = models;
+                        depth_non_models++;
                         models = models->Right();
                         continue;
                     }
@@ -740,12 +760,15 @@ namespace structures
                     prev_type_model = models;
                     models = models->Parent();
                 }
+                delete[] non_models_depth;
                 // Do we have a right for the non_sold_models?
                 if (non_sold_models->Right() && prev_node != non_sold_models->Right())
                 {
                     // We can go through this node.
                     prev_node = non_sold_models;
                     prev_right_node = non_sold_models;
+                    non_sold_depth[depth_non_sold] = non_sold_models;
+                    depth_non_sold++;
                     non_sold_models = non_sold_models->Right();
                     continue;
                 }
@@ -756,6 +779,13 @@ namespace structures
             {
                 // Use the sold models.
                 // Check if we have a left.
+                if (depth_sold >= 1 && sold_models_depth[depth_sold - 1] == sold_models)
+                {
+                    sold_models_depth[depth_sold - 1] = nullptr;
+                    depth_sold--;
+                    sold_models = sold_models->Parent();
+                    continue;
+                }
                 if (sold_models->Left() && prev_right && prev_right != sold_models && prev_model != sold_models->Left())
                 {
                     prev_model = sold_models;
@@ -777,6 +807,8 @@ namespace structures
                 {
                     prev_model = sold_models;
                     prev_right = sold_models;
+                    sold_models_depth[depth_sold] = sold_models;
+                    depth_sold++;
                     sold_models = sold_models->Right();
                     continue;
                 }
@@ -785,5 +817,7 @@ namespace structures
                 sold_models = sold_models->Parent();
             }
         }
+        delete[] sold_models_depth;
+        delete[] non_sold_depth;
     }
 }
