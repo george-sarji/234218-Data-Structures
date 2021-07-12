@@ -689,7 +689,6 @@ namespace structures
         Tree<CarModel> *prev_model = nullptr, *prev_right = nullptr;
         Tree<TypeNode> *prev_node = nullptr, *prev_right_node = nullptr;
         Tree<CarModel> *prev_type_model = nullptr, *prev_type_right = nullptr;
-        // TypeNode *non_sold_depth = non_sold_models == nullptr ? nullptr : new TypeNode[non_sold_models->Height()];
         CarModel *non_models_depth = nullptr, *sold_models_depth = (sold_models == nullptr) ? nullptr : new CarModel[sold_models->Height()];
         int depth_non_sold = 0, depth_non_models = 0, depth_sold = 0;
         while (counter != threshhold)
@@ -722,7 +721,7 @@ namespace structures
                         depth_non_models--;
                         continue;
                     }
-                    if (models->Left() && prev_type_right && prev_type_right != models && prev_type_model != models->Left() && !(non_models_depth[depth_non_models] == *models->Left()->Data()))
+                    if (models->Left() && prev_type_right && prev_type_right != models && prev_type_model != models->Left() && (depth_non_models >= 0 && !(non_models_depth[depth_non_models] == *models->Left()->Data())))
                     {
                         prev_type_model = models;
                         models = models->Left();
@@ -744,7 +743,7 @@ namespace structures
                     {
                         prev_type_model = models;
                         prev_type_right = models;
-                        // non_models_depth[depth_non_models++] = CarModel(*models->Data());
+                        non_models_depth[depth_non_models++] = CarModel(*models->Data());
                         models = models->Right();
                         continue;
                     }
@@ -775,7 +774,7 @@ namespace structures
                     continue;
                 }
                 // Check if we have a left.
-                if (sold_models->Left() && prev_right && prev_right != sold_models && prev_model != sold_models->Left() && !(sold_models_depth[depth_sold] == *sold_models->Left()->Data()))
+                if (sold_models->Left() && prev_right && prev_right != sold_models && prev_model != sold_models->Left() && (depth_sold >= 0 && !(sold_models_depth[depth_sold] == *sold_models->Left()->Data())))
                 {
                     prev_model = sold_models;
                     sold_models = sold_models->Left();
@@ -807,6 +806,5 @@ namespace structures
             }
         }
         delete[] sold_models_depth;
-        // delete[] non_sold_depth;
     }
 }
