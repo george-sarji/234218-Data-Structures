@@ -224,11 +224,11 @@ namespace structures
         (new_root->right)->parent = new_root;
         if ((new_root->right)->left)
         {
-            ((new_root->right)->left)->parent = new_root->right;
+            //((new_root->right)->left)->parent = new_root->left;
         }
-        if ((new_root->right)->right)
+        if ((new_root->left)->right)
         {
-            //((new_root->right)->right)->parent = new_root->left;
+            ((new_root->left)->right)->parent = new_root->left;
         }
 
         root->height = root->Height();
