@@ -670,7 +670,7 @@ namespace structures
         if (numOfModels > this->total_models)
             throw FailureError();
         int c = 0;
-        CarDealershipManager::getWorstModelsMInOrder(this->smallest_sold_model, this->smallest_non_sold_type, c, numOfModels, types, models);
+        CarDealershipManager::getWorstModelsMInOrder(this->smallest_sold_model, this->smallest_non_sold_type, c, numOfModels, types, models, (this->non_sold_models != nullptr) ? this->non_sold_models->Height() : 0, (this->sold_models != nullptr) ? this->sold_models->Height() : 0);
     }
 
     void CarDealershipManager::Quit()
@@ -681,7 +681,7 @@ namespace structures
         car_sales->clearTree();
     }
 
-    void CarDealershipManager::getWorstModelsMInOrder(Tree<CarModel> *sold_models, Tree<TypeNode> *non_sold_models, int &counter, int threshhold, int *type_array, int *model_array)
+    void CarDealershipManager::getWorstModelsMInOrder(Tree<CarModel> *sold_models, Tree<TypeNode> *non_sold_models, int &counter, int threshhold, int *type_array, int *model_array, int non_sold_height, int sold_height)
     {
         // Check if we have reached the threshold.
         if (counter == threshhold)
@@ -689,14 +689,21 @@ namespace structures
         Tree<CarModel> *prev_model = nullptr, *prev_right = nullptr;
         Tree<TypeNode> *prev_node = nullptr, *prev_right_node = nullptr;
         Tree<CarModel> *prev_type_model = nullptr, *prev_type_right = nullptr;
-        CarModel *non_models_depth = nullptr, *sold_models_depth = (sold_models == nullptr) ? nullptr : new CarModel[sold_models->Height()];
+        int non_sold_depth[non_sold_height];
+        CarModel *non_models_depth = nullptr, *sold_models_depth = (sold_models == nullptr) ? nullptr : new CarModel[sold_height];
         int depth_non_sold = 0, depth_non_models = 0, depth_sold = 0;
         while (counter != threshhold)
         {
             // Check if we have to use the non-sold models.
             if ((non_sold_models != nullptr && non_sold_models->Data() != nullptr) && (sold_models == nullptr || (sold_models->Data()->Grade() >= 0 && sold_models->Left() != nullptr && sold_models->Left()->Data()->Grade() <= 0) || (sold_models->Data()->Grade() >= 0)))
             {
-                if (non_sold_models->Left() && prev_right_node && prev_right_node != non_sold_models && prev_node != non_sold_models->Left())
+                if (depth_non_sold >= 1 && non_sold_depth[depth_non_sold - 1] == non_sold_models->Data()->getTypeId())
+                {
+                    non_sold_models = non_sold_models->Parent();
+                    depth_non_sold--;
+                    continue;
+                }
+                if (non_sold_models->Left() && prev_right_node && prev_right_node != non_sold_models && prev_node != non_sold_models->Left() && (depth_non_sold >= 0 && !(non_sold_depth[depth_non_models] == non_sold_models->Left()->Data()->getTypeId())))
                 {
                     // We can go through this node.
                     prev_node = non_sold_models;
@@ -758,6 +765,7 @@ namespace structures
                     // We can go through this node.
                     prev_node = non_sold_models;
                     prev_right_node = non_sold_models;
+                    non_sold_depth[depth_non_sold++] = int(non_sold_models->Data()->getTypeId());
                     non_sold_models = non_sold_models->Right();
                     continue;
                 }
